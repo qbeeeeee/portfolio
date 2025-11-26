@@ -1,3 +1,21 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@keyframes spin-map {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+
+@keyframes spin-sun {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}

@@ -3,11 +3,14 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import "../test/css.css";
 import testImage from "./../assets/test.jpg";
+import earth from "./../assets/saturn2.png";
+import { useGSAP } from "@gsap/react";
 
 gsap.registerPlugin(ScrollTrigger);
 
 export default function App() {
   const slidesRef = useRef(null);
+  const earthRef = useRef(null);
 
   useEffect(() => {
     const slides = gsap.utils.toArray(".slide");
@@ -65,37 +68,33 @@ export default function App() {
   const slides = Array.from({ length: 10 });
 
   useEffect(() => {
-    const nav = document.querySelector("nav");
-    const footer = document.querySelector("footer");
-
-    // fade in nav/footer when ProjectsSection starts
     ScrollTrigger.create({
       trigger: ".projects-container",
       start: "top top",
       end: "bottom top",
       onEnter: () => {
-        gsap.to([nav, footer, slidesRef.current], {
+        gsap.to([slidesRef.current], {
           opacity: 1,
           duration: 0.8,
           pointerEvents: "auto",
         });
       },
       onLeaveBack: () => {
-        gsap.to([nav, footer, slidesRef.current], {
+        gsap.to([slidesRef.current], {
           opacity: 0,
           duration: 0.5,
           pointerEvents: "none",
         });
       },
       onLeave: () => {
-        gsap.to([nav, footer, slidesRef.current], {
+        gsap.to([slidesRef.current], {
           opacity: 0,
           duration: 0.5,
           pointerEvents: "none",
         });
       },
       onEnterBack: () => {
-        gsap.to([nav, footer, slidesRef.current], {
+        gsap.to([slidesRef.current], {
           opacity: 1,
           duration: 0.8,
           pointerEvents: "auto",
@@ -106,34 +105,35 @@ export default function App() {
     return () => ScrollTrigger.getAll().forEach((st) => st.kill());
   }, []);
 
+  useGSAP(
+    () => {
+      const glowLayer = earthRef.current.querySelectorAll("div")[1];
+      gsap.to(glowLayer, {
+        WebkitMaskImage:
+          "linear-gradient(to bottom, black var(--line-pos), transparent calc(var(--line-pos) + 1%))",
+        ease: "none",
+        scrollTrigger: {
+          trigger: slidesRef.current,
+          start: "top top",
+          end: "bottom bottom",
+          scrub: true,
+          onUpdate: (self) => {
+            const progress = self.progress * 100;
+            glowLayer.style.setProperty("--line-pos", `${progress}%`);
+          },
+        },
+      });
+    },
+    { dependencies: [], revertOnUpdate: true }
+  );
+
   return (
     <div className="projects-container">
-      <nav className="fixed top-0 w-full px-[1.5em] py-[2em] flex items-center opacity-0 pointer-events-none">
-        <div className="flex gap-[2em]">
-          <a href="#">Works</a>
-          <a href="#">Archive</a>
-        </div>
-        <div className="flex justify-center">
-          <a className="font-bold text-[16px]" href="#">
-            Modavate
-          </a>
-        </div>
-        <div className="flex gap-[2em] justify-end">
-          <a href="#">Works</a>
-          <a href="#">Archive</a>
-        </div>
-      </nav>
-
-      <footer className="fixed bottom-0 w-full px-[1.5em] py-[2em] flex justify-between items-center opacity-0 pointer-events-none">
-        <p>Watch showreel</p>
-        <p>Coming soon</p>
-      </footer>
-
       <div
-        className="w-full h-[2000vh] opacity-0 pointer-events-none"
+        className="w-full h-[2000vh] opacity-0 pointer-events-none relative"
         ref={slidesRef}
       >
-        <div className="fixed top-0 left-0 w-full h-full overflow-hidden bg-[#000] opacity-[0.35] z-[-1] active-slide">
+        {/* <div className="fixed top-0 left-0 w-full h-full overflow-hidden bg-[#000] opacity-[0.35] z-[-1] active-slide">
           {slides.map((_, i) => (
             <img
               className="absolute blur-[50px] scale-[1.125]"
@@ -142,6 +142,37 @@ export default function App() {
               alt={`bg-${i}`}
             />
           ))}
+        </div> */}
+
+        <div
+          ref={earthRef}
+          className="fixed right-1/2 top-1/2 transform -translate-y-1/2 translate-x-1/2 w-[500px] h-[500px] flex items-center justify-center"
+        >
+          {/* White base image (always visible) */}
+          <div
+            className="absolute inset-0 bg-center bg-no-repeat bg-contain"
+            style={{
+              backgroundImage: `url(${earth})`,
+              backgroundSize: "contain",
+              filter: "brightness(1.5)",
+            }}
+          />
+
+          {/* Blue glow overlay (hidden at first, revealed top→bottom) */}
+          <div
+            className="absolute inset-0 bg-center bg-no-repeat bg-contain"
+            style={{
+              backgroundImage: `url(${earth})`,
+              backgroundSize: "contain",
+              filter:
+                "drop-shadow(0 0 4px #00bfff) drop-shadow(0 0 4px #00ffff)",
+              maskImage: "linear-gradient(to bottom, black 0%, transparent 0%)",
+              WebkitMaskImage:
+                "linear-gradient(to bottom, black 0%, transparent 0%)",
+              maskRepeat: "no-repeat",
+              WebkitMaskRepeat: "no-repeat",
+            }}
+          />
         </div>
 
         <div className="fixed top-0 w-[100vw] h-[100vh] overflow-hidden [transform-style:preserve-3d] [perspective:750px]">
