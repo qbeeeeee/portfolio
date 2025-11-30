@@ -13,6 +13,7 @@ const KeepMeSection = () => {
   const sectionRef = useRef(null);
   const videoRef = useRef(null);
   const [playKeepMeHomepage, setPlayKeepMeHomepage] = useState(false);
+  const [showSvgOrigin, setShowSvgOrigin] = useState(true);
 
   useGSAP(
     () => {
@@ -20,58 +21,30 @@ const KeepMeSection = () => {
 
       const totalRects = 6;
 
-      // for (let i = 1; i <= totalRects; i++) {
-      //   gsap.to(`#circle${i}`, {
-      //     morphSVG: `#logoPath${i}`,
-      //     duration: 1,
-      //     scrollTrigger: {
-      //       trigger: document.body,
-      //       start: "top -100%",
-      //       end: "+=900",
-      //       scrub: true,
-      //     },
-      //   });
-      // }
-
-      // gsap.to(".mySvg", {
-      //   attr: { viewBox: "-300 0 1200 800" },
-      //   duration: 1,
-      //   ease: "power2.inOut",
-      //   scrollTrigger: {
-      //     trigger: document.body,
-      //     start: "top -100%",
-      //     end: "+=900",
-      //     scrub: true,
-      //   },
-      // });
-
-      // for (let i = 1; i <= totalRects; i++) {
-      //   gsap.to(`#circle${i}`, {
-      //     morphSVG: {
-      //       shape: `#rect${i}`,
-      //       shapeIndex: "auto",
-      //     },
-      //     overwrite: false,
-      //     duration: 1,
-      //     scrollTrigger: {
-      //       trigger: document.body,
-      //       start: "top -200%",
-      //       end: "+=600",
-      //       scrub: true,
-      //     },
-      //   });
-      // }
-
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: document.body,
           start: "top -110%",
           end: "+=1500",
           scrub: true,
+          onUpdate: (self) => {
+            if (self.progress >= 0.8) {
+              setPlayKeepMeHomepage(true);
+              setShowSvgOrigin(false);
+            } else {
+              setPlayKeepMeHomepage(false);
+              setShowSvgOrigin(true);
+            }
+          },
         },
       });
 
-      // Step 1: Circle -> Logo (first 30% of timeline)
+      // Circle -> Logo (first 30% of timeline)
+      const svgWidth = window.innerWidth * 0.8;
+      const baseLogoWidth = window.innerWidth > 650 ? 570 : 600;
+      const rawScale = svgWidth / baseLogoWidth;
+      const scaleFactor = rawScale > 1 ? 1 : rawScale;
+
       for (let i = 1; i <= totalRects; i++) {
         tl.to(
           `#circle${i}`,
@@ -82,24 +55,31 @@ const KeepMeSection = () => {
         );
       }
 
-      // ViewBox morph with same timing
       tl.to(
-        ".mySvg",
+        "#circleWrapper",
         {
-          attr: { viewBox: "-300 0 1200 800" },
+          scale: scaleFactor,
         },
         0
       );
 
-      // Step 2: Hold Logo fully visible (nothing happens) - timeline space is reserved
-      // We just offset the start of next morph. No tween needed; this is "pause" region
+      const newWidth = baseLogoWidth * scaleFactor + "px";
 
-      // Step 3: Logo -> Rectangle (last 30% of timeline)
+      tl.to(
+        "#svgOrigin",
+        {
+          width: newWidth,
+        },
+        0
+      );
+
+      // Logo -> Rectangle (last 30% of timeline)
       for (let i = 1; i <= totalRects; i++) {
         tl.to(
           `#circle${i}`,
           {
             morphSVG: { shape: `#rect${i}`, shapeIndex: "auto" },
+            x: 0,
           },
           0.7 // start at 70% of timeline
         );
@@ -108,7 +88,6 @@ const KeepMeSection = () => {
       tl.to(
         ".mySvg",
         {
-          attr: { viewBox: "0 0 1200 550" },
           borderRadius: "40px",
         },
         0.7
@@ -117,114 +96,37 @@ const KeepMeSection = () => {
       tl.to(
         "#svgOrigin",
         {
-          height: "60vh",
+          height: "70vh",
           width: "80vw",
         },
         0.7
       );
 
-      //   gsap.fromTo(
-      //     el,
-      //     {
-      //       width: "5px",
-      //       height: "5px",
-      //       backgroundColor: "white",
-      //       opacity: 1,
-      //     },
-      //     {
-      //       width: "80vw",
-      //       height: "80vh",
-      //       backgroundColor: "#E8E9E8",
-      //       scrollTrigger: {
-      //         trigger: document.body,
-      //         start: "top -100%",
-      //         end: "+=900",
-      //         scrub: true,
-      //         onUpdate: (self) => {
-      //           if (self.progress >= 0.2) {
-      //             setPlayKeepMeHomepage(true);
-      //           } else {
-      //             setPlayKeepMeHomepage(false);
-      //           }
+      tl.to(
+        "#circleWrapper",
+        {
+          scale: 1,
+        },
+        0.7
+      );
 
-      //           // If video is mounted, update opacity based on progress
-      //           if (videoRef.current) {
-      //             const alpha = gsap.utils.clamp(
-      //               0,
-      //               1,
-      //               (self.progress - 0.2) / 0.3
-      //             );
-      //             // progress: 0.2 → opacity: 0
-      //             // progress: 0.5 → opacity: 1
-      //             gsap.to(videoRef.current, {
-      //               opacity: alpha,
-      //               duration: 0.1, // fast smooth update
-      //               overwrite: true,
-      //             });
-      //           }
-      //         },
-      //       },
-      //     }
-      //   );
+      tl.to(
+        el,
+        {
+          opacity: 1,
+        },
+        0.9
+      );
 
-      //   const totalRects = 6;
-
-      //   for (let i = 1; i <= totalRects; i++) {
-      //     gsap.to(`#logoPath${i}`, {
-      //       morphSVG: `#rect${i}`,
-      //       duration: 1,
-      //       scrollTrigger: {
-      //         trigger: document.body,
-      //         start: "top -200%",
-      //         end: "+=600",
-      //         scrub: true,
-      //       },
-      //     });
-      //   }
-
-      //   const svg = document.querySelector(".mySvg");
-      //   const origin = document.querySelector("#svgOrigin");
-      //   const target = document.querySelector("#svgTarget");
-
-      //   gsap.fromTo(
-      //     svg,
-      //     {
-      //       x: 0,
-      //       y: 0,
-      //       width: origin.offsetWidth,
-      //       height: origin.offsetHeight,
-      //     },
-      //     {
-      //       x: () =>
-      //         target.getBoundingClientRect().left -
-      //         origin.getBoundingClientRect().left,
-      //       y: () =>
-      //         target.getBoundingClientRect().top -
-      //         origin.getBoundingClientRect().top,
-      //       width: () => target.offsetWidth,
-      //       height: () => target.offsetHeight,
-      //       ease: "power2.inOut",
-      //       borderRadius: "40px",
-      //       scrollTrigger: {
-      //         trigger: document.body,
-      //         start: "top -200%",
-      //         end: "+=600",
-      //         scrub: true,
-      //       },
-      //     }
-      //   );
-
-      //   gsap.to(".mySvg", {
-      //     attr: { viewBox: "0 0 1200 800" },
-      //     duration: 1,
-      //     ease: "power2.inOut",
-      //     scrollTrigger: {
-      //       trigger: document.body,
-      //       start: "top -200%",
-      //       end: "+=600",
-      //       scrub: true,
-      //     },
-      //   });
+      // tl.to(
+      //   el,
+      //   {
+      //     width: "80vw",
+      //     height: "70vh",
+      //     backgroundColor: "#E8E9E8",
+      //   },
+      //   0.9
+      // );
     },
     { dependencies: [], revertOnUpdate: true }
   );
@@ -237,33 +139,37 @@ const KeepMeSection = () => {
         </h1> */}
 
         {/* SVG starts next to title, absolute but relative to its wrapper */}
-        <div id="svgOrigin" className="relative w-[80vw] h-[200px]">
-          <svg
-            className="absolute inset-0 mySvg z-[100]"
-            viewBox="0 0 1200 800"
-            preserveAspectRatio="xMidYMid meet"
-          >
-            {[...Array(6)].map((_, i) => {
-              const r = 1.5; // radius of circle
-              const cx = ((i + 0.5) * 1200) / 6; // evenly spaced
-              const cy = 160; // vertical position
 
-              return (
-                <path
-                  key={i}
-                  id={`circle${i + 1}`}
-                  style={{ fill: "white" }}
-                  d={`
+        <div
+          id="svgOrigin"
+          className="relative w-[80vw] min-h-[200px]"
+          // style={{ opacity: showSvgOrigin ? 1 : 0 }}
+        >
+          <svg className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-full mySvg z-[100]">
+            <g id="circleWrapper">
+              {[...Array(6)].map((_, i) => {
+                const r = 1.5; // radius of circle
+                const svgWidth = window.innerWidth * 0.8; // 80vw
+                const cx = ((i + 0.5) * svgWidth) / 6;
+                const cy = 160; // vertical position
+
+                return (
+                  <path
+                    key={i}
+                    id={`circle${i + 1}`}
+                    style={{ fill: "white" }}
+                    d={`
                     M ${cx - r}, ${cy}
                     a ${r},${r} 0 1,0 ${r * 2},0
                     a ${r},${r} 0 1,0 ${-r * 2},0
                 `}
-                />
-              );
-            })}
+                  />
+                );
+              })}
+            </g>
 
             {[...Array(6)].map((_, i) => {
-              const svgWidth = 1200;
+              const svgWidth = window.innerWidth * 0.8;
               const rectWidth = svgWidth / 6;
 
               return (
@@ -323,22 +229,14 @@ const KeepMeSection = () => {
       </div>
 
       {/* Expanding section */}
-      {/* <div
+      <div
         ref={sectionRef}
-        className="flex flex-col items-center justify-center relative overflow-hidden rounded-[40px]"
+        className="flex flex-col items-center justify-center overflow-hidden rounded-[40px] absolute w-[80vw] h-[70vh] bg-white opacity-0 z-[200]"
       >
-  
-        <div id="svgTarget" className="absolute inset-0"></div>
-
-        {playKeepMeHomepage && (
-          <div
-            ref={videoRef}
-            className="absolute bottom-0 inset-0 opacity-0 w-full h-full"
-          >
-            <VideoPlayer videoSource={keepmeHomepage} />
-          </div>
-        )}
-      </div> */}
+        <div ref={videoRef} className="w-full h-full">
+          <VideoPlayer videoSource={keepmeHomepage} />
+        </div>
+      </div>
     </div>
   );
 };
