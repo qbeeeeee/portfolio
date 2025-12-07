@@ -1,0 +1,87 @@
+.range-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  border-radius: 5px;
+  outline: none;
+  transition: background 0.2s;
+  cursor: pointer;
+}
+
+/* Gray track before the thumb, white after */
+.range-slider::-webkit-slider-runnable-track {
+  height: 6px;
+  border-radius: 5px;
+}
+/* Gray thumb (ball) */
+.range-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 13px;
+  height: 13px;
+  background: #d1d3d6;
+  border-radius: 50%;
+  cursor: pointer;
+  margin-top: -4px;
+}
+/* Firefox styles */
+.range-slider::-moz-range-track {
+  height: 6px;
+  border-radius: 5px;
+}
+.range-slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  background: #6b7280; /* Gray-500 */
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+/* Larger range slider variant */
+.range-slider-lg {
+  height: 35px;
+  border-radius: 10px;
+  background-color: #f9fafb;
+  --percentage: 50%;
+  background: linear-gradient(
+    to right,
+    #e4e4e4 var(--percentage),
+    #ffffff var(--percentage)
+  );
+}
+
+.range-slider-lg::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 0;
+  height: 0;
+  background: transparent;
+  cursor: default;
+}
+
+.range-slider-lg::-moz-range-thumb {
+  width: 0;
+  height: 0;
+  background: transparent;
+  border: none;
+  cursor: default;
+}
+
+.range-slider-lg::-ms-thumb {
+  width: 0;
+  height: 0;
+  background: transparent;
+  border: none;
+  cursor: default;
+}
+
+.menu-item {
+  background-image: linear-gradient(
+    to bottom,
+    #17ff27 0%,
+    #17ff27 var(--text-fill, 0%),
+    black var(--text-fill, 0%),
+    black 100%
+  );
+  -webkit-background-clip: text;
+  color: transparent;
+}

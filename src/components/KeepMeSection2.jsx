@@ -15,6 +15,10 @@ const KeepMeSection = () => {
   const [playKeepMeHomepage, setPlayKeepMeHomepage] = useState(false);
   const [showSvgOrigin, setShowSvgOrigin] = useState(true);
 
+  const titleRef = useRef(null);
+  const menuRef = useRef(null);
+  const menuInnerRef = useRef(null);
+
   useGSAP(
     () => {
       const el = sectionRef.current;
@@ -86,9 +90,18 @@ const KeepMeSection = () => {
       }
 
       tl.to(
-        ".mySvg",
+        "#mySvg",
         {
           borderRadius: "40px",
+        },
+        0.7
+      );
+
+      tl.to(
+        "#svgOutterWrapper",
+        {
+          top: "55%",
+          left: "58%",
         },
         0.7
       );
@@ -97,7 +110,7 @@ const KeepMeSection = () => {
         "#svgOrigin",
         {
           height: "70vh",
-          width: "80vw",
+          width: "70vw",
         },
         0.7
       );
@@ -131,25 +144,118 @@ const KeepMeSection = () => {
     { dependencies: [], revertOnUpdate: true }
   );
 
+  useGSAP(
+    () => {
+      gsap.to(titleRef.current, {
+        scrollTrigger: {
+          trigger: document.body,
+          start: "top -190%",
+          end: "+=600",
+          scrub: true,
+          onUpdate: (self) => {
+            const progress = self.progress * 100;
+            titleRef.current.style.setProperty("--line-pos", `${progress}%`);
+          },
+        },
+      });
+    },
+    { dependencies: [], revertOnUpdate: true }
+  );
+
+  useGSAP(
+    () => {
+      gsap.to(menuRef.current, {
+        scrollTrigger: {
+          trigger: document.body,
+          start: "top -190%",
+          end: "+=600",
+          scrub: true,
+          onUpdate: (self) => {
+            const progress = self.progress * 100;
+            menuRef.current.style.setProperty("--line-pos", `${progress}%`);
+          },
+        },
+      });
+
+      gsap.to(menuInnerRef.current, {
+        scrollTrigger: {
+          trigger: document.body,
+          start: "top -190%-=600",
+          end: "+=2000",
+          scrub: true,
+          onUpdate: (self) => {
+            const progress = self.progress; // 0 → 1
+
+            // update wipe background (yours)
+            menuInnerRef.current.style.setProperty(
+              "--inner-pos",
+              `${progress * 100}%`
+            );
+
+            // text items
+            const items = menuInnerRef.current.querySelectorAll(".menu-item");
+            const wrapRect = menuInnerRef.current.getBoundingClientRect();
+
+            // wipe Y position
+            const wipeY = wrapRect.top + wrapRect.height * progress;
+
+            items.forEach((item) => {
+              const rect = item.getBoundingClientRect();
+
+              const itemTop = rect.top;
+              const itemBottom = rect.bottom;
+
+              // how much of this text is covered by the wipe (0 → 1)
+              let fillAmount = (wipeY - itemTop) / (itemBottom - itemTop);
+
+              fillAmount = Math.max(0, Math.min(fillAmount, 1)); // clamp
+
+              // update CSS variable for gradual fill
+              item.style.setProperty("--text-fill", `${fillAmount * 100}%`);
+            });
+          },
+        },
+      });
+    },
+    { dependencies: [], revertOnUpdate: true }
+  );
+
   return (
-    <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center">
-      <div className="flex items-center gap-4">
-        {/* <h1 className="text-[40px] text-white my-5 flex gap-5 items-center justify-center">
-          Selected Project:
-        </h1> */}
+    <div className="fixed w-full h-full top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center">
+      <h1
+        ref={titleRef}
+        className="absolute top-[7%] left-[58%] transform -translate-x-1/2 text-[50px] font-semibold text-white my-5 flex gap-5 items-center justify-center"
+        style={{
+          WebkitMaskImage:
+            "linear-gradient(to top, black var(--line-pos, 0%), transparent calc(var(--line-pos, 0%) + 1%))",
+          maskImage:
+            "linear-gradient(to top, black var(--line-pos, 0%), transparent calc(var(--line-pos, 0%) + 1%))",
+          WebkitMaskRepeat: "no-repeat",
+          maskRepeat: "no-repeat",
+          WebkitMaskSize: "100% 100%",
+          maskSize: "100% 100%",
+        }}
+      >
+        Selected Project
+      </h1>
 
-        {/* SVG starts next to title, absolute but relative to its wrapper */}
-
+      <div
+        id="svgOutterWrapper"
+        className="flex items-center gap-4 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+      >
         <div
           id="svgOrigin"
-          className="relative w-[80vw] min-h-[200px]"
+          className="relative w-[70vw] min-h-[200px]"
           // style={{ opacity: showSvgOrigin ? 1 : 0 }}
         >
-          <svg className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-full mySvg z-[100]">
+          <svg
+            id="mySvg"
+            className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-full z-[100]"
+          >
             <g id="circleWrapper">
               {[...Array(6)].map((_, i) => {
                 const r = 1.5; // radius of circle
-                const svgWidth = window.innerWidth * 0.8; // 80vw
+                const svgWidth = window.innerWidth * 0.7; // 70vw
                 const cx = ((i + 0.5) * svgWidth) / 6;
                 const cy = 160; // vertical position
 
@@ -231,10 +337,46 @@ const KeepMeSection = () => {
       {/* Expanding section */}
       <div
         ref={sectionRef}
-        className="flex flex-col items-center justify-center overflow-hidden rounded-[40px] absolute w-[80vw] h-[70vh] bg-white opacity-0 z-[200]"
+        className="absolute top-[55%] left-[58%] transform -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-[40px] w-[70vw] h-[70vh] bg-white opacity-0 z-[200]"
       >
         <div ref={videoRef} className="w-full h-full">
           <VideoPlayer videoSource={keepmeHomepage} />
+        </div>
+      </div>
+
+      {/* KeepMe Sections */}
+      <div
+        ref={menuRef}
+        className="absolute left-[5%] top-[55%] transform -translate-y-1/2 rounded-[40px] bg-white text-black
+       h-[70vh] w-[15vw]"
+        style={{
+          "--line-pos": "-5%",
+          WebkitMaskImage:
+            "linear-gradient(to left, black var(--line-pos), transparent calc(var(--line-pos) + 0px))",
+          maskImage:
+            "linear-gradient(to left, black var(--line-pos), transparent calc(var(--line-pos) + 0px))",
+          WebkitMaskRepeat: "no-repeat",
+          maskRepeat: "no-repeat",
+          WebkitMaskSize: "100% 100%",
+          maskSize: "100% 100%",
+        }}
+      >
+        <div
+          ref={menuInnerRef}
+          style={{
+            "--inner-pos": "-5%",
+            // white
+            backgroundImage:
+              "linear-gradient(to bottom, black var(--inner-pos), #17ff27 calc(var(--inner-pos) + 0px))",
+            backgroundRepeat: "no-repeat",
+            backgroundSize: "100% 100%",
+          }}
+          className="w-full h-full flex flex-col items-center justify-evenly bg-transparent"
+        >
+          <div className="menu-item text-[1.8vw] font-bold">Homepage</div>
+          <div className="menu-item text-[1.8vw] font-bold">Profile Page</div>
+          <div className="menu-item text-[1.8vw] font-bold">Subscription</div>
+          <div className="menu-item text-[1.8vw] font-bold">Search Cards</div>
         </div>
       </div>
     </div>
