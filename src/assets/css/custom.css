@@ -77,11 +77,34 @@
 .menu-item {
   background-image: linear-gradient(
     to bottom,
-    #17ff27 0%,
-    #17ff27 var(--text-fill, 0%),
-    black var(--text-fill, 0%),
-    black 100%
+    #d7a2ff 0%,
+    #d7a2ff var(--text-fill, 0%),
+    white var(--text-fill, 0%),
+    white 100%
   );
   -webkit-background-clip: text;
   color: transparent;
+  position: relative;
+}
+
+.menu-item .bullet {
+  position: absolute;
+  left: -33px; /* match the vertical line */
+  top: 35%;
+
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  box-shadow: 0 0 3px #d7a2ff, 0 0 6px #d7a2ff;
+
+  /* gradient from green to white based on --bullet-fill */
+  background-image: linear-gradient(
+    to bottom,
+    #d7a2ff 0%,
+    #d7a2ff var(--bullet-fill, 0%),
+    white var(--bullet-fill, 0%),
+    white 100%
+  );
+
+  z-index: 5;
 }

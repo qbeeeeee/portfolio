@@ -12,6 +12,7 @@ import pythonSvg from "../../assets/skills/python.svg";
 import djangoSvg from "../../assets/skills/django.svg";
 import gsapSvg from "../../assets/skills/gsap.svg";
 import "./../../assets/css/custom.css";
+import qrCode from "../../assets/qrCode2.png";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -220,18 +221,24 @@ export default function BackgroundGradient() {
           <div className="relative z-10 pt-12 text-white h-[33%]">
             <div className="flex justify-between items-center px-20 text-[22px]">
               <div className="flex gap-14">
-                <div>Home</div>
-                <div>Projects</div>
-              </div>
-
-              <div className="flex gap-14">
                 <div>Contact Me</div>
                 <div>Download CV</div>
               </div>
+
+              {/* <div className="flex gap-14">
+                <div>Home</div>
+                <div>Projects</div>
+              </div> */}
             </div>
           </div>
 
-          <div className="flex items-center justify-center w-full h-[10%] gap-16 whitespace-nowrap z-[400] relative">
+          <div className="flex items-end justify-between px-20 w-full h-[18%] gap-16 whitespace-nowrap z-[400] relative">
+            <img
+              src={qrCode}
+              alt="QR Code"
+              className="hover:cursor-pointer hover:bg-[#ffffff32] border border-[#ffffffc6] shadow-xl rounded-[10px] w-40 h-40"
+            />
+
             <div className="grid grid-cols-5 gap-5" ref={skillsWrapperRef}>
               {skills.map((skill, index) => (
                 <div
@@ -250,7 +257,7 @@ export default function BackgroundGradient() {
             </div>
           </div>
 
-          <div className="flex gap-4 p-4 text-white z-50 absolute right-1/2 bottom-[30%] transform -translate-y-1/2 translate-x-1/2">
+          {/* <div className="flex gap-4 p-4 text-white z-50 absolute right-1/2 bottom-[30%] transform -translate-y-1/2 translate-x-1/2">
             <div
               className={`
                   bg-white text-black border border-black border-opacity-30 flex items-center justify-between px-4 sm:px-5 h-[35px] w-[130px] 
@@ -260,12 +267,11 @@ export default function BackgroundGradient() {
             >
               <span>{gradient.color1}</span>
 
-              {/* Color Preview Swatch */}
               <div
                 className="w-6 h-6 rounded-full border border-black shadow-md"
                 style={{ backgroundColor: gradient.color1 }}
               />
-              {/* Hidden native color input */}
+
               <input
                 ref={inputRef}
                 type="color"
@@ -286,12 +292,11 @@ export default function BackgroundGradient() {
             >
               <span>{gradient.color2}</span>
 
-              {/* Color Preview Swatch */}
               <div
                 className="w-6 h-6 rounded-full border border-black shadow-md"
                 style={{ backgroundColor: gradient.color2 }}
               />
-              {/* Hidden native color input */}
+
               <input
                 ref={inputRef2}
                 type="color"
@@ -327,15 +332,24 @@ export default function BackgroundGradient() {
                 {gradient.angle}°
               </span>
             </div>
-          </div>
+          </div> */}
 
-          <div className="relative flex justify-center flex-col h-[75%] z-10 p-10 text-white pl-20">
-            <h1 className="font-bold text-[52px]">Hey, I'm Konstantinos</h1>
-            <h1 className="font-bold text-[52px]">Web Developer</h1>
+          <div className="relative flex justify-between items-end h-[48%] z-10 p-10 text-white px-20">
+            <div>
+              <h1 className="font-bold text-[52px]">Hey, I'm Konstantinos</h1>
+              <h1 className="font-bold text-[52px]">Web Developer</h1>
 
-            <div className="mt-4 text-[18px] font-normal text-white max-w-[500px]">
-              I’m a 27-year-old fullstack web developer from Greece, passionate
-              about building modern, interactive websites.
+              <div className="mt-4 text-[18px] font-normal text-white max-w-[500px]">
+                I’m a 27-year-old fullstack web developer from Greece,
+                passionate about building modern, interactive websites.
+              </div>
+            </div>
+
+            <div className="flex flex-col items-end">
+              <h2 className="font-bold text-[35px]">
+                Papadokonst1998@gmail.com
+              </h2>
+              <h2 className="font-bold text-[35px]">+30 697 235 8102</h2>
             </div>
           </div>
         </div>
