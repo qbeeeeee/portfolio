@@ -108,3 +108,25 @@
 
   z-index: 5;
 }
+
+.reveal-title {
+  --line-pos: 0%;
+
+  -webkit-mask-image: linear-gradient(
+    to top,
+    black var(--line-pos),
+    transparent calc(var(--line-pos) + 1%)
+  );
+
+  mask-image: linear-gradient(
+    to top,
+    black var(--line-pos),
+    transparent calc(var(--line-pos) + 1%)
+  );
+
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+}

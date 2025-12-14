@@ -99,6 +99,7 @@ const KeepMeSection = () => {
 
       const tl = gsap.timeline({
         scrollTrigger: {
+          id: "keepme-finish-rectangle",
           trigger: document.body,
           start: "top -110%",
           end: "+=1500",
@@ -110,6 +111,10 @@ const KeepMeSection = () => {
           onEnterBack: () => setShowSvg(false),
         },
       });
+
+      tl.addLabel("circleToLogo", 0);
+      tl.addLabel("logoToRect", 0.7);
+      tl.addLabel("showVideo", 0.9);
 
       // Circle -> Logo (first 30% of timeline)
       const svgWidth = window.innerWidth * 0.8;
@@ -129,7 +134,7 @@ const KeepMeSection = () => {
             {
               morphSVG: logoPath,
             },
-            0
+            "circleToLogo"
           );
         }
       }
@@ -140,7 +145,7 @@ const KeepMeSection = () => {
           {
             scale: scaleFactor,
           },
-          0
+          "circleToLogo"
         );
       }
 
@@ -152,9 +157,33 @@ const KeepMeSection = () => {
           {
             width: newWidth,
           },
-          0
+          "circleToLogo"
         );
       }
+
+      const menu = menuRef?.current;
+
+      if (menu) {
+        tl.to(
+          menu,
+          {
+            "--line-pos": "100%",
+            ease: "none",
+          },
+          "logoToRect"
+        );
+      }
+
+      const title = titleRef?.current;
+
+      tl.to(
+        title,
+        {
+          "--line-pos": "100%",
+          ease: "none",
+        },
+        "logoToRect"
+      );
 
       if (circles && rects) {
         // Logo -> Rectangle (last 30% of timeline)
@@ -173,7 +202,7 @@ const KeepMeSection = () => {
               },
               x: 0,
             },
-            0.7
+            "logoToRect"
           );
         }
       }
@@ -184,7 +213,7 @@ const KeepMeSection = () => {
           {
             borderRadius: "40px",
           },
-          0.7
+          "logoToRect"
         );
       }
 
@@ -195,7 +224,7 @@ const KeepMeSection = () => {
             top: "55%",
             left: "58%",
           },
-          0.7
+          "logoToRect"
         );
       }
 
@@ -206,7 +235,7 @@ const KeepMeSection = () => {
             height: "70vh",
             width: "70vw",
           },
-          0.7
+          "logoToRect"
         );
       }
 
@@ -216,7 +245,7 @@ const KeepMeSection = () => {
           {
             scale: 1,
           },
-          0.7
+          "logoToRect"
         );
       }
 
@@ -225,7 +254,7 @@ const KeepMeSection = () => {
         {
           opacity: 1,
         },
-        0.9
+        "showVideo"
       );
 
       // tl.to(
@@ -243,59 +272,20 @@ const KeepMeSection = () => {
 
   useGSAP(
     () => {
-      const title = titleRef?.current;
-      if (!title) return;
-
-      gsap.to(title, {
-        scrollTrigger: {
-          trigger: document.body,
-          start: "top -190%",
-          end: "+=600",
-          scrub: true,
-          onUpdate: (self) => {
-            const progress = self.progress * 100;
-            title.style.setProperty("--line-pos", `${progress}%`);
-          },
-        },
-      });
-    },
-    { dependencies: [], revertOnUpdate: true }
-  );
-
-  useGSAP(
-    () => {
-      const menu = menuRef?.current;
       const menuInner = menuInnerRef?.current;
-
-      if (menu) {
-        gsap.to(menu, {
-          scrollTrigger: {
-            trigger: document.body,
-            start: "top -190%",
-            end: "+=600",
-            scrub: true,
-            onUpdate: (self) => {
-              const progress = self.progress * 100;
-              menu.style.setProperty("--line-pos", `${progress}%`);
-            },
-          },
-        });
-      }
+      const keepmeFinish = ScrollTrigger.getById("keepme-finish-rectangle");
 
       if (menuInner) {
         gsap.to(menuInner, {
           scrollTrigger: {
             id: "keepme-sections-scroll",
             trigger: document.body,
-            start: "top -190%-=700",
+            start: () => keepmeFinish.end,
             end: "+=4000",
             scrub: true,
             onUpdate: (self) => {
               const progress = self.progress; // 0 → 1
-              menuInnerRef.current.style.setProperty(
-                "--inner-pos",
-                `${progress * 100}%`
-              );
+              menuInnerRef.current.style.setProperty("--inner-pos", `${progress * 100}%`);
 
               const items = menuInnerRef.current.querySelectorAll(".menu-item");
               const wrapRect = menuInnerRef.current.getBoundingClientRect();
@@ -314,26 +304,22 @@ const KeepMeSection = () => {
                 // Bullet fill
                 const bullet = item.querySelector(".bullet");
                 if (bullet) {
-                  let bulletFill =
-                    (wipeY - bullet.getBoundingClientRect().top) /
-                    bullet.getBoundingClientRect().height;
+                  const bulletRect = bullet.getBoundingClientRect();
+                  let bulletFill = (wipeY - bulletRect.top) / bulletRect.height;
                   bulletFill = Math.max(0, Math.min(bulletFill, 1));
-                  bullet.style.setProperty(
-                    "--bullet-fill",
-                    `${bulletFill * 100}%`
-                  );
-                }
+                  bullet.style.setProperty("--bullet-fill", `${bulletFill * 100}%`);
 
-                // Update active item when wipe passes the top
-                if (wipeY >= rect.top) {
-                  activeItemName = item.dataset.name;
+                  // Update active section when wipe passes the bullet center
+                  if (wipeY >= bulletRect.top + bulletRect.height / 2) {
+                    activeItemName = item.dataset.name;
+                  }
                 }
               });
 
               if (activeItemName) {
                 setActiveSection(activeItemName);
               }
-            },
+            }
           },
         });
       }
@@ -343,22 +329,12 @@ const KeepMeSection = () => {
 
   return (
     <div className="fixed w-full h-full top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center">
-      <h1
-        ref={titleRef}
-        className="absolute top-[7%] left-[58%] transform -translate-x-1/2 text-[50px] font-semibold text-white my-5 flex gap-5 items-center justify-center"
-        style={{
-          WebkitMaskImage:
-            "linear-gradient(to top, black var(--line-pos, 0%), transparent calc(var(--line-pos, 0%) + 1%))",
-          maskImage:
-            "linear-gradient(to top, black var(--line-pos, 0%), transparent calc(var(--line-pos, 0%) + 1%))",
-          WebkitMaskRepeat: "no-repeat",
-          maskRepeat: "no-repeat",
-          WebkitMaskSize: "100% 100%",
-          maskSize: "100% 100%",
-        }}
-      >
-        Selected Project
-      </h1>
+     <h1
+      ref={titleRef}
+      className="reveal-title absolute top-[7%] left-[58%] transform -translate-x-1/2 text-[50px] font-semibold text-white my-5 flex gap-5 items-center justify-center"
+    >
+      Selected Project
+    </h1>
 
       {!showSvg && (
         <div

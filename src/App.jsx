@@ -25,7 +25,7 @@ const App = () => {
   }, []);
 
   return (
-    <div className="overflow-x-hidden h-[800vh]">
+    <div className="overflow-x-hidden min-h-[800vh]">
       <FirstSection />
       <KeepMeSection />
       {/* <PlanetsOrbit /> */}

@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import "../test/css.css";
+// import "../test/css.css";
 import testImage from "./../assets/test.jpg";
 import { useGSAP } from "@gsap/react";
 
@@ -91,7 +91,7 @@ export default function App() {
   );
 
   return (
-    <div className="projects-container">
+    <div className="projects-container overflow-hidden">
       <div
         className="w-full h-[2000vh] opacity-0 pointer-events-none relative"
         ref={slidesRef}
