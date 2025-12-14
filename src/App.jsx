@@ -29,7 +29,7 @@ const App = () => {
       <FirstSection />
       <KeepMeSection />
       {/* <PlanetsOrbit /> */}
-      {/* <ProjectsSection /> */}
+      <ProjectsSection />
     </div>
   );
 };

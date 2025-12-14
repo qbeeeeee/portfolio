@@ -285,9 +285,10 @@ const KeepMeSection = () => {
       if (menuInner) {
         gsap.to(menuInner, {
           scrollTrigger: {
+            id: "keepme-sections-scroll",
             trigger: document.body,
             start: "top -190%-=700",
-            end: "+=2000",
+            end: "+=4000",
             scrub: true,
             onUpdate: (self) => {
               const progress = self.progress; // 0 → 1
