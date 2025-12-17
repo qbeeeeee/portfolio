@@ -30,6 +30,7 @@ const KeepMeSection = () => {
   const titleRef = useRef(null);
   const menuRef = useRef(null);
   const menuInnerRef = useRef(null);
+  const keepmeWrapperRef = useRef(null);
 
   const [playKeepMeHomepage, setPlayKeepMeHomepage] = useState(false);
   const [showSvg, setShowSvg] = useState(false);
@@ -285,7 +286,10 @@ const KeepMeSection = () => {
             scrub: true,
             onUpdate: (self) => {
               const progress = self.progress; // 0 → 1
-              menuInnerRef.current.style.setProperty("--inner-pos", `${progress * 100}%`);
+              menuInnerRef.current.style.setProperty(
+                "--inner-pos",
+                `${progress * 100}%`
+              );
 
               const items = menuInnerRef.current.querySelectorAll(".menu-item");
               const wrapRect = menuInnerRef.current.getBoundingClientRect();
@@ -307,7 +311,10 @@ const KeepMeSection = () => {
                   const bulletRect = bullet.getBoundingClientRect();
                   let bulletFill = (wipeY - bulletRect.top) / bulletRect.height;
                   bulletFill = Math.max(0, Math.min(bulletFill, 1));
-                  bullet.style.setProperty("--bullet-fill", `${bulletFill * 100}%`);
+                  bullet.style.setProperty(
+                    "--bullet-fill",
+                    `${bulletFill * 100}%`
+                  );
 
                   // Update active section when wipe passes the bullet center
                   if (wipeY >= bulletRect.top + bulletRect.height / 2) {
@@ -319,7 +326,26 @@ const KeepMeSection = () => {
               if (activeItemName) {
                 setActiveSection(activeItemName);
               }
-            }
+            },
+            onLeave: () => {
+              gsap.to(keepmeWrapperRef?.current, {
+                z: 1000,
+                opacity: 0,
+                duration: 1,
+                transformStyle: "preserve-3d",
+                ease: "power1.inOut",
+              });
+            },
+
+            // Reset when scrolling back up
+            onEnterBack: () => {
+              gsap.to(keepmeWrapperRef?.current, {
+                z: 0,
+                opacity: 1,
+                duration: 1,
+                ease: "power1.inOut",
+              });
+            },
           },
         });
       }
@@ -328,13 +354,16 @@ const KeepMeSection = () => {
   );
 
   return (
-    <div className="fixed w-full h-full top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center">
-     <h1
-      ref={titleRef}
-      className="reveal-title absolute top-[7%] left-[58%] transform -translate-x-1/2 text-[50px] font-semibold text-white my-5 flex gap-5 items-center justify-center"
+    <div
+      ref={keepmeWrapperRef}
+      className="fixed w-full h-full top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center"
     >
-      Selected Project
-    </h1>
+      <h1
+        ref={titleRef}
+        className="reveal-title absolute top-[7%] left-[58%] transform -translate-x-1/2 text-[50px] font-semibold text-white my-5 flex gap-5 items-center justify-center"
+      >
+        Selected Project
+      </h1>
 
       {!showSvg && (
         <div
