@@ -1,3 +1,9 @@
+@import url("https://fonts.cdnfonts.com/css/ica-rubrik-black");
+
+.font-ica-rubrik {
+  font-family: "ICA Rubrik";
+}
+
 .range-slider {
   -webkit-appearance: none;
   appearance: none;
@@ -129,4 +135,27 @@
 
   -webkit-mask-size: 100% 100%;
   mask-size: 100% 100%;
+}
+
+.galaxy-header {
+  font-family: "ICA Rubrik";
+  color: #613064; /* 3b1f3d  2983dd*/
+  --stroke-width: 2px;
+}
+
+.galaxy-header::after {
+  content: attr(data-content);
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  color: transparent;
+  -webkit-text-stroke: var(--stroke-width) #ff5ec7; /* d2d2d2  ff5ec7*/
+}
+
+@media (max-width: 1024px) {
+  .galaxy-header {
+    text-align: center;
+    width: 100%;
+    text-shadow: 0 10px 20px #000;
+  }
 }

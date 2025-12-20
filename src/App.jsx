@@ -1,8 +1,6 @@
 import React, { useEffect } from "react";
-import ProjectsSection from "./components/ProjectsSection";
 import FirstSection from "./components/firstsection/FirstSection";
 import KeepMeSection from "./components/KeepMeSection2";
-import PlanetsOrbit from "./components/PlanetsOrbit";
 import Lenis from "lenis";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -33,8 +31,6 @@ const App = () => {
       <div className="h-[calc(110vh_+_5500px)]">
         <KeepMeSection />
       </div>
-      {/* <PlanetsOrbit /> */}
-      {/* <ProjectsSection /> */}
       <ProjectsSectionV2 />
     </div>
   );

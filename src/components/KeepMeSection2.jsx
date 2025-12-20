@@ -35,15 +35,16 @@ const KeepMeSection = () => {
   const [playKeepMeHomepage, setPlayKeepMeHomepage] = useState(false);
   const [showSvg, setShowSvg] = useState(false);
 
-  const [activeSection, setActiveSection] = useState("Homepage");
+  const [activeSection, setActiveSection] = useState("none");
 
   const animationVideoRef = useRef(null);
-  const [currentVideo, setCurrentVideo] = useState(keepmeHomepage);
+  const [currentVideo, setCurrentVideo] = useState();
   const sectionVideos = {
     Homepage: keepmeHomepage,
     "Profile Page": "111",
     Subscription: keepmeHomepage,
     "Search Cards": "222",
+    none: "none",
   };
 
   const animateSectionVideo = (nextVideo) => {
@@ -52,30 +53,34 @@ const KeepMeSection = () => {
 
     const tl = gsap.timeline();
 
-    tl.set(animationVideo, {
-      left: 0,
-      width: 0,
-    });
+    if (nextVideo !== "none") {
+      tl.set(animationVideo, {
+        left: 0,
+        width: 0,
+      });
 
-    // 1. Slide in from right to cover full width
-    tl.to(animationVideo, {
-      width: "100%",
-      left: 0,
-      duration: 0.35,
-      ease: "power3.out",
-    });
+      // 1. Slide in from right to cover full width
+      tl.to(animationVideo, {
+        width: "100%",
+        left: 0,
+        duration: 0.35,
+        ease: "power3.out",
+      });
+    }
 
     tl.add(() => {
       setCurrentVideo(nextVideo);
     });
 
-    // 2. Slide out to left
-    tl.to(animationVideo, {
-      left: "100%",
-      width: "0", // keep full width while sliding out
-      duration: 0.35,
-      ease: "power3.in",
-    });
+    if (nextVideo !== "none") {
+      // 2. Slide out to left
+      tl.to(animationVideo, {
+        left: "100%",
+        width: "0", // keep full width while sliding out
+        duration: 0.35,
+        ease: "power3.in",
+      });
+    }
   };
 
   useEffect(() => {
@@ -106,7 +111,7 @@ const KeepMeSection = () => {
           end: "+=1500",
           scrub: true,
           onUpdate: (self) => {
-            setPlayKeepMeHomepage(self.progress >= 0.6);
+            setPlayKeepMeHomepage(self.progress >= 0.8);
           },
           onLeave: () => setShowSvg(true),
           onEnterBack: () => setShowSvg(false),
@@ -175,17 +180,6 @@ const KeepMeSection = () => {
         );
       }
 
-      const title = titleRef?.current;
-
-      tl.to(
-        title,
-        {
-          "--line-pos": "100%",
-          ease: "none",
-        },
-        "logoToRect"
-      );
-
       if (circles && rects) {
         // Logo -> Rectangle (last 30% of timeline)
         for (let i = 0; i < totalRects; i++) {
@@ -222,7 +216,7 @@ const KeepMeSection = () => {
         tl.to(
           svgOutterWrapper,
           {
-            top: "55%",
+            top: "50%",
             left: "58%",
           },
           "logoToRect"
@@ -233,7 +227,7 @@ const KeepMeSection = () => {
         tl.to(
           svgOrigin,
           {
-            height: "70vh",
+            height: "80vh",
             width: "70vw",
           },
           "logoToRect"
@@ -285,16 +279,53 @@ const KeepMeSection = () => {
             end: "+=4000",
             scrub: true,
             onUpdate: (self) => {
-              const progress = self.progress; // 0 → 1
-              menuInnerRef.current.style.setProperty(
-                "--inner-pos",
-                `${progress * 100}%`
-              );
+              const rawProgress = self.progress;
 
-              const items = menuInnerRef.current.querySelectorAll(".menu-item");
-              const wrapRect = menuInnerRef.current.getBoundingClientRect();
+              const items = menuInner.querySelectorAll(".menu-item");
+              if (!items.length) return;
+
+              const wrapRect = menuInner.getBoundingClientRect();
+
+              /* --------------------------------------------
+             Determine EXACT progress where Homepage
+             becomes active (bullet center)
+          --------------------------------------------- */
+              const homepageItem = items[0];
+              const homepageBullet = homepageItem.querySelector(".bullet");
+              const bulletRect = homepageBullet.getBoundingClientRect();
+
+              const homepageRatio =
+                (bulletRect.top + bulletRect.height / 2 - wrapRect.top) /
+                wrapRect.height;
+
+              /* --------------------------------------------
+                Progress remapping
+              --------------------------------------------- */
+              const slowScrollPortion = 0.25; // % of scroll BEFORE Homepage
+              let progress;
+
+              if (rawProgress <= slowScrollPortion) {
+                // Slow until Homepage bullet center
+                progress = (rawProgress / slowScrollPortion) * homepageRatio;
+              } else {
+                // Normal speed after Homepage
+                const remainingProgress =
+                  (rawProgress - slowScrollPortion) / (1 - slowScrollPortion);
+
+                progress =
+                  homepageRatio + remainingProgress * (1 - homepageRatio);
+              }
+
+              /* --------------------------------------------
+                    Vertical line position
+                  --------------------------------------------- */
+              menuInner.style.setProperty("--inner-pos", `${progress * 100}%`);
+
               const wipeY = wrapRect.top + wrapRect.height * progress;
 
+              /* --------------------------------------------
+                  Fill + active section logic (unchanged)
+                --------------------------------------------- */
               let activeItemName = null;
 
               items.forEach((item) => {
@@ -307,25 +338,24 @@ const KeepMeSection = () => {
 
                 // Bullet fill
                 const bullet = item.querySelector(".bullet");
-                if (bullet) {
-                  const bulletRect = bullet.getBoundingClientRect();
-                  let bulletFill = (wipeY - bulletRect.top) / bulletRect.height;
-                  bulletFill = Math.max(0, Math.min(bulletFill, 1));
-                  bullet.style.setProperty(
-                    "--bullet-fill",
-                    `${bulletFill * 100}%`
-                  );
+                if (!bullet) return;
 
-                  // Update active section when wipe passes the bullet center
-                  if (wipeY >= bulletRect.top + bulletRect.height / 2) {
-                    activeItemName = item.dataset.name;
-                  }
+                const bRect = bullet.getBoundingClientRect();
+                let bulletFill = (wipeY - bRect.top) / bRect.height;
+                bulletFill = Math.max(0, Math.min(bulletFill, 1));
+
+                bullet.style.setProperty(
+                  "--bullet-fill",
+                  `${bulletFill * 100}%`
+                );
+
+                // Active section
+                if (wipeY >= bRect.top + bRect.height / 2) {
+                  activeItemName = item.dataset.name;
                 }
               });
 
-              if (activeItemName) {
-                setActiveSection(activeItemName);
-              }
+              setActiveSection(activeItemName || "none");
             },
             onLeave: () => {
               gsap.to(keepmeWrapperRef?.current, {
@@ -353,17 +383,58 @@ const KeepMeSection = () => {
     { dependencies: [], revertOnUpdate: true }
   );
 
+  useGSAP(
+    () => {
+      const title = titleRef?.current;
+      const keepmeFinish = ScrollTrigger.getById("keepme-finish-rectangle");
+
+      if (title) {
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: document.body,
+            start: () => (keepmeFinish?.end ?? 0) - 300,
+            end: "+=1300", // total scroll distance
+            scrub: true,
+          },
+        });
+
+        tl.to(title, {
+          scale: 1,
+          transformOrigin: "center center",
+          ease: "power3.inOut",
+          duration: 1, // normalized duration within timeline
+        })
+          // Pause at scale=1 for ~100px scroll
+          .to(title, {
+            scale: 1,
+            duration: 0.15, // small duration = pause
+          })
+          // Continue zoom to 100
+          .to(title, {
+            scale: 100,
+            transformOrigin: "center center",
+            ease: "power3.inOut",
+            duration: 1,
+          });
+      }
+    },
+    { dependencies: [playKeepMeHomepage, activeSection], revertOnUpdate: true }
+  );
+
   return (
     <div
       ref={keepmeWrapperRef}
       className="fixed w-full h-full top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center"
     >
-      <h1
+      {/* <h1
         ref={titleRef}
-        className="reveal-title absolute top-[7%] left-[58%] transform -translate-x-1/2 text-[50px] font-semibold text-white my-5 flex gap-5 items-center justify-center"
+        data-content="SELECTED PROJECT"
+        style={{ "--stroke-width": "1px" }}
+        className="reveal-title galaxy-header text-[5em] leading-[1em] whitespace-nowrap
+         absolute top-[7%] left-[58%] transform -translate-x-1/2 font-semibold my-5 flex gap-5 items-center justify-center"
       >
-        Selected Project
-      </h1>
+        SELECTED PROJECT
+      </h1> */}
 
       {!showSvg && (
         <div
@@ -435,14 +506,25 @@ const KeepMeSection = () => {
       {playKeepMeHomepage && (
         <div
           ref={videoWrapperRef}
-          className="absolute top-[55%] left-[58%] transform -translate-x-1/2 -translate-y-1/2 
-               overflow-hidden rounded-[40px] w-[70vw] h-[70vh] opacity-0 z-[200]"
+          className={`${
+            activeSection === "none" ? "bg-white" : "bg-black"
+          } absolute top-[50%] left-[58%] transform -translate-x-1/2 -translate-y-1/2
+               overflow-hidden rounded-[40px] w-[70vw] h-[80vh] opacity-0 z-[200]`}
         >
+          {activeSection === "none" && (
+            <h1
+              ref={titleRef}
+              data-content="SELECTED PROJECT"
+              className="text-[5em] leading-[1em] whitespace-nowrap font-ica-rubrik text-black scale-0
+         absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 font-semibold flex items-center justify-center"
+            >
+              SELECTED PROJECT
+            </h1>
+          )}
           {/* Video layer */}
           <div className="absolute top-0 left-0 w-full h-full z-[10]">
             <VideoPlayer videoSource={currentVideo} />
           </div>
-
           {/* Slide animation overlay */}
           <div
             ref={animationVideoRef}
@@ -482,25 +564,25 @@ const KeepMeSection = () => {
           className="w-full h-full flex flex-col pl-10 justify-around bg-transparent"
         >
           <div
-            className="menu-item text-[1.8vw] font-bold"
+            className="menu-item text-[1.8vw] font-bold font-ica-rubrik"
             data-name="Homepage"
           >
             <span className="bullet"></span>Homepage
           </div>
           <div
-            className="menu-item text-[1.8vw] font-bold"
+            className="menu-item text-[1.8vw] font-bold font-ica-rubrik"
             data-name="Profile Page"
           >
             <span className="bullet"></span>Profile Page
           </div>
           <div
-            className="menu-item text-[1.8vw] font-bold"
+            className="menu-item text-[1.8vw] font-bold font-ica-rubrik"
             data-name="Subscription"
           >
             <span className="bullet"></span>Subscription
           </div>
           <div
-            className="menu-item text-[1.8vw] font-bold"
+            className="menu-item text-[1.8vw] font-bold font-ica-rubrik"
             data-name="Search Cards"
           >
             <span className="bullet"></span>Search Cards
