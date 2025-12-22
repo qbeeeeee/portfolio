@@ -100,11 +100,40 @@ const ProjectsSectionV2 = () => {
           },
         }
       );
+
+      gsap.fromTo(
+        spinRef?.current,
+        { "--offset": "0deg" },
+        {
+          "--offset": "100deg",
+          scrollTrigger: {
+            trigger: projectsWrapper,
+            start: "top bottom",
+            end: "bottom bottom",
+            scrub: true,
+          },
+        }
+      );
     },
     { dependencies: [], revertOnUpdate: true }
   );
 
   const [activeProject, setActiveProject] = useState(null);
+
+  const spinRef = useRef(null);
+
+  const handleProjectClick = (project, index) => {
+    const anglePerProject = 360 / projects.length;
+
+    const targetOffset = -index * anglePerProject;
+
+    gsap.to(spinRef?.current, {
+      duration: 1,
+      "--offset": `${targetOffset}deg`,
+      ease: "power1.inOut",
+      onComplete: () => setActiveProject(project),
+    });
+  };
 
   return (
     <div
@@ -112,6 +141,7 @@ const ProjectsSectionV2 = () => {
       className="w-full h-[100vh] text-center relative opacity-0 [transform-style:preserve-3d] [transform:perspective(100000px)] mt-[400px]"
     >
       <div
+        ref={spinRef}
         className={`spin-animation absolute top-[10%] z-[2] [transform-style:preserve-3d] [transform:perspective(1000px)]
           w-[300px] h-[150px] left-[calc(50%-150px)]
           max-lg:w-[160px] max-lg:h-[200px] max-lg:left-[calc(50%-80px)]
@@ -126,7 +156,7 @@ const ProjectsSectionV2 = () => {
             hover:border-white hover:shadow-[0_0_20px_#fff] `}
             key={index}
             style={{ "--position": index + 1 }}
-            onClick={() => setActiveProject(project)}
+            onClick={() => handleProjectClick(project, index)}
           >
             <img
               className="w-full h-full object-fill"

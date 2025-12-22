@@ -12,7 +12,11 @@ import pythonSvg from "../../assets/skills/python.svg";
 import djangoSvg from "../../assets/skills/django.svg";
 import gsapSvg from "../../assets/skills/gsap.svg";
 import "./../../assets/css/custom.css";
-import qrCode from "../../assets/qrCode2.png";
+import qrCode from "../../assets/qrCode.png";
+
+import { SplitText } from "gsap/SplitText";
+
+gsap.registerPlugin(SplitText);
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -62,8 +66,6 @@ const skills = [
 export default function BackgroundGradient() {
   const containerRef = useRef(null);
   const skillsWrapperRef = useRef(null);
-  const inputRef = useRef(null);
-  const inputRef2 = useRef(null);
 
   const [gradient, setGradient] = useState({
     angle: 135,
@@ -149,53 +151,57 @@ export default function BackgroundGradient() {
     });
   });
 
-  // useGSAP(
-  //   () => {
-  //     const container = containerRef.current;
-  //     if (!container) return;
+  const HoverButton = () => {
+    const container = useRef();
+    const tl = useRef();
 
-  //     const handleMouseMove = (e) => {
-  //       const x = (e.clientX / window.innerWidth - 0.5) * 30;
-  //       const y = (e.clientY / window.innerHeight - 0.5) * 30;
+    useGSAP(
+      () => {
+        // Split the text into characters
+        const splitA = new SplitText("#name-top", { type: "chars" });
+        const splitB = new SplitText("#name-bottom", { type: "chars" });
 
-  //       gsap.to(container, {
-  //         rotationY: x,
-  //         rotationX: -y,
-  //         transformPerspective: 800,
-  //         ease: "power2.out",
-  //         duration: 1.2,
-  //       });
-  //     };
+        // Set initial position of the second name
+        gsap.set(splitB.chars, { y: 15 });
 
-  //     window.addEventListener("mousemove", handleMouseMove);
+        // Create the timeline
+        tl.current = gsap
+          .timeline({ paused: true })
+          .to(splitA.chars, {
+            y: -80,
+            duration: 0.4,
+            stagger: 0.025,
+            ease: "sine.inOut",
+          })
+          .to(
+            splitB.chars,
+            {
+              y: -90,
+              duration: 0.4,
+              stagger: 0.025,
+              ease: "sine.inOut",
+            },
+            "<"
+          );
+      },
+      { scope: container }
+    );
 
-  //     // cleanup handled by GSAP context
-  //     return () => {
-  //       window.removeEventListener("mousemove", handleMouseMove);
-  //     };
-  //   },
-  //   { dependencies: [], revertOnUpdate: true }
-  // );
+    const handleMouseEnter = () => tl.current.play();
+    const handleMouseLeave = () => tl.current.reverse();
 
-  // useGSAP(
-  //   () => {
-  //     const container = containerRef.current;
-  //     if (!container) return;
-
-  //     gsap.to(container, {
-  //       z: 1200,
-  //       opacity: 0,
-  //       ease: "none",
-  //       scrollTrigger: {
-  //         trigger: container,
-  //         start: "top top",
-  //         end: "bottom+=100% top",
-  //         scrub: true,
-  //       },
-  //     });
-  //   },
-  //   { dependencies: [], revertOnUpdate: true }
-  // );
+    return (
+      <span
+        ref={container}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+        className="inline-flex flex-col bg-[#fafafa] text-[#7b2584] cursor-pointer rounded-[15px] px-4 h-[85px] overflow-hidden font-bold"
+      >
+        <div id="name-top">Papadopoulos</div>
+        <div id="name-bottom">Konstaninos</div>
+      </span>
+    );
+  };
 
   return (
     <div className="absolute inset-0 flex justify-center items-center z-20">
@@ -218,33 +224,24 @@ export default function BackgroundGradient() {
         />
 
         <div className="h-full">
-          <div className="relative z-10 pt-12 text-white h-[33%]">
-            <div className="flex justify-between items-center px-20 text-[22px]">
-              <div className="flex gap-14">
-                <div>Contact Me</div>
-                <div>Download CV</div>
-              </div>
-
-              {/* <div className="flex gap-14">
-                <div>Home</div>
-                <div>Projects</div>
-              </div> */}
+          <div className="flex items-end justify-between px-20 w-full h-[40%] gap-16 whitespace-nowrap z-[400] relative [perspective:800px]">
+            <div className="flex flex-col">
+              <img
+                src={qrCode}
+                alt="QR Code"
+                className="hover:cursor-pointer hover:bg-[#ffffff32] border border-[#ffffffc6] shadow-xl rounded-[10px] w-40 h-40"
+              />
+              <h2 className="mt-4 text-[16px] text-white font-inter font-light">
+                Scan to view my KeepMe Digital Card
+              </h2>
             </div>
-          </div>
-
-          <div className="flex items-end justify-between px-20 w-full h-[18%] gap-16 whitespace-nowrap z-[400] relative">
-            <img
-              src={qrCode}
-              alt="QR Code"
-              className="hover:cursor-pointer hover:bg-[#ffffff32] border border-[#ffffffc6] shadow-xl rounded-[10px] w-40 h-40"
-            />
 
             <div className="grid grid-cols-5 gap-5" ref={skillsWrapperRef}>
               {skills.map((skill, index) => (
                 <div
                   key={index}
                   className="skill-item flex flex-col items-center justify-center hover:cursor-pointer hover:bg-[#ffffff32] gap-2 text-[1.2rem] text-white
-      border border-[#ffffffc6] shadow-xl rounded-[10px] w-[150px] h-[100px]"
+      border border-[#ffffffc6] shadow-xl rounded-[10px] w-[150px] h-[100px] font-inter"
                 >
                   <img
                     src={skill.icon}
@@ -257,99 +254,43 @@ export default function BackgroundGradient() {
             </div>
           </div>
 
-          {/* <div className="flex gap-4 p-4 text-white z-50 absolute right-1/2 bottom-[30%] transform -translate-y-1/2 translate-x-1/2">
-            <div
-              className={`
-                  bg-white text-black border border-black border-opacity-30 flex items-center justify-between px-4 sm:px-5 h-[35px] w-[130px] 
-       cursor-pointer rounded-[10px] text-[12px] sm:text-[14px]
-       font-inter font-light transition-colors duration-300`}
-              onClick={() => inputRef.current.click()}
-            >
-              <span>{gradient.color1}</span>
-
-              <div
-                className="w-6 h-6 rounded-full border border-black shadow-md"
-                style={{ backgroundColor: gradient.color1 }}
-              />
-
-              <input
-                ref={inputRef}
-                type="color"
-                value={gradient.color1}
-                onChange={(e) =>
-                  setGradient({ ...gradient, color1: e.target.value })
-                }
-                className="absolute opacity-0 w-0 h-0 pointer-events-none"
-              />
-            </div>
-
-            <div
-              className={`
-                  bg-white text-black border border-black border-opacity-30 flex items-center justify-between px-4 sm:px-5 h-[35px] w-[130px] 
-       cursor-pointer rounded-[10px] text-[12px] sm:text-[14px]
-       font-inter font-light transition-colors duration-300`}
-              onClick={() => inputRef2.current.click()}
-            >
-              <span>{gradient.color2}</span>
-
-              <div
-                className="w-6 h-6 rounded-full border border-black shadow-md"
-                style={{ backgroundColor: gradient.color2 }}
-              />
-
-              <input
-                ref={inputRef2}
-                type="color"
-                value={gradient.color2}
-                onChange={(e) =>
-                  setGradient({ ...gradient, color2: e.target.value })
-                }
-                className="absolute opacity-0 w-0 h-0 pointer-events-none"
-              />
-            </div>
-
-            <div className="relative w-[130px]">
-              <input
-                type="range"
-                min="0"
-                max="360"
-                step="1"
-                value={gradient.angle ?? 0}
-                className="w-full range-slider border border-black border-opacity-30 range-slider-lg flex items-center justify-center"
-                style={{
-                  "--percentage": `${(gradient.angle / 360) * 100}%`,
-                }}
-                onChange={(e) =>
-                  setGradient({ ...gradient, angle: Number(e.target.value) })
-                }
-              />
-
-              <span className="absolute pointer-events-none left-4 top-1/2 -translate-y-1/2 text-[12px] sm:text-[14px] font-inter font-light text-gray-600">
-                Angle
-              </span>
-
-              <span className="absolute pointer-events-none right-4 top-1/2 -translate-y-1/2 text-[12px] sm:text-[14px] font-inter font-light text-gray-600">
-                {gradient.angle}°
-              </span>
-            </div>
-          </div> */}
-
-          <div className="relative flex justify-between items-end h-[48%] z-10 p-10 text-white px-20">
+          <div className="relative flex justify-between items-end h-[52%] z-10 text-white px-20">
             <div>
-              <h1 className="font-bold text-[52px]">Hey, I'm Konstantinos</h1>
-              <h1 className="font-bold text-[52px]">Web Developer</h1>
+              <h1 className="font-bold text-[60px] font-ica-rubrik">
+                Hey, I'm <HoverButton />
+              </h1>
+              <h1 className="font-bold text-[60px] font-ica-rubrik">
+                Web Developer
+              </h1>
 
-              <div className="mt-4 text-[18px] font-normal text-white max-w-[500px]">
-                I’m a 27-year-old fullstack web developer from Greece,
+              <div className="mt-4 text-[20px] text-white max-w-[500px] font-inter font-light">
+                I’m a 27-year-old Full-stack web developer from Greece,
                 passionate about building modern, interactive websites.
               </div>
             </div>
 
             <div className="flex flex-col items-end">
-              <h2 className="font-bold text-[35px]">
+              <h1 className="font-bold text-[40px] font-inter">Contact Me:</h1>
+
+              <h2 className="font-bold text-[35px] font-inter">
                 Papadokonst1998@gmail.com
               </h2>
-              <h2 className="font-bold text-[35px]">+30 697 235 8102</h2>
+              <h2 className="font-bold text-[35px] font-inter">
+                +30 697 235 8102
+              </h2>
+
+              <div className="flex gap-10 mt-4 text-[20px] text-white font-inter">
+                <div className="hover:underline hover:underline-offset-4 hover:cursor-pointer">
+                  GitHub
+                </div>
+                <div className="hover:underline hover:underline-offset-4 hover:cursor-pointer">
+                  LinkedIn
+                </div>
+
+                <div className="hover:underline hover:underline-offset-4 hover:cursor-pointer">
+                  Download CV
+                </div>
+              </div>
             </div>
           </div>
         </div>

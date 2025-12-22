@@ -11,10 +11,12 @@
 
 @keyframes autoRun {
   from {
-    transform: perspective(1000px) rotateX(var(--tilt)) rotateY(0deg);
+    transform: perspective(1000px) rotateX(var(--tilt))
+      rotateY(calc(var(--offset) + 0deg));
   }
   to {
-    transform: perspective(1000px) rotateX(var(--tilt)) rotateY(360deg);
+    transform: perspective(1000px) rotateX(var(--tilt))
+      rotateY(calc(var(--offset) + 360deg));
   }
 }
 
