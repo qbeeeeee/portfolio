@@ -39,6 +39,7 @@ const projects = [
 const ProjectsSectionV2 = () => {
   const projectsWrapperRef = useRef(null);
   const planetRef = useRef(null);
+  const projectInfoRef = useRef(null);
 
   useGSAP(
     () => {
@@ -87,6 +88,17 @@ const ProjectsSectionV2 = () => {
         }
       );
 
+      gsap.to(projectsWrapper, {
+        "--offset": "0deg",
+        "--offset2": "360deg",
+        scrollTrigger: {
+          trigger: projectsWrapper,
+          start: "top bottom",
+          end: "bottom bottom",
+          scrub: true,
+        },
+      });
+
       gsap.fromTo(
         projectsWrapper,
         { "--tilt": "10deg" },
@@ -103,9 +115,23 @@ const ProjectsSectionV2 = () => {
 
       gsap.fromTo(
         spinRef?.current,
-        { "--offset": "0deg" },
+        { "--scrollSpin": "0deg" },
         {
-          "--offset": "100deg",
+          "--scrollSpin": "100deg",
+          scrollTrigger: {
+            trigger: projectsWrapper,
+            start: "top bottom",
+            end: "bottom bottom",
+            scrub: true,
+          },
+        }
+      );
+
+      gsap.fromTo(
+        projectRefs?.current,
+        { "--zaxis": "350px" },
+        {
+          "--zaxis": "530px",
           scrollTrigger: {
             trigger: projectsWrapper,
             start: "top bottom",
@@ -121,24 +147,92 @@ const ProjectsSectionV2 = () => {
   const [activeProject, setActiveProject] = useState(null);
 
   const spinRef = useRef(null);
+  const projectRefs = useRef([]);
+  const [currentIndex, setCurrentIndex] = useState("");
 
   const handleProjectClick = (project, index) => {
     const anglePerProject = 360 / projects.length;
 
     const targetOffset = -index * anglePerProject;
 
-    gsap.to(spinRef?.current, {
-      duration: 1,
-      "--offset": `${targetOffset}deg`,
-      ease: "power1.inOut",
-      onComplete: () => setActiveProject(project),
+    const tl = gsap.timeline({
+      onComplete: () => {
+        setActiveProject(project);
+        showProjectInfo();
+      },
     });
+
+    tl.to(
+      spinRef.current,
+      {
+        duration: 1,
+        top: "40%",
+        "--offset": `${targetOffset - 100}deg`,
+        "--offset2": `${targetOffset - 100}deg`,
+        "--tilt2": "14deg",
+        // "--scrollSpin": "0deg",
+        ease: "power1.inOut",
+      },
+      0
+    );
+
+    tl.to(
+      projectRefs.current[index],
+      {
+        duration: 1,
+        "--zaxis": "650px",
+        ease: "power1.inOut",
+      },
+      0.6
+    );
+  };
+
+  const handleCloseProject = () => {
+    const tl = gsap.timeline({
+      onComplete: () => setActiveProject(null),
+    });
+
+    tl.to(
+      projectRefs.current[currentIndex],
+      {
+        duration: 1,
+        "--zaxis": "530px",
+        ease: "power1.inOut",
+      },
+      0
+    );
+
+    tl.to(
+      spinRef.current,
+      {
+        duration: 1,
+        top: "10%",
+        "--offset": `0deg`,
+        "--offset2": `360deg`,
+        "--tilt2": "0deg",
+        ease: "power1.inOut",
+      },
+      0.1
+    );
+  };
+
+  const showProjectInfo = () => {
+    const tl = gsap.timeline({});
+
+    tl.to(
+      projectInfoRef?.current,
+      {
+        width: "80vw",
+        height: "80vh",
+      },
+      0
+    );
   };
 
   return (
     <div
       ref={projectsWrapperRef}
-      className="w-full h-[100vh] text-center relative opacity-0 [transform-style:preserve-3d] [transform:perspective(100000px)] mt-[400px]"
+      className="w-full h-[100vh] text-center relative opacity-0 [transform-style:preserve-3d] [transform:perspective(100000px)] mt-[1000px]"
     >
       <div
         ref={spinRef}
@@ -152,11 +246,15 @@ const ProjectsSectionV2 = () => {
       >
         {projects.map((project, index) => (
           <div
-            className={`item cursor-pointer transition-transform duration-300 hover:border-1 
-            hover:border-white hover:shadow-[0_0_20px_#fff] `}
+            ref={(el) => (projectRefs.current[index] = el)}
+            className={`item cursor-pointer hover:border-2 
+            hover:border-[#ff5ec7]`}
             key={index}
             style={{ "--position": index + 1 }}
-            onClick={() => handleProjectClick(project, index)}
+            onClick={() => {
+              setCurrentIndex(index);
+              handleProjectClick(project, index);
+            }}
           >
             <img
               className="w-full h-full object-fill"
@@ -198,33 +296,29 @@ const ProjectsSectionV2 = () => {
         />
       </div>
 
-      {activeProject &&
-        createPortal(
-          <div
-            className="fixed inset-0 bg-black/70 flex items-center justify-center"
-            onClick={() => setActiveProject(null)} // closes modal
-          >
-            <div
-              className="bg-white p-6 rounded-lg max-w-lg w-full relative"
-              onClick={(e) => e.stopPropagation()} // prevents closing when clicking inside modal
-            >
-              <h2 className="text-2xl font-bold mb-4">{activeProject.title}</h2>
-              <img
-                src={activeProject.src}
-                alt={activeProject.alt}
-                className="w-full h-auto mb-4"
-              />
-              <p>{activeProject.description}</p>
-              <button
-                className="absolute top-2 right-2 text-gray-600 hover:text-gray-900"
-                onClick={() => setActiveProject(null)}
-              >
-                ✕
-              </button>
-            </div>
-          </div>,
-          document.body
-        )}
+      <div
+        ref={projectInfoRef}
+        className="fixed left-1/2 top-[48%] transform -translate-x-1/2 -translate-y-1/2 z-[1000000000]
+             inset-0 flex flex-col items-center justify-center bg-white h-0 w-0"
+        onClick={(e) => {
+          e.stopPropagation();
+          setActiveProject(null);
+        }}
+      >
+        <h2 className="text-2xl font-bold">{activeProject?.title}</h2>
+        <img
+          src={activeProject?.src}
+          alt={activeProject?.alt}
+          className="w-[600px] h-auto"
+        />
+        <p>{activeProject?.description}</p>
+        <button
+          className="absolute top-5 right-5 text-gray-600 hover:text-gray-900"
+          onClick={() => handleCloseProject()}
+        >
+          ✕
+        </button>
+      </div>
     </div>
   );
 };

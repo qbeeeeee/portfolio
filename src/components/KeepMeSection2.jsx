@@ -3,9 +3,10 @@ import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { MorphSVGPlugin } from "gsap/MorphSVGPlugin";
-import keepmeHomepage from "./../assets/keepme/keepmeHomepage.mp4";
 import VideoPlayer from "./videoPlayer/VideoPlayer";
 import keepme from "./../assets/keepme/KeepMe_logo_fullcolor_rgb.svg";
+import keepmeHomepage from "./../assets/keepme/homepage.mp4";
+import keepMeProfilePage from "./../assets/keepme/ProfilePage.mp4";
 
 gsap.registerPlugin(ScrollTrigger, MorphSVGPlugin);
 
@@ -41,9 +42,9 @@ const KeepMeSection = () => {
   const [currentVideo, setCurrentVideo] = useState();
   const sectionVideos = {
     Homepage: keepmeHomepage,
-    "Profile Page": "111",
+    "Profile Page": keepMeProfilePage,
     Subscription: keepmeHomepage,
-    "Search Cards": "222",
+    "Search Cards": keepMeProfilePage,
     none: "none",
   };
 
@@ -273,7 +274,7 @@ const KeepMeSection = () => {
       if (menuInner) {
         gsap.to(menuInner, {
           scrollTrigger: {
-            id: "keepme-sections-scroll",
+            // id: "keepme-sections-scroll",
             trigger: document.body,
             start: () => keepmeFinish.end,
             end: "+=4000",
@@ -357,27 +358,28 @@ const KeepMeSection = () => {
 
               setActiveSection(activeItemName || "none");
             },
-            onLeave: () => {
-              gsap.to(keepmeWrapperRef?.current, {
-                z: 1000,
-                opacity: 0,
-                duration: 1,
-                transformStyle: "preserve-3d",
-                ease: "power1.inOut",
-              });
-            },
-
-            // Reset when scrolling back up
-            onEnterBack: () => {
-              gsap.to(keepmeWrapperRef?.current, {
-                z: 0,
-                opacity: 1,
-                duration: 1,
-                ease: "power1.inOut",
-              });
-            },
           },
         });
+
+        gsap.fromTo(
+          keepmeWrapperRef.current,
+          {
+            clipPath: "circle(150% at 50% 50%)",
+            webkitClipPath: "circle(150% at 50% 50%)",
+          },
+          {
+            clipPath: "circle(0% at 50% 50%)",
+            webkitClipPath: "circle(0% at 50% 50%)",
+            ease: "none",
+            scrollTrigger: {
+              id: "keepme-sections-scroll",
+              trigger: document.body,
+              start: () => `${keepmeFinish.end}+=4000`,
+              end: "+=700",
+              scrub: true,
+            },
+          }
+        );
       }
     },
     { dependencies: [], revertOnUpdate: true }

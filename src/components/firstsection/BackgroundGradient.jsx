@@ -169,16 +169,16 @@ export default function BackgroundGradient() {
           .timeline({ paused: true })
           .to(splitA.chars, {
             y: -80,
-            duration: 0.4,
-            stagger: 0.025,
+            duration: 0.33,
+            stagger: 0.02,
             ease: "sine.inOut",
           })
           .to(
             splitB.chars,
             {
               y: -90,
-              duration: 0.4,
-              stagger: 0.025,
+              duration: 0.33,
+              stagger: 0.02,
               ease: "sine.inOut",
             },
             "<"

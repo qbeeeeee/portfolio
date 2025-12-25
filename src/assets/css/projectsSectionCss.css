@@ -11,12 +11,14 @@
 
 @keyframes autoRun {
   from {
-    transform: perspective(1000px) rotateX(var(--tilt))
-      rotateY(calc(var(--offset) + 0deg));
+    transform: perspective(1000px)
+      rotateX(calc(var(--tilt) + var(--tilt2, 0deg)))
+      rotateY(calc(var(--offset) + var(--scrollSpin)));
   }
   to {
-    transform: perspective(1000px) rotateX(var(--tilt))
-      rotateY(calc(var(--offset) + 360deg));
+    transform: perspective(1000px)
+      rotateX(calc(var(--tilt) + var(--tilt2, 0deg)))
+      rotateY(calc(var(--offset2) + var(--scrollSpin)));
   }
 }
 
@@ -26,7 +28,7 @@
   transform: rotateY(
       calc((var(--position) - 1) * (360 / var(--quantity)) * 1deg)
     )
-    translateZ(530px);
+    translateZ(var(--zaxis));
   border-radius: 10px;
   overflow: hidden;
 }
