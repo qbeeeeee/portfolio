@@ -37,6 +37,7 @@ const KeepMeSection = () => {
   const [showSvg, setShowSvg] = useState(false);
 
   const [activeSection, setActiveSection] = useState("none");
+  const scrollDirectionRef = useRef(1);
 
   const animationVideoRef = useRef(null);
   const [currentVideo, setCurrentVideo] = useState();
@@ -48,15 +49,16 @@ const KeepMeSection = () => {
     none: "none",
   };
 
-  const animateSectionVideo = (nextVideo) => {
+  const animateSectionVideo = (nextVideo, direction = 1) => {
     const animationVideo = animationVideoRef.current;
     if (!animationVideo) return;
 
+    const isForward = direction === 1;
     const tl = gsap.timeline();
 
     if (nextVideo !== "none") {
       tl.set(animationVideo, {
-        left: 0,
+        left: isForward ? "0%" : "100%",
         width: 0,
       });
 
@@ -76,7 +78,7 @@ const KeepMeSection = () => {
     if (nextVideo !== "none") {
       // 2. Slide out to left
       tl.to(animationVideo, {
-        left: "100%",
+        left: isForward ? "100%" : "-100%",
         width: "0", // keep full width while sliding out
         duration: 0.35,
         ease: "power3.in",
@@ -86,7 +88,10 @@ const KeepMeSection = () => {
 
   useEffect(() => {
     if (activeSection && sectionVideos[activeSection]) {
-      animateSectionVideo(sectionVideos[activeSection]);
+      animateSectionVideo(
+        sectionVideos[activeSection],
+        scrollDirectionRef.current
+      );
     }
   }, [activeSection]);
 
@@ -356,6 +361,7 @@ const KeepMeSection = () => {
                 }
               });
 
+              scrollDirectionRef.current = self.direction;
               setActiveSection(activeItemName || "none");
             },
           },
@@ -375,7 +381,7 @@ const KeepMeSection = () => {
               id: "keepme-sections-scroll",
               trigger: document.body,
               start: () => `${keepmeFinish.end}+=4000`,
-              end: "+=700",
+              end: "+=1000",
               scrub: true,
             },
           }
