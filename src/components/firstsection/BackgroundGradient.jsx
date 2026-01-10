@@ -66,6 +66,7 @@ const skills = [
 export default function BackgroundGradient() {
   const containerRef = useRef(null);
   const skillsWrapperRef = useRef(null);
+  const contentRef = useRef(null);
 
   const [gradient, setGradient] = useState({
     angle: 135,
@@ -90,8 +91,8 @@ export default function BackgroundGradient() {
         const relX = (e.clientX - rect.left) / rect.width - 0.5;
         const relY = (e.clientY - rect.top) / rect.height - 0.5;
 
-        tiltX = relX * 30;
-        tiltY = relY * 30;
+        tiltX = relX * 28;
+        tiltY = relY * 28;
 
         tiltY = Math.max(Math.min(tiltY, 20), -20);
 
@@ -203,8 +204,47 @@ export default function BackgroundGradient() {
     );
   };
 
+  // useEffect(() => {
+  //   const container = containerRef.current;
+  //   const content = contentRef.current;
+
+  //   // Hide inner content initially
+  //   gsap.set(content.children, {
+  //     opacity: 0,
+  //     y: 40,
+  //   });
+
+  //   // Set container far away in Z space
+  //   gsap.set(container, {
+  //     height: 0,
+  //     width: 0,
+  //   });
+
+  //   const tl = gsap.timeline({ defaults: { ease: "sine.inOut" } });
+
+  //   // SPACE TRAVEL INTRO
+  //   tl.to(container, {
+  //     height: "80vh",
+  //     width: "80vw",
+  //     duration: 2,
+  //   })
+
+  //     // REVEAL INNER CONTENT
+  //     .to(
+  //       content.children,
+  //       {
+  //         opacity: 1,
+  //         y: 0,
+  //         duration: 0.9,
+  //         stagger: 0.12,
+  //         ease: "power3.out",
+  //       },
+  //       "+=0.6"
+  //     );
+  // }, []);
+
   return (
-    <div className="absolute inset-0 flex justify-center items-center z-20">
+    <div className="absolute inset-0 flex justify-center items-center z-20 [transform-style:preserve-3d] [transform:perspective(1200px)]">
       <div
         ref={containerRef}
         className="w-[85%] h-[85%] rounded-[40px]"
@@ -218,21 +258,21 @@ export default function BackgroundGradient() {
           style={{
             backgroundImage: `linear-gradient(${gradient.angle}deg, ${gradient.color1}, ${gradient.color2})`,
             backgroundSize: "100% 100%",
-            filter: "blur(5px)",
+            filter: "blur(3px)",
             zIndex: 1,
           }}
         />
 
-        <div className="h-full">
+        <div ref={contentRef} className="h-full relative">
           <div className="flex items-end justify-between px-20 w-full h-[40%] gap-16 whitespace-nowrap z-[400] relative [perspective:800px]">
-            <div className="flex flex-col">
+            <div className="flex flex-col items-center">
               <img
                 src={qrCode}
                 alt="QR Code"
                 className="hover:cursor-pointer hover:bg-[#ffffff32] border border-[#ffffffc6] shadow-xl rounded-[10px] w-40 h-40"
               />
-              <h2 className="mt-4 text-[16px] text-white font-inter font-light">
-                Scan to view my KeepMe Digital Card
+              <h2 className="mt-4 text-[16px] text-white font-inter font-bold">
+                My KeepMe Card
               </h2>
             </div>
 
@@ -270,16 +310,18 @@ export default function BackgroundGradient() {
             </div>
 
             <div className="flex flex-col items-end">
-              <h1 className="font-bold text-[40px] font-inter">Contact Me:</h1>
+              <h1 className="font-bold text-[35px] font-inter mb-2">
+                Contact Me:
+              </h1>
 
-              <h2 className="font-bold text-[35px] font-inter">
-                Papadokonst1998@gmail.com
+              <h2 className="font-bold text-[25px] font-inter">
+                papadokonst1998@gmail.com
               </h2>
-              <h2 className="font-bold text-[35px] font-inter">
+              <h2 className="font-bold text-[25px] font-inter">
                 +30 697 235 8102
               </h2>
 
-              <div className="flex gap-10 mt-4 text-[20px] text-white font-inter">
+              <div className="flex gap-10 text-[20px] text-white font-inter">
                 <div className="hover:underline hover:underline-offset-4 hover:cursor-pointer">
                   GitHub
                 </div>

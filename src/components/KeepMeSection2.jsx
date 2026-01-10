@@ -380,8 +380,8 @@ const KeepMeSection = () => {
             scrollTrigger: {
               id: "keepme-sections-scroll",
               trigger: document.body,
-              start: () => `${keepmeFinish.end}+=4000`,
-              end: "+=1000",
+              start: () => `${keepmeFinish.end}+=3200`,
+              end: "+=1500",
               scrub: true,
             },
           }

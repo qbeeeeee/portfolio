@@ -43,7 +43,7 @@ const App = () => {
   const totalHeight = 1.1 * vh + 5500;
 
   return (
-    <div className="overflow-x-hidden min-h-[1400vh]">
+    <div className="overflow-x-hidden min-h-[1400vh] bg-black">
       <FirstSection />
       <div className="h-[calc(110vh_+_5500px)]">
         <KeepMeSection />

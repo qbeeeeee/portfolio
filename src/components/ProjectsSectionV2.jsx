@@ -150,7 +150,7 @@ const ProjectsSectionV2 = ({ stopScroll, resumeScroll }) => {
 
   const spinRef = useRef(null);
   const projectRefs = useRef([]);
-  const [currentIndex, setCurrentIndex] = useState("");
+  const [currentIndex, setCurrentIndex] = useState(null);
 
   const { contextSafe } = useGSAP();
 
@@ -209,6 +209,8 @@ const ProjectsSectionV2 = ({ stopScroll, resumeScroll }) => {
   };
 
   const handleCloseProject = () => {
+    setCurrentIndex(null);
+
     const tl = gsap.timeline({
       onComplete: () => {
         setActiveProject(null);
@@ -266,7 +268,7 @@ const ProjectsSectionV2 = ({ stopScroll, resumeScroll }) => {
   return (
     <div
       ref={projectsWrapperRef}
-      className="w-full h-[100vh] text-center relative opacity-0 [transform-style:preserve-3d] [transform:perspective(100000px)] mt-[1200px]"
+      className="w-full h-[100vh] text-center relative opacity-0 [transform-style:preserve-3d] [transform:perspective(100000px)] mt-[800px]"
     >
       <div
         ref={spinRef}
@@ -281,11 +283,16 @@ const ProjectsSectionV2 = ({ stopScroll, resumeScroll }) => {
         {projects.map((project, index) => (
           <div
             ref={(el) => (projectRefs.current[index] = el)}
-            className={`item cursor-pointer hover:border-2 
-            hover:border-[#ff5ec7]`}
+            className={`item ${
+              !currentIndex &&
+              "cursor-pointer hover:border-2 hover:border-[#ff5ec7]"
+            }`}
             key={index}
             style={{ "--position": index + 1 }}
             onClick={() => {
+              if (currentIndex) {
+                return;
+              }
               setCurrentIndex(index);
               handleProjectClick(project, index);
             }}
@@ -315,11 +322,8 @@ const ProjectsSectionV2 = ({ stopScroll, resumeScroll }) => {
             max-lg:z-[2] max-lg:w-full max-lg:max-w-none max-lg:text-center max-lg:px-[30px] max-lg:[text-shadow:0_10px_20px_#000]
           "
         >
-          <h2 className="text-[3em]">LUN DEV</h2>
-          <p>
-            <b>Web Design</b>
-          </p>
-          <p>Subscribe to the channel to watch many interesting videos</p>
+          <h2 className="text-[3em]">Godstakis</h2>
+          <p>Select a project to view more details.</p>
         </div>
 
         <div

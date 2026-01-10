@@ -1,12 +1,11 @@
 import React from "react";
-import BackgroundGradient from "./BackgroundGradient";
-import Starfield from "./StarField";
+import PreloaderHero from "./../firstsection/preloader/PreloaderHero";
 
 const FirstSection = () => {
   return (
-    <div className="w-full relative min-h-screen">
-      <BackgroundGradient />
-      <Starfield />
+    <div className="w-full relative min-h-screen z-10">
+      <PreloaderHero />
+      {/* <Starfield /> */}
     </div>
   );
 };

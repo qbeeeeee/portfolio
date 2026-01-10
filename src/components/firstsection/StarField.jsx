@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -14,42 +14,72 @@ export default function Starfield() {
       const canvas = canvasRef.current;
       const ctx = canvas.getContext("2d");
 
-      let w = (canvas.width = window.innerWidth);
-      let h = (canvas.height = window.innerHeight);
+      let w;
+      let h;
+      let rafId;
 
-      const numStars = 220;
+      const resizeCanvas = () => {
+        const dpr = window.devicePixelRatio || 1;
 
-      const stars = Array.from({ length: numStars }, () => ({
-        x: Math.random() * w,
-        y: Math.random() * h,
-        size: Math.random() * 1.2 + 0.6,
-        glow: Math.random() * 8 + 8,
-        parallax: Math.random() * 2 + 0.5,
-        twinkleSpeed: Math.random() * 0.04 + 0.01,
-        twinkle: Math.random() * Math.PI * 2,
-        opacity: 1, // <-- add opacity for scroll animation
-      }));
+        w = window.innerWidth;
+        h = window.innerHeight;
+
+        canvas.width = w * dpr;
+        canvas.height = h * dpr;
+
+        canvas.style.width = `${w}px`;
+        canvas.style.height = `${h}px`;
+
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      };
+
+      resizeCanvas();
+
+      const numStars = 250;
+
+      const stars = Array.from({ length: numStars }, () => {
+        const depth = Math.random();
+        return {
+          x: Math.random() * w,
+          y: Math.random() * h,
+          baseX: Math.random() * Math.PI * 2,
+          baseY: Math.random() * Math.PI * 2,
+          size: depth * 1.4 + 0.6,
+          glow: depth * 12 + 6,
+          parallax: depth * 2 + 0.4,
+          twinkleSpeed: Math.random() * 0.03 + 0.008,
+          twinkle: Math.random() * Math.PI * 2,
+          driftSpeed: Math.random() * 0.0006 + 0.0003,
+          opacity: 1,
+          depth,
+        };
+      }).sort((a, b) => a.depth - b.depth);
 
       starsRef.current = stars;
 
       let mouseX = w / 2;
       let mouseY = h / 2;
+      let smoothX = mouseX;
+      let smoothY = mouseY;
 
-      const drawStar = (star, dx, dy) => {
-        const x = star.x + dx;
-        const y = star.y + dy;
+      const lerp = (a, b, t) => a + (b - a) * t;
 
-        // Twinkle
+      const drawStar = (star, dx, dy, time) => {
+        const driftX = Math.sin(time * star.driftSpeed + star.baseX) * 6;
+        const driftY = Math.cos(time * star.driftSpeed + star.baseY) * 6;
+
+        const x = star.x + dx + driftX;
+        const y = star.y + dy + driftY;
+
         star.twinkle += star.twinkleSpeed;
-        const scale = 0.6 + Math.sin(star.twinkle) * 0.4;
+        const scale = 0.7 + Math.sin(star.twinkle) * 0.3;
 
         ctx.shadowBlur = star.glow;
-        ctx.shadowColor = "white";
-        ctx.strokeStyle = `rgba(255,255,255,${star.opacity})`;
-        ctx.fillStyle = `rgba(255,255,255,${star.opacity})`;
+        ctx.shadowColor = "rgba(255,255,255,0.8)";
+        ctx.strokeStyle = `rgba(235,240,255,${star.opacity * star.depth})`;
+        ctx.fillStyle = ctx.strokeStyle;
         ctx.lineWidth = 1;
 
-        // Draw sparkle cross shape
         ctx.beginPath();
         ctx.moveTo(x - star.size * scale, y);
         ctx.lineTo(x + star.size * scale, y);
@@ -57,60 +87,70 @@ export default function Starfield() {
         ctx.lineTo(x, y + star.size * scale);
         ctx.stroke();
 
-        // Core dot
         ctx.beginPath();
-        ctx.arc(x, y, star.size * 0.3 * scale, 0, Math.PI * 2);
+        ctx.arc(x, y, star.size * 0.35 * scale, 0, Math.PI * 2);
         ctx.fill();
       };
 
-      const draw = () => {
+      const draw = (time) => {
         ctx.clearRect(0, 0, w, h);
 
-        stars.forEach((star) => {
-          const dx = (mouseX - w / 2) * star.parallax * 0.03;
-          const dy = (mouseY - h / 2) * star.parallax * 0.03;
+        smoothX = lerp(smoothX, mouseX, 0.05);
+        smoothY = lerp(smoothY, mouseY, 0.05);
 
-          drawStar(star, dx, dy);
+        stars.forEach((star) => {
+          const dx = (smoothX - w / 2) * star.parallax * 0.03;
+          const dy = (smoothY - h / 2) * star.parallax * 0.03;
+          drawStar(star, dx, dy, time);
         });
 
-        requestAnimationFrame(draw);
+        rafId = requestAnimationFrame(draw);
       };
 
-      window.addEventListener("mousemove", (e) => {
-        mouseX = e.clientX;
-        mouseY = e.clientY;
-      });
+      let mouseRaf = false;
+      const onMouseMove = (e) => {
+        if (mouseRaf) return;
 
-      window.addEventListener("resize", () => {
-        w = canvas.width = window.innerWidth;
-        h = canvas.height = window.innerHeight;
-      });
+        mouseRaf = true;
+        requestAnimationFrame(() => {
+          mouseX = e.clientX;
+          mouseY = e.clientY;
+          mouseRaf = false;
+        });
+      };
 
-      draw();
+      let resizeRaf = null;
+      const onResize = () => {
+        if (resizeRaf) return;
 
-      // GSAP ScrollTrigger: fade stars out as you scroll
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: document.body,
-          start: "top -40%",
-          end: "top -300%",
-          scrub: true,
-        },
-      });
+        resizeRaf = requestAnimationFrame(() => {
+          resizeCanvas();
+          resizeRaf = null;
+        });
+      };
 
-      tl.to(
-        starsRef.current,
-        {
-          opacity: 0,
-        },
-        0
-      ).to(
-        starsRef.current,
-        {
-          opacity: 1,
-        },
-        0.8
-      );
+      window.addEventListener("mousemove", onMouseMove, { passive: true });
+      window.addEventListener("resize", onResize, { passive: true });
+
+      draw(0);
+
+      gsap
+        .timeline({
+          scrollTrigger: {
+            trigger: document.body,
+            start: "top -40%",
+            end: "top -300%",
+            scrub: true,
+          },
+        })
+        .to(starsRef.current, { opacity: 0 })
+        .to(starsRef.current, { opacity: 1 }, 0.8);
+
+      return () => {
+        cancelAnimationFrame(rafId);
+        window.removeEventListener("mousemove", onMouseMove);
+        window.removeEventListener("resize", onResize);
+      };
     },
     { dependencies: [], revertOnUpdate: true }
   );
@@ -124,7 +164,8 @@ export default function Starfield() {
         left: 0,
         width: "100vw",
         height: "100vh",
-        background: "black",
+        background:
+          "radial-gradient(circle at center, #1a001a 0%, #000000 180%)",
         zIndex: -1,
       }}
     />
