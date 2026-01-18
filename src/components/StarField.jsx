@@ -19,7 +19,7 @@ export default function Starfield() {
       let rafId;
 
       const resizeCanvas = () => {
-        const dpr = window.devicePixelRatio || 1;
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
 
         w = window.innerWidth;
         h = window.innerHeight;
@@ -35,7 +35,7 @@ export default function Starfield() {
 
       resizeCanvas();
 
-      const numStars = 250;
+      const numStars = window.innerWidth < 768 ? 120 : 250;
 
       const stars = Array.from({ length: numStars }, () => {
         const depth = Math.random();
@@ -75,10 +75,8 @@ export default function Starfield() {
         const scale = 0.7 + Math.sin(star.twinkle) * 0.3;
 
         ctx.shadowBlur = star.glow;
-        ctx.shadowColor = "rgba(255,255,255,0.8)";
         ctx.strokeStyle = `rgba(235,240,255,${star.opacity * star.depth})`;
         ctx.fillStyle = ctx.strokeStyle;
-        ctx.lineWidth = 1;
 
         ctx.beginPath();
         ctx.moveTo(x - star.size * scale, y);
@@ -94,15 +92,18 @@ export default function Starfield() {
 
       const draw = (time) => {
         ctx.clearRect(0, 0, w, h);
+        ctx.shadowColor = "rgba(255,255,255,0.8)";
+        ctx.lineWidth = 1;
 
         smoothX = lerp(smoothX, mouseX, 0.05);
         smoothY = lerp(smoothY, mouseY, 0.05);
 
-        stars.forEach((star) => {
-          const dx = (smoothX - w / 2) * star.parallax * 0.03;
-          const dy = (smoothY - h / 2) * star.parallax * 0.03;
+        for (let i = 0; i < stars.length; i++) {
+          const star = stars[i];
+          const dx = (smoothX - w / 2) * star.parallax * 0.01;
+          const dy = (smoothY - h / 2) * star.parallax * 0.01;
           drawStar(star, dx, dy, time);
-        });
+        }
 
         rafId = requestAnimationFrame(draw);
       };
@@ -134,11 +135,17 @@ export default function Starfield() {
 
       draw(0);
 
+      gsap.to(canvas, {
+        opacity: 1,
+        duration: 2,
+        ease: "power2.out",
+      });
+
       gsap
         .timeline({
           scrollTrigger: {
             trigger: document.body,
-            start: "top -40%",
+            start: "top -50%",
             end: "top -300%",
             scrub: true,
           },
@@ -162,11 +169,11 @@ export default function Starfield() {
         position: "fixed",
         top: 0,
         left: 0,
+        opacity: 0,
         width: "100vw",
         height: "100vh",
-        background:
-          "radial-gradient(circle at center, #1a001a 0%, #000000 180%)",
-        zIndex: -1,
+        pointerEvents: "none",
+        zIndex: 1,
       }}
     />
   );

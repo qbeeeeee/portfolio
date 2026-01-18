@@ -1,22 +1,22 @@
 // Hero.jsx
-import { useLayoutEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import gsap from "gsap";
 import SplitText from "gsap/SplitText";
-import testImage from "./../../../assets/test1233.jpg";
+import testImage from "./../../assets/test1233.jpg";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import figma from "../../../assets/skills/figma.png";
-import git from "../../../assets/skills/git.png";
-import javascript from "../../../assets/skills/javascript.png";
-import react from "../../../assets/skills/react.png";
-import sql from "../../../assets/skills/sql.png";
-import tailwind from "../../../assets/skills/tailwind.png";
-import pythonSvg from "../../../assets/skills/python.svg";
-import djangoSvg from "../../../assets/skills/django.svg";
-import gsapSvg from "../../../assets/skills/gsap.svg";
-import qrCode from "../../../assets/qrCode.png";
-import "../../../assets/css/custom.css";
-import "../../../assets/css/preloader.css";
+import figma from "../../assets/skills/figma.png";
+import git from "../../assets/skills/git.png";
+import javascript from "../../assets/skills/javascript.png";
+import react from "../../assets/skills/react.png";
+import sql from "../../assets/skills/sql.png";
+import tailwind from "../../assets/skills/tailwind.png";
+import pythonSvg from "../../assets/skills/python.svg";
+import djangoSvg from "../../assets/skills/django.svg";
+import gsapSvg from "../../assets/skills/gsap.svg";
+import qrCode from "../../assets/qrCode.png";
+import "../../assets/css/custom.css";
+import "../../assets/css/preloader.css";
 
 gsap.registerPlugin(SplitText);
 
@@ -65,7 +65,7 @@ const skills = [
   },
 ];
 
-export default function Hero() {
+export default function Hero({ setAnimationFinished }) {
   const root = useRef(null);
 
   useGSAP(
@@ -89,6 +89,7 @@ export default function Hero() {
           gsap.set(skillsWrapperRef.current?.children, {
             opacity: 0,
           });
+          gsap.set(".hover-bg", { scaleX: 0 });
 
           const splitElements = [
             { key: "logoChars", selector: ".preloader-logo h1", type: "chars" },
@@ -138,7 +139,7 @@ export default function Hero() {
             ],
             {
               y: "100%",
-            }
+            },
           );
 
           function animateProgress(duration = 2.5) {
@@ -203,7 +204,7 @@ export default function Hero() {
                 duration: 1,
                 ease: "power4.inOut",
               },
-              "0.25"
+              "0.25",
             )
             .add(animateProgress(), "<")
             .set(".preloader-progress", { backgroundColor: "var(--base-300)" })
@@ -215,7 +216,7 @@ export default function Hero() {
                 duration: 1,
                 ease: "power4.inOut",
               },
-              "-=0.5"
+              "-=0.5",
             )
             .to(
               splits.footerLines.lines,
@@ -225,7 +226,7 @@ export default function Hero() {
                 duration: 1,
                 ease: "power4.inOut",
               },
-              "<"
+              "<",
             )
             .to(
               ".preloader-progress",
@@ -234,7 +235,7 @@ export default function Hero() {
                 duration: 0.5,
                 ease: "power3.out",
               },
-              "-=0.25"
+              "-=0.25",
             )
             .to(
               ".preloader-mask",
@@ -243,7 +244,7 @@ export default function Hero() {
                 duration: 2.5,
                 ease: "power3.out",
               },
-              "<"
+              "<",
             )
             .to(
               ".hero-img",
@@ -252,7 +253,7 @@ export default function Hero() {
                 duration: 1.5,
                 ease: "power3.out",
               },
-              "<"
+              "<",
             )
             .to(splits.headerLine1.chars, {
               y: 0,
@@ -269,7 +270,7 @@ export default function Hero() {
                 duration: 0.8,
                 ease: "power4.out",
               },
-              "<"
+              "<",
             )
             .to(
               ".hover-bg",
@@ -278,7 +279,7 @@ export default function Hero() {
                 duration: 0.8,
                 ease: "power2.inOut",
               },
-              "<"
+              "<",
             )
             .to(
               splits.headerQrCode.lines,
@@ -288,7 +289,7 @@ export default function Hero() {
                 duration: 0.8,
                 ease: "power4.out",
               },
-              "<"
+              "<",
             )
             .to(
               [splits.headerDevP.lines, splits.heroFooterP.lines],
@@ -298,16 +299,17 @@ export default function Hero() {
                 duration: 1,
                 ease: "power4.out",
               },
-              "-=1.5"
+              "-=1.5",
             )
             .add(playSkillsEntrance, "<")
-            .add(startSkillsFloating, "<");
+            .add(startSkillsFloating, "<")
+            .add(() => setAnimationFinished(true));
         });
       }, root);
 
       return () => ctx.revert();
     },
-    { dependencies: [], revertOnUpdate: true }
+    { dependencies: [], revertOnUpdate: true },
   );
 
   const containerRef = useRef(null);
@@ -337,8 +339,8 @@ export default function Hero() {
         const relX = (e.clientX - rect.left) / rect.width - 0.5;
         const relY = (e.clientY - rect.top) / rect.height - 0.5;
 
-        tiltX = relX * 15;
-        tiltY = relY * 15;
+        tiltX = relX * 5;
+        tiltY = relY * 5;
 
         tiltY = Math.max(Math.min(tiltY, 20), -20);
 
@@ -347,7 +349,7 @@ export default function Hero() {
           rotationY: tiltX,
           rotationX: -tiltY,
           transformPerspective: 800,
-          duration: 1.2,
+          duration: 0.8,
           ease: "power2.out",
         });
 
@@ -369,7 +371,7 @@ export default function Hero() {
         window.removeEventListener("mousemove", handleMouseMove);
       };
     },
-    { dependencies: [], revertOnUpdate: true }
+    { dependencies: [], revertOnUpdate: true },
   );
 
   const HoverButton = () => {
@@ -402,10 +404,10 @@ export default function Hero() {
               stagger: 0.02,
               ease: "sine.inOut",
             },
-            "<"
+            "<",
           );
       },
-      { scope: container }
+      { scope: container },
     );
 
     const handleMouseEnter = () => tl.current.play();
@@ -416,9 +418,9 @@ export default function Hero() {
         ref={container}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
-        className="inline-flex flex-col relative text-[#7b2584] cursor-pointer rounded-[15px] px-4 h-[85px] overflow-hidden font-bold hover-button"
+        className="inline-flex flex-col relative text-[#9f6989] cursor-pointer rounded-[15px] px-4 h-[85px] overflow-hidden font-bold hover-button"
       >
-        <span className="absolute inset-0 bg-white z-0 origin-left scale-x-0 hover-bg" />
+        <span className="absolute inset-0 bg-white z-0 origin-left hover-bg" />
 
         <div id="name-top">Papadopoulos</div>
         <div id="name-bottom">Konstaninos</div>

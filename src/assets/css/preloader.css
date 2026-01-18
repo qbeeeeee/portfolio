@@ -48,8 +48,9 @@ img {
 
 .preloader-mask {
   background-color: var(--base-100);
-  mask: linear-gradient(var(--base-300), var(--base-300)),
-    url("/src/assets//mask.svg") center/50% no-repeat;
+  mask:
+    linear-gradient(var(--base-300), var(--base-300)),
+    url("/src/assets//mask.svg") center/38% no-repeat;
   mask-composite: subtract;
   will-change: transform;
   z-index: 1;
@@ -84,7 +85,8 @@ img {
   }
 
   .preloader-mask {
-    mask: linear-gradient(var(--base-300), var(--base-300)),
+    mask:
+      linear-gradient(var(--base-300), var(--base-300)),
       url("/src/assets//mask.svg") center/90% no-repeat;
     mask-composite: subtract;
   }

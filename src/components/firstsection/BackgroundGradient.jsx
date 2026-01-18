@@ -123,7 +123,7 @@ export default function BackgroundGradient() {
         window.removeEventListener("mousemove", handleMouseMove);
       };
     },
-    { dependencies: [], revertOnUpdate: true }
+    { dependencies: [], revertOnUpdate: true },
   );
 
   useGSAP(() => {
@@ -182,10 +182,10 @@ export default function BackgroundGradient() {
               stagger: 0.02,
               ease: "sine.inOut",
             },
-            "<"
+            "<",
           );
       },
-      { scope: container }
+      { scope: container },
     );
 
     const handleMouseEnter = () => tl.current.play();

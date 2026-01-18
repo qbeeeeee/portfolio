@@ -12,7 +12,6 @@ import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ScrollToPlugin } from "gsap/ScrollToPlugin";
-import { createPortal } from "react-dom";
 
 gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
@@ -37,14 +36,14 @@ const projects = [
   { src: airplane, alt: "Airplane 3D" },
 ];
 
-const ProjectsSectionV2 = ({ stopScroll, resumeScroll }) => {
+const OtherProjects = ({ stopScroll, resumeScroll }) => {
   const projectsWrapperRef = useRef(null);
   const planetRef = useRef(null);
   const projectInfoRef = useRef(null);
 
   useGSAP(
     () => {
-      const menuTrigger = ScrollTrigger.getById("keepme-sections-scroll");
+      const menuTrigger = ScrollTrigger.getById("keepme-components");
       const projectsWrapper = projectsWrapperRef?.current;
 
       gsap.to(projectsWrapper, {
@@ -55,13 +54,13 @@ const ProjectsSectionV2 = ({ stopScroll, resumeScroll }) => {
           trigger: ".projects-container",
 
           // THIS is the key line
-          start: () => menuTrigger.end,
+          start: () => menuTrigger?.end,
 
           toggleActions: "play reverse play reverse",
         },
       });
     },
-    { dependencies: [], revertOnUpdate: true }
+    { dependencies: [], revertOnUpdate: true },
   );
 
   useGSAP(
@@ -86,7 +85,7 @@ const ProjectsSectionV2 = ({ stopScroll, resumeScroll }) => {
             end: "bottom bottom", // scroll distance over which animation occurs
             scrub: true, // ties animation to scroll
           },
-        }
+        },
       );
 
       gsap.to(projectsWrapper, {
@@ -111,7 +110,7 @@ const ProjectsSectionV2 = ({ stopScroll, resumeScroll }) => {
             end: "bottom bottom",
             scrub: true,
           },
-        }
+        },
       );
 
       gsap.fromTo(
@@ -125,7 +124,7 @@ const ProjectsSectionV2 = ({ stopScroll, resumeScroll }) => {
             end: "bottom bottom",
             scrub: true,
           },
-        }
+        },
       );
 
       gsap.fromTo(
@@ -140,10 +139,10 @@ const ProjectsSectionV2 = ({ stopScroll, resumeScroll }) => {
             end: "bottom bottom",
             scrub: true,
           },
-        }
+        },
       );
     },
-    { dependencies: [], revertOnUpdate: true }
+    { dependencies: [], revertOnUpdate: true },
   );
 
   const [activeProject, setActiveProject] = useState(null);
@@ -167,7 +166,7 @@ const ProjectsSectionV2 = ({ stopScroll, resumeScroll }) => {
         ease: "expo.inOut",
       });
     }),
-    [contextSafe]
+    [contextSafe],
   );
 
   const handleProjectClick = (project, index) => {
@@ -194,7 +193,7 @@ const ProjectsSectionV2 = ({ stopScroll, resumeScroll }) => {
         // "--scrollSpin": "0deg",
         ease: "power1.inOut",
       },
-      0
+      0,
     );
 
     tl.to(
@@ -204,7 +203,7 @@ const ProjectsSectionV2 = ({ stopScroll, resumeScroll }) => {
         "--zaxis": "650px",
         ease: "power1.inOut",
       },
-      0.6
+      0.6,
     );
   };
 
@@ -227,7 +226,7 @@ const ProjectsSectionV2 = ({ stopScroll, resumeScroll }) => {
         "--zaxis": "530px",
         ease: "power1.inOut",
       },
-      0.3
+      0.3,
     );
 
     tl.to(
@@ -240,7 +239,7 @@ const ProjectsSectionV2 = ({ stopScroll, resumeScroll }) => {
         "--tilt2": "0deg",
         ease: "power1.inOut",
       },
-      0.4
+      0.4,
     );
   };
 
@@ -253,7 +252,7 @@ const ProjectsSectionV2 = ({ stopScroll, resumeScroll }) => {
         width: "90vw",
         height: "90vh",
       },
-      0
+      0,
     );
   };
 
@@ -268,7 +267,7 @@ const ProjectsSectionV2 = ({ stopScroll, resumeScroll }) => {
   return (
     <div
       ref={projectsWrapperRef}
-      className="w-full h-[100vh] text-center relative opacity-0 [transform-style:preserve-3d] [transform:perspective(100000px)] mt-[800px]"
+      className="w-full h-[100vh] text-center relative opacity-0 [transform-style:preserve-3d] [transform:perspective(100000px)] mt-[800px] z-10"
     >
       <div
         ref={spinRef}
@@ -363,4 +362,4 @@ const ProjectsSectionV2 = ({ stopScroll, resumeScroll }) => {
   );
 };
 
-export default ProjectsSectionV2;
+export default OtherProjects;

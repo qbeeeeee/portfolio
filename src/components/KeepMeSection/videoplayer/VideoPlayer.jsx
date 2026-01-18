@@ -5,9 +5,15 @@ import {
   faPause,
   faPlay,
 } from "@fortawesome/free-solid-svg-icons";
+import { gsap } from "gsap";
+import { useGSAP } from "@gsap/react";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const VideoPlayer = ({ videoSource, onVideoEnd }) => {
   const videoRef = useRef(null);
+  const videoWrapperRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(true);
   const [isEnded, setIsEnded] = useState(false);
 
@@ -41,8 +47,38 @@ const VideoPlayer = ({ videoSource, onVideoEnd }) => {
     }
   }, [videoSource]);
 
+  useGSAP(
+    () => {
+      if (!videoWrapperRef.current) return;
+      const keepmeSelectedProject = ScrollTrigger.getById(
+        "keepme-selected-project",
+      );
+
+      gsap.fromTo(
+        videoWrapperRef.current,
+        { opacity: 0 },
+        {
+          opacity: 1,
+          ease: "power2.inOut",
+          clearProps: "opacity",
+          scrollTrigger: {
+            trigger: document.body,
+            start: () => keepmeSelectedProject?.end,
+            end: "+=400",
+            scrub: true,
+          },
+        },
+      );
+    },
+    { dependencies: [] },
+  );
+
   return (
-    <div className="relative w-full h-full">
+    <div
+      className="relative w-full h-full"
+      ref={videoWrapperRef}
+      style={{ opacity: 0 }}
+    >
       <video
         ref={videoRef}
         className="w-full h-full min-h-[300px] sm:min-h-[500px] rounded-[40px] object-cover"

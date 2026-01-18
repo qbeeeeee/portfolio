@@ -1,12 +1,14 @@
-import React, { useEffect, useRef } from "react";
-import FirstSection from "./components/firstsection/FirstSection";
-import KeepMeSection from "./components/KeepMeSection2";
+import React, { useEffect, useRef, useState } from "react";
+import PreloaderHero from "./components/firstsection/PreloaderHero";
+import KeepMeSection from "./components/KeepMeSection/KeepMeSection";
 import Lenis from "lenis";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import ProjectsSectionV2 from "./components/ProjectsSectionV2";
+import OtherProjects from "./components/OtherProjects";
+import StarField from "./components/StarField";
 
 const App = () => {
+  const [animationFinished, setAnimationFinished] = useState(false);
   const lenisRef = useRef(null);
 
   useEffect(() => {
@@ -43,12 +45,26 @@ const App = () => {
   const totalHeight = 1.1 * vh + 5500;
 
   return (
-    <div className="overflow-x-hidden min-h-[1400vh] bg-black">
-      <FirstSection />
-      <div className="h-[calc(110vh_+_5500px)]">
+    <div
+      style={{
+        background:
+          "radial-gradient(circle at center, #1a001a 0%, #000000 100%)",
+      }}
+      className="overflow-x-hidden min-h-[2000vh] relative"
+    >
+      {/* {animationFinished && (
+        <>
+          <StarField />
+        </>
+      )} */}
+
+      <div className="w-full relative min-h-screen z-20">
+        <PreloaderHero setAnimationFinished={setAnimationFinished} />
+      </div>
+      <div className="h-[calc(110vh_+_13000px)]">
         <KeepMeSection />
       </div>
-      <ProjectsSectionV2 stopScroll={stopScroll} resumeScroll={resumeScroll} />
+      <OtherProjects stopScroll={stopScroll} resumeScroll={resumeScroll} />
     </div>
   );
 };
