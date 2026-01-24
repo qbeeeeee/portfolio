@@ -50,7 +50,7 @@ const App = () => {
         background:
           "radial-gradient(circle at center, #1a001a 0%, #000000 100%)",
       }}
-      className="overflow-x-hidden min-h-[2000vh] relative"
+      className="overflow-x-hidden relative"
     >
       {/* {animationFinished && (
         <>
@@ -61,10 +61,14 @@ const App = () => {
       <div className="w-full relative min-h-screen z-20">
         <PreloaderHero setAnimationFinished={setAnimationFinished} />
       </div>
+
       <div className="h-[calc(110vh_+_13000px)]">
         <KeepMeSection />
       </div>
+
       <OtherProjects stopScroll={stopScroll} resumeScroll={resumeScroll} />
+
+      <div className="h-[100vh]"></div>
     </div>
   );
 };

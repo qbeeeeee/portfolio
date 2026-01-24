@@ -3,6 +3,9 @@ import { useRef, useState } from "react";
 import gsap from "gsap";
 import SplitText from "gsap/SplitText";
 import testImage from "./../../assets/test1233.jpg";
+import testImage2 from "./../../assets/spaceBackground/11112.jpg";
+import topHero from "./../../assets/spaceBackground/top.webp";
+import bottomHero from "./../../assets/spaceBackground/bottom.webp";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import figma from "../../assets/skills/figma.png";
@@ -87,9 +90,22 @@ export default function Hero({ setAnimationFinished }) {
           }
 
           gsap.set(skillsWrapperRef.current?.children, {
+            y: -50,
             opacity: 0,
           });
           gsap.set(".hover-bg", { scaleX: 0 });
+
+          gsap.set(".top-hero-image", {
+            yPercent: 20,
+          });
+
+          gsap.set(".bottom-hero-image", {
+            yPercent: -20,
+          });
+
+          gsap.set([".preloader-logo", ".preloader-footer"], {
+            visibility: "visible",
+          });
 
           const splitElements = [
             { key: "logoChars", selector: ".preloader-logo h1", type: "chars" },
@@ -164,7 +180,7 @@ export default function Hero({ setAnimationFinished }) {
             if (!items) return;
 
             gsap.to(items, {
-              y: 50,
+              y: 0,
               opacity: 1,
               stagger: 0.1,
               duration: 1,
@@ -178,7 +194,7 @@ export default function Hero({ setAnimationFinished }) {
 
             Array.from(items).forEach((item, index) => {
               gsap.to(item, {
-                yPercent: 12,
+                yPercent: window.innerWidth > 1536 ? 10 : 8,
                 repeat: -1,
                 yoyo: true,
                 ease: "sine.inOut",
@@ -240,7 +256,7 @@ export default function Hero({ setAnimationFinished }) {
             .to(
               ".preloader-mask",
               {
-                scale: 5,
+                scale: 7,
                 duration: 2.5,
                 ease: "power3.out",
               },
@@ -255,12 +271,27 @@ export default function Hero({ setAnimationFinished }) {
               },
               "<",
             )
+            .to(".top-hero-image", {
+              yPercent: 0,
+              duration: 2,
+              ease: "power3.inOut",
+              delay: -3.1,
+            })
+            .to(
+              ".bottom-hero-image",
+              {
+                yPercent: 0,
+                duration: 2,
+                ease: "power3.inOut",
+              },
+              "<",
+            )
             .to(splits.headerLine1.chars, {
               y: 0,
               stagger: 0.04,
               duration: 0.8,
               ease: "power4.out",
-              delay: -2,
+              delay: -1.8,
             })
             .to(
               splits.headerLine2.chars,
@@ -316,33 +347,21 @@ export default function Hero({ setAnimationFinished }) {
   const skillsWrapperRef = useRef(null);
   const contentRef = useRef(null);
 
-  const [gradient, setGradient] = useState({
-    angle: 135,
-    color1: "#2a0f7a",
-    color2: "#e74292",
-  });
-
   useGSAP(
     () => {
       const container = containerRef.current;
       const wrapper = skillsWrapperRef.current;
       if (!container || !wrapper) return;
 
-      let tiltX = 0;
-      let tiltY = 0;
-
       //-----------------------------
       // Mouse move: tilt container + move wrapper
       //-----------------------------
       const handleMouseMove = (e) => {
-        const rect = container.getBoundingClientRect();
-        const relX = (e.clientX - rect.left) / rect.width - 0.5;
-        const relY = (e.clientY - rect.top) / rect.height - 0.5;
+        const relX = e.clientX / window.innerWidth - 0.5;
+        const relY = e.clientY / window.innerHeight - 0.5;
 
-        tiltX = relX * 5;
-        tiltY = relY * 5;
-
-        tiltY = Math.max(Math.min(tiltY, 20), -20);
+        const tiltX = relX * 5;
+        const tiltY = relY * 5;
 
         // Tilt container (3D effect)
         gsap.to(container, {
@@ -353,14 +372,17 @@ export default function Hero({ setAnimationFinished }) {
           ease: "power2.out",
         });
 
-        // Move wrapper smoothly based on mouse position
-        const offsetX = relX * 50; // adjust strength
-        const offsetY = relY * 50;
-
         gsap.to(wrapper, {
-          x: offsetX,
-          y: offsetY,
+          x: relX * 30,
+          y: relY * 30,
           duration: 0.5,
+          ease: "power2.out",
+        });
+
+        gsap.to(".top-hero-image-wrapper", {
+          x: relX * -50,
+          y: relY * -50,
+          duration: 0.8,
           ease: "power2.out",
         });
       };
@@ -399,7 +421,7 @@ export default function Hero({ setAnimationFinished }) {
           .to(
             splitB.chars,
             {
-              y: -90,
+              y: window.innerWidth > 1536 ? -90 : -80,
               duration: 0.33,
               stagger: 0.02,
               ease: "sine.inOut",
@@ -418,7 +440,7 @@ export default function Hero({ setAnimationFinished }) {
         ref={container}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
-        className="inline-flex flex-col relative text-[#9f6989] cursor-pointer rounded-[15px] px-4 h-[85px] overflow-hidden font-bold hover-button"
+        className="inline-flex flex-col relative text-[#230322] cursor-pointer rounded-[15px] px-4 h-[79px] 2xl:h-[85px] overflow-hidden font-bold hover-button"
       >
         <span className="absolute inset-0 bg-white z-0 origin-left hover-bg" />
 
@@ -428,11 +450,47 @@ export default function Hero({ setAnimationFinished }) {
     );
   };
 
+  useGSAP(
+    () => {
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: ".hero-section",
+          start: "top top",
+          end: "+=700",
+          scrub: true,
+          pin: true,
+          pinSpacing: true,
+          anticipatePin: 1,
+        },
+      });
+
+      // Split images
+      tl.to(
+        [".top-hero-image", ".top-hero-content"],
+        {
+          y: "-80vh",
+          ease: "power2.in",
+        },
+        0,
+      );
+
+      tl.to(
+        [".bottom-hero-image", ".bottom-hero-content"],
+        {
+          y: "80vh",
+          ease: "power2.in",
+        },
+        0,
+      );
+    },
+    { dependencies: [], revertOnUpdate: true },
+  );
+
   return (
     <div ref={root}>
       <div className="preloader-progress">
         <div className="preloader-progress-bar"></div>
-        <div className="preloader-logo absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full text-center z-2 mix-blend-difference">
+        <div className="preloader-logo invisible absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full text-center z-2 mix-blend-difference">
           <h1 className="relative text-[#d7a2ff] text-[3rem] font-medium leading-[1]">
             Konstantinos
           </h1>
@@ -442,15 +500,15 @@ export default function Hero({ setAnimationFinished }) {
       <div className="preloader-mask"></div>
 
       <div className="preloader-content">
-        <div className="preloader-footer">
-          <p>Portfolio by Qbeeeeee...</p>
+        <div className="preloader-footer text-[#d7a2ff] invisible text-[16px] font-inter font-light">
+          <p>Portfolio by Qbeeeeee</p>
         </div>
       </div>
 
-      <div className="relative w-full h-full">
-        <section className="flex items-center justify-center relative w-full h-[100svh] p-[1rem]">
+      <div className="w-full h-full">
+        <section className="hero-section flex items-center justify-center relative w-full h-[100svh] overflow-hidden">
           <div className="relative rounded-[4rem] w-[90%] h-[90%]">
-            <div className="hero-img absolute w-full h-full scale-150 will-change-transform">
+            <div className="hero-img absolute w-full h-full scale-[1.75] will-change-transform">
               <div className="absolute inset-0 flex justify-center items-center z-20 [transform-style:preserve-3d] [transform:perspective(1200px)]">
                 <div
                   ref={containerRef}
@@ -460,44 +518,46 @@ export default function Hero({ setAnimationFinished }) {
                     zIndex: 1,
                   }}
                 >
-                  <div
-                    className="absolute inset-0 rounded-[40px]"
-                    style={{
-                      // backgroundImage: `linear-gradient(${gradient.angle}deg, ${gradient.color1}, ${gradient.color2})`,
-                      backgroundImage: `url(${testImage})`,
-                      backgroundSize: "100% 100%",
-                      // filter: "blur(3px)",
-                      zIndex: 1,
-                    }}
+                  <div className="top-hero-image-wrapper absolute w-full h-full">
+                    <img
+                      src={topHero}
+                      alt=""
+                      className="absolute inset-0 h-full w-full object-cover rounded-[40px] top-hero-image"
+                    />
+                  </div>
+                  <img
+                    src={bottomHero}
+                    alt=""
+                    className="absolute inset-0 h-full w-full object-cover rounded-[40px] bottom-hero-image"
                   />
 
                   <div ref={contentRef} className="h-full relative">
-                    <div className="flex items-end justify-between px-20 w-full h-[40%] gap-16 whitespace-nowrap z-[400] relative [perspective:800px]">
+                    <div className="top-hero-content flex items-end justify-between px-16 2xl:px-20 w-full h-[40%] gap-16 whitespace-nowrap z-[400] relative [perspective:800px]">
                       <div className="flex flex-col items-center header-qr-code">
                         <img
                           src={qrCode}
                           alt="QR Code"
                           className="hover:cursor-pointer hover:bg-[#ffffff32] border border-[#ffffffc6] shadow-xl rounded-[10px] w-40 h-40"
                         />
-                        <h2 className="mt-4 text-[16px] text-white font-inter font-bold">
+                        <h2 className="mt-4 text-[16px] text-white font-inter font-bold text-center">
                           My KeepMe Card
                         </h2>
                       </div>
 
                       <div
-                        className="grid grid-cols-5 gap-5"
+                        className="grid grid-cols-5 gap-4 2xl:gap-5"
                         ref={skillsWrapperRef}
                       >
                         {skills.map((skill, index) => (
                           <div
                             key={index}
-                            className="skill-item flex flex-col items-center justify-center hover:cursor-pointer hover:bg-[#ffffff32] gap-2 text-[1.2rem] text-white
-      border border-[#ffffffc6] shadow-xl rounded-[10px] w-[150px] h-[100px] font-inter"
+                            className="skill-item flex flex-col items-center justify-center hover:cursor-pointer hover:bg-[#ffffff32] gap-2 text-[1rem] 2xl:text-[1.2rem] text-white
+      border border-[#ffffffc6] shadow-xl rounded-[10px] w-[130px] 2xl:w-[150px] h-[87px] 2xl:h-[100px] font-inter"
                           >
                             <img
                               src={skill.icon}
                               alt=""
-                              className="h-8 w-8 object-contain"
+                              className="h-7 2xl:h-8 w-7 2xl:w-8 object-contain"
                             />
                             {skill.label}
                           </div>
@@ -505,16 +565,16 @@ export default function Hero({ setAnimationFinished }) {
                       </div>
                     </div>
 
-                    <div className="relative flex justify-between items-end h-[52%] z-10 text-white px-20">
+                    <div className="bottom-hero-content relative flex justify-between items-end h-[52%] z-10 text-white px-16 2xl:px-20">
                       <div className="header-dev">
-                        <h1 className="font-bold text-[60px] font-ica-rubrik">
+                        <h1 className="font-bold text-[54px] 2xl:text-[60px] font-ica-rubrik">
                           Hey, I'm <HoverButton />
                         </h1>
-                        <h1 className="font-bold text-[60px] font-ica-rubrik">
+                        <h1 className="font-bold text-[54px] 2xl:text-[60px] font-ica-rubrik">
                           Web Developer
                         </h1>
 
-                        <p className="mt-4 text-[20px] text-white max-w-[500px] font-inter font-light">
+                        <p className="mt-4 text-[18px] 2xl:text-[20px] text-white max-w-[500px] font-inter font-light">
                           I’m a 27-year-old Full-stack web developer from
                           Greece, passionate about building modern, interactive
                           websites.
@@ -522,18 +582,18 @@ export default function Hero({ setAnimationFinished }) {
                       </div>
 
                       <div className="flex flex-col items-end hero-footer-right">
-                        <h1 className="font-bold text-[35px] font-inter mb-2">
+                        <h1 className="font-bold text-[32px] 2xl:text-[35px] font-inter mb-2">
                           Contact Me:
                         </h1>
 
-                        <h2 className="font-bold text-[25px] font-inter">
+                        <h2 className="font-bold text-[23px] 2xl:text-[25px] font-inter">
                           papadokonst1998@gmail.com
                         </h2>
-                        <h2 className="font-bold text-[25px] font-inter">
+                        <h2 className="font-bold text-[23px] 2xl:text-[25px] font-inter">
                           +30 697 235 8102
                         </h2>
 
-                        <div className="flex gap-10 text-[20px] text-white font-inter">
+                        <div className="flex gap-10 text-[18px] 2xl:text-[20px] text-white font-inter">
                           <div className="hover:underline hover:underline-offset-4 hover:cursor-pointer">
                             GitHub
                           </div>

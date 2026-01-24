@@ -267,7 +267,7 @@ const OtherProjects = ({ stopScroll, resumeScroll }) => {
   return (
     <div
       ref={projectsWrapperRef}
-      className="w-full h-[100vh] text-center relative opacity-0 [transform-style:preserve-3d] [transform:perspective(100000px)] mt-[800px] z-10"
+      className="w-full h-[100vh] text-center relative opacity-0 [transform-style:preserve-3d] [transform:perspective(100000px)] mt-[100vh] z-10"
     >
       <div
         ref={spinRef}

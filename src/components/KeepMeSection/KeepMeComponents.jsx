@@ -25,6 +25,9 @@ import myQrCodesFixed from "../../assets/keepme/sections/myQrCodesFixed.webp";
 import customisableFull from "../../assets/keepme/sections/customisableFull.png";
 import myDigitalCardFull from "../../assets/keepme/sections/myDigitalCardFull.png";
 import myDigitalCardFixed from "../../assets/keepme/sections/myDigitalCardFixed.webp";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faRotate } from "@fortawesome/free-solid-svg-icons";
+import colorWheel from "../../assets/color-wheel.webp";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -34,93 +37,129 @@ gsap.registerPlugin(ScrollTrigger);
 // bg-blue-900
 // bg-sky-950
 
+const glaceAvatar =
+  "https://keepmeprd.fra1.digitaloceanspaces.com/assets/templateBG/glaceCustom.webp";
+
+// #0B0114, #160625, #1F1135
+// #FF2D95, #BC13FE, #00F3FF
+// #E0D7FF, #A58BA3
+
 const sections = [
-  { id: 1, title: "Homepage", color: "bg-fuchsia-900", hold: 3000 },
-  { id: 2, title: "Profile Page", color: "bg-violet-900", hold: 6500 },
-  { id: 3, title: "Settings", color: "bg-indigo-900", hold: 800 },
-  { id: 4, title: "Dashboard", color: "bg-blue-900", hold: 800 },
+  { id: 1, title: "Homepage", color: "bg-[#d6266b]", hold: 2600 },
+  { id: 2, title: "Profile Page", color: "bg-[#8e26d6]", hold: 6500 },
+  { id: 3, title: "Templates", color: "bg-[#c01ac0]", hold: 800 },
+  { id: 4, title: "Dashboard", color: "bg-[#6b26d6]", hold: 800 },
 ];
 
 const profilePageComponents = [
   {
     id: 1,
     title: "Account Details",
-    description: "Here the user can update his personal details",
+    description:
+      "This feature allows users to manage their personal information, including name, email, phone number, and social links. Users can create custom action buttons with labels linking to URLs or files. Additionally, users can add notes or supplementary information, which the AI chatbot can utilize to provide context-aware responses.",
     icon: accountDetailsFixed,
     icon2: accountDetailsFull,
   },
   {
     id: 2,
     title: "Company Details",
-    description: "This is the component",
+    description:
+      "Designed for business users, this feature allows a company to manage its profile and invite team members. All company information is shared consistently across all associated user accounts, providing a unified business presence.",
     icon: companyDetailsFull,
   },
   {
     id: 3,
     title: "My Digital Card",
-    description: "This is the component",
+    description:
+      "This feature enables users to create a personalized digital card with a custom display name used in its URL. Users can choose from multiple templates, adjust background and font colors, upload custom background images, and select from various layouts to tailor their card’s appearance.",
     icon: myDigitalCardFixed,
     icon2: myDigitalCardFull,
   },
   {
     id: 4,
-    title: "Templates",
-    description: "This is the component",
-  },
-  {
-    id: 5,
     title: "My Qr Codes",
-    description: "This is the component",
+    description:
+      "This feature allows users to create fully customized QR codes for instant sharing of their digital card. Users can personalize dot patterns, corner shapes, background colors, and even add a custom logo, ensuring each QR code aligns with their personal or brand identity.",
     icon: myQrCodesFixed,
     icon2: myQrCodesFull,
   },
   {
-    id: 6,
+    id: 5,
     title: "Apple Wallet Cards",
-    description: "This is the component",
+    description:
+      "This feature allows users to save their digital card to Apple Wallet or Google Wallet. The wallet stores all relevant information from the individual or company card and includes the QR code for easy sharing.",
     icon: appleWalletFull,
   },
   {
-    id: 7,
+    id: 6,
     title: "Analytics",
-    description: "This is the component",
+    description:
+      "This feature provides users with detailed insights into their digital card’s performance. Users can track total and unique views, view engagement trends over time via interactive graphs, monitor average time spent, bounce rate, geographic data (cities and countries), device and browser statistics, and analyze custom action events such as button clicks and click-through rates on specific templates.",
     icon: analyticsFixed,
     icon2: analyticsFull,
   },
   {
-    id: 8,
+    id: 7,
     title: "Profile Type",
-    description: "This is the component",
+    description:
+      "This feature allows users to select and switch between an individual or a business profile. Choosing a business profile enables collaboration by inviting team members and sharing company information, while the individual profile focuses on personal branding and customization. This flexibility ensures that users can tailor their digital presence to their specific needs, whether personal or professional.",
     icon: profiletypeFull,
   },
   {
-    id: 9,
+    id: 8,
     title: "Team Members",
-    description: "This is the component",
+    description:
+      "This feature enables company owners and administrators to manage their team efficiently. Users can generate and share invite codes via copy or email, create alternative profiles without registering new accounts, and edit or update existing profiles. For companies with a subscription plan, templates can be assigned to team members, ensuring a consistent digital presence across the organization.",
     icon: teamMembersFixed,
     icon2: teamMembersFull,
   },
   {
-    id: 10,
+    id: 9,
     title: "Security",
-    description: "This is the component",
+    description:
+      "This feature allows users to securely manage their account and subscription settings. Users can update login credentials, including username and password, and maintain control over their subscription plan—viewing status, billing history, next payment date, and options to cancel or reactivate. Subscription management is integrated with Stripe, providing a seamless and secure billing experience.",
     icon: securityFixed,
     icon2: securityFull,
-  },
-  {
-    id: 11,
-    title: "Customisable",
-    description: "This is the component",
-    icon: customisableFull,
   },
 ];
 
 const templates = [
-  { id: 1, title: "BaseV2", image: BaseV2 },
-  { id: 2, title: "ExecV2", image: ExecV2 },
-  { id: 3, title: "Fluro", image: Fluro },
-  { id: 4, title: "PlayV2", image: PlayV2 },
-  { id: 5, title: "Glace", image: Glace },
+  {
+    id: 1,
+    title: "BaseV2",
+    image: BaseV2,
+    colors: ["custom", "reset"],
+    fontColors: ["white", "black"],
+  },
+  {
+    id: 2,
+    title: "ExecV2",
+    image: ExecV2,
+    colors: ["gray", "pink", "gold", "black", "blue"],
+    fontColors: ["white"],
+  },
+  {
+    id: 3,
+    title: "Fluro",
+    image: Fluro,
+    colors: ["red", "green", "blue"],
+    fontColors: ["black"],
+  },
+  {
+    id: 4,
+    title: "PlayV2",
+    image: PlayV2,
+    colors: ["blue"],
+    fontColors: ["white"],
+  },
+  {
+    id: 5,
+    title: "Glace",
+    image: Glace,
+    colors: ["customCard", "reset"],
+    fontColors: ["white", "black"],
+    extraSetting: "blur",
+  },
 ];
 
 const KeepMeComponents = ({
@@ -134,14 +173,22 @@ const KeepMeComponents = ({
   const templatesRowRef = useRef(null);
   const templatesContainerRef = useRef(null);
 
+  const customisableRef = useRef(null);
+
   useGSAP(
     () => {
       const cards = gsap.utils.toArray(".card");
       const profileItems = gsap.utils.toArray(".profile-item");
 
-      gsap.set(".profile-title", { opacity: 0, x: -20 });
+      gsap.set(".profile-title-description", { opacity: 0, x: -20 });
       gsap.set(".profile-image", { y: 800 });
-      gsap.set(".profile-description", { opacity: 0, x: -20 });
+
+      gsap.set(customisableRef.current, {
+        opacity: 0,
+        x: -400,
+        scale: 0.7,
+        filter: "blur(5px)",
+      });
 
       // Set initial positions
       cards.forEach((card, index) => {
@@ -181,7 +228,7 @@ const KeepMeComponents = ({
           ease: "none",
           duration: totalScroll * 0.05,
         },
-        totalScroll * 0.02,
+        totalScroll * 0.01,
       );
 
       sections.forEach((section, index) => {
@@ -197,8 +244,7 @@ const KeepMeComponents = ({
           const itemDuration = section.hold / profileItems.length;
 
           profileItems.forEach((item, i) => {
-            const title = item.querySelector(".profile-title");
-            const desc = item.querySelector(".profile-description");
+            const title = item.querySelector(".profile-title-description");
             const imageContainer = item.querySelector(".profile-image");
             const tallImg = item.querySelector(".tall-img-scroll");
             const shortImg = item.querySelector(".short-img-scroll");
@@ -234,7 +280,7 @@ const KeepMeComponents = ({
 
             // 3. Cross-fade the TITLE (Delayed until image is halfway up)
             tl.to(
-              [title, desc],
+              [title],
               {
                 opacity: 1,
                 x: 0,
@@ -245,18 +291,11 @@ const KeepMeComponents = ({
 
             // 4. Fade out the PREVIOUS title and image
             if (i > 0) {
-              const prevTitle =
-                profileItems[i - 1].querySelector(".profile-title");
-
-              const prevDecs = profileItems[i - 1].querySelector(
-                ".profile-description",
+              const prevTitle = profileItems[i - 1].querySelector(
+                ".profile-title-description",
               );
 
-              tl.to(
-                [prevTitle, prevDecs],
-                { opacity: 0, x: 20, duration: 0.2 },
-                "<",
-              );
+              tl.to([prevTitle], { opacity: 0, x: 20, duration: 0.2 }, "<");
             }
 
             // 5. Scroll tall image to the top
@@ -267,7 +306,6 @@ const KeepMeComponents = ({
               const backHeight = tallImg.offsetHeight;
               // Calculate how much we need to move up so the bottom aligns
               const scrollDistance = backHeight - frontHeight;
-              console.log(frontHeight);
 
               if (scrollDistance > 0) {
                 // Animate y instead of top for smooth GPU animation
@@ -280,28 +318,51 @@ const KeepMeComponents = ({
                 tl.to({}, { duration: 0.5 });
               }
             }
-
-            // 6. EXTRA HOLD for "Templates"
-            if (i === 3 && templatesRowRef.current) {
-              const totalWidth =
-                templatesRowRef.current.scrollWidth -
-                templatesContainerRef.current.clientWidth +
-                415;
-
-              // Hold first
-              tl.to({}, { duration: 200 });
-
-              // Horizontal scroll
-              tl.to(templatesRowRef.current, {
-                x: -totalWidth,
-                ease: "none",
-                duration: 1400,
-              });
-
-              // Hold last
-              tl.to({}, { duration: 200 });
-            }
           });
+        } else if (section.id === 3) {
+          if (templatesRowRef.current) {
+            const totalWidth =
+              templatesRowRef.current.scrollWidth -
+              templatesContainerRef.current.clientWidth +
+              700;
+
+            // Hold first
+            tl.to({}, { duration: 200 });
+
+            // Horizontal scroll
+            tl.to(templatesRowRef.current, {
+              x: -totalWidth,
+              ease: "none",
+              duration: 1400,
+            });
+
+            // Transition OUT the templates row
+            tl.to(templatesRowRef.current, {
+              scale: 0.7,
+              rotateY: 15,
+              opacity: 0,
+              filter: "blur(5px)",
+              duration: 500,
+              ease: "power2.inOut",
+            });
+
+            // Bring IN the hero
+            tl.to(
+              customisableRef.current,
+              {
+                opacity: 1,
+                filter: "blur(0px)",
+                x: 0,
+                scale: 1,
+                duration: 500,
+                ease: "power3.out",
+              },
+              "<+300",
+            );
+
+            // Hold hero
+            tl.to({}, { duration: 300 });
+          }
         } else {
           tl.to({}, { duration: section.hold });
         }
@@ -318,7 +379,7 @@ const KeepMeComponents = ({
       {sections.map((section, index) => (
         <section
           key={section.id}
-          className={`card absolute inset-0 w-full h-screen p-10 border-t border-white/20 shadow-[0_-20px_50px_rgba(0,0,0,0.5)] ${section.color}`}
+          className={`card absolute inset-0 w-full h-screen rounded-[40px] p-10 border border-black/20 shadow-[0_0px_50px_rgba(0,0,0,0.5)] ${section.color}`}
           style={{
             zIndex: index + 1,
           }}
@@ -327,22 +388,21 @@ const KeepMeComponents = ({
             <>
               <div className="pl-[10%]">
                 <h2
-                  className="text-[44px] font-black text-white uppercase tracking-tighter title-homepage"
+                  className="text-[44px] font-black text-black uppercase tracking-tighter title-homepage"
                   style={{ height: `${headerGap}px` }}
                 >
                   {section.title}
                 </h2>
 
-                <div className="mt-10 text-xl text-white/70">
+                <div className="mt-10 text-xl text-black/70">
                   {playKeepMeHomepage && (
                     <div
                       ref={videoWrapperRef}
-                      className={`bg-white absolute top-[55%] left-[50%] transform -translate-x-1/2 -translate-y-1/2
+                      className={`bg-[#efa8c4] absolute top-[55%] left-[50%] transform -translate-x-1/2 -translate-y-1/2
                overflow-hidden rounded-[40px] w-[80vw] h-[80vh] opacity-0 z-[200]`}
                     >
                       <h1
                         ref={selectedProjectRef}
-                        style={{ color: "#140014" }}
                         data-content="SELECTED PROJECT"
                         className="text-[5em] leading-[1em] whitespace-nowrap font-ica-rubrik text-black scale-0
          absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 font-semibold flex items-center justify-center"
@@ -359,7 +419,7 @@ const KeepMeComponents = ({
           ) : section.id === 2 ? (
             <div className="pl-[10%]">
               <h2
-                className="text-[44px] font-black text-white uppercase tracking-tighter"
+                className="text-[44px] font-black text-black uppercase tracking-tighter"
                 style={{ height: `${headerGap}px` }}
               >
                 {section.title}
@@ -372,76 +432,224 @@ const KeepMeComponents = ({
                     key={comp.id}
                     className="profile-item absolute flex items-center justify-between px-20 gap-10 w-full h-full"
                   >
-                    {/* Title: Positioned absolute so they all stack in one spot */}
-                    <h3 className="profile-title opacity-0 text-4xl font-bold text-white whitespace-nowrap absolute left-[10%] top-[30%] -translate-y-1/2">
-                      {comp.title}
-                    </h3>
-
-                    <div className="profile-description opacity-0 text-lg font-bold text-white whitespace-nowrap absolute left-[10%] top-[40%] -translate-y-1/2">
-                      {comp.description}
+                    <div className="profile-title-description opacity-0 h-[50vh] absolute left-[5%] top-[50%] -translate-y-1/2">
+                      {/* Title: Positioned absolute so they all stack in one spot */}
+                      <h3 className="text-4xl font-bold text-black whitespace-nowrap">
+                        {comp.title}
+                      </h3>
+                      <div className="max-w-[25vw] mt-10 text-lg font-bold text-black">
+                        {comp.description}
+                      </div>{" "}
                     </div>
 
                     {/* Image: This is what we will slide up */}
                     <div className="profile-image w-[55vw] h-auto flex items-center justify-center ml-auto">
-                      {comp.id === 4 ? (
-                        <div
-                          ref={templatesContainerRef}
-                          className="w-full h-full overflow-hidden rounded-[20px] border border-black/30 bg-white"
-                        >
-                          <div
-                            ref={templatesRowRef}
-                            className="flex gap-10 pl-[400px] py-9 h-full"
-                          >
-                            {templates.map((temp, index) => (
-                              <div
-                                key={index}
-                                className="flex bg-[#f9f9f9] rounded-[40px] h-[285px] sm:h-[450px] w-[297px] sm:w-[400px] 
-                                  shrink-0 justify-center items-center relative"
-                              >
-                                <div className="flex flex-col justify-center items-center w-full h-full z-10">
-                                  <img
-                                    src={temp.image}
-                                    alt={temp.title}
-                                    className="h-[70%] w-auto"
-                                  />
-                                  <div className="mt-6 text-black text-xl font-medium">
-                                    {temp.title}
-                                  </div>
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      ) : (
-                        <div className="relative overflow-hidden border border-black/30 h-full w-full rounded-[20px]">
+                      <div className="relative overflow-hidden border border-black/30 h-full w-full rounded-[20px]">
+                        <img
+                          src={comp.icon}
+                          alt={comp.title}
+                          className="short-img-scroll w-full h-full relative z-10 object-contain border border-white/20"
+                        />
+                        {comp.icon2 && (
                           <img
-                            src={comp.icon}
+                            src={comp.icon2}
                             alt={comp.title}
-                            className="short-img-scroll w-full h-full relative z-10 object-contain border border-white/20"
+                            className="tall-img-scroll w-full h-auto z-0 absolute top-0 object-cover border border-white/20"
                           />
-                          {comp.icon2 && (
-                            <img
-                              src={comp.icon2}
-                              alt={comp.title}
-                              className="tall-img-scroll w-full h-auto z-0 absolute top-0 object-cover border border-white/20"
-                            />
-                          )}
-                        </div>
-                      )}
+                        )}
+                      </div>
                     </div>
                   </div>
                 ))}
               </div>
             </div>
-          ) : (
-            <div className="pl-[10%]">
+          ) : section.id === 3 ? (
+            <div className="w-full">
               <h2
-                className="text-[44px] font-black text-white uppercase tracking-tighter"
+                className="text-[44px] font-black text-black uppercase tracking-tighter pl-[10%]"
                 style={{ height: `${headerGap}px` }}
               >
                 {section.title}
               </h2>
-              <div className="mt-10 text-xl text-white/70">dsadsdassd</div>
+
+              <div
+                ref={templatesContainerRef}
+                className="w-full h-full overflow-hidden rounded-[20px] mt-14"
+              >
+                <div
+                  ref={templatesRowRef}
+                  className="flex gap-6 pl-[10%] py-9 h-full"
+                >
+                  {templates.map((template, index) => (
+                    <div
+                      key={index}
+                      className="flex bg-white/40 rounded-[40px] h-[297px] sm:h-[450px] w-[297px] sm:w-[450px] 
+                                  shrink-0 justify-center items-center relative border border-black/20"
+                    >
+                      <div className="flex flex-col justify-evenly items-center w-full h-full z-10">
+                        <img
+                          src={template.image}
+                          alt={template.title}
+                          className="h-[70%] w-auto"
+                        />
+                        <div className="text-black font-inter text-[15px]">
+                          {template.title}
+                        </div>
+
+                        <div className="flex items-center justify-center gap-1">
+                          <div>
+                            {template.colors && (
+                              <div className="flex justify-center items-center gap-0.5 cursor-pointer">
+                                {template.colors.map((color, index) => (
+                                  <div
+                                    key={index}
+                                    className="w-[13px] h-[13px] border border-black rounded-full mb-1 transition-colors duration-200 ease-in-out"
+                                    style={{
+                                      backgroundColor: color,
+                                    }}
+                                  >
+                                    {color === "custom" && (
+                                      <img
+                                        src={colorWheel}
+                                        alt="colorswheel"
+                                        className="z-10 w-full h-full object-cover rounded-full"
+                                      />
+                                    )}
+
+                                    {color === "reset" && (
+                                      <div className="flex items-center justify-center text-white bg-[#252525] rounded-full z-10">
+                                        <FontAwesomeIcon
+                                          className="w-full h-full"
+                                          icon={faRotate}
+                                        />
+                                      </div>
+                                    )}
+
+                                    {/* Background Template Card */}
+                                    {color === "customCard" && (
+                                      <div className="flex items-center justify-center text-white bg-[#252525] rounded-full overflow-hidden z-10">
+                                        <div
+                                          className="w-[12px] h-[12px] bg-cover bg-center"
+                                          style={{
+                                            backgroundImage: `url(${glaceAvatar})`,
+                                          }}
+                                          aria-hidden="true"
+                                        />
+                                      </div>
+                                    )}
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+
+                          {template.extraSetting && (
+                            <>
+                              {template.title === "Glace" && (
+                                <>
+                                  <div className="border-r border-black h-5" />
+
+                                  <input
+                                    type="range"
+                                    min="0"
+                                    max="10"
+                                    step="0.1"
+                                    defaultValue={1}
+                                    className="w-20 range-slider"
+                                    style={{
+                                      background: `linear-gradient(to right, #D1D3D6 ${(1 / 10) * 100}%, #f3f3f3 ${(1 / 10) * 100}%)`,
+                                    }}
+                                    aria-label="GlaceCard blur effect"
+                                  />
+                                </>
+                              )}
+                            </>
+                          )}
+
+                          <div className="border-r border-black h-5" />
+
+                          <div>
+                            {template.fontColors && (
+                              <div>
+                                <div className="flex justify-center items-center gap-0.5 cursor-pointer">
+                                  {template.fontColors.map(
+                                    (fontColor, index) => (
+                                      <div
+                                        key={index}
+                                        className="p-[2px] w-[13px] h-[13px] border border-black flex rounded-full mb-1 transition-border duration-200 ease-in-out"
+                                        style={{
+                                          backgroundColor: fontColor,
+                                        }}
+                                      ></div>
+                                    ),
+                                  )}
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* NEW HERO SCENE */}
+              <div
+                ref={customisableRef}
+                className="absolute inset-0 flex items-center justify-center pointer-events-none"
+              >
+                <div className="flex justify-between items-center w-full h-full px-[3%] gap-10">
+                  <img
+                    className="w-[50vw] max-h-max rounded-[40px]"
+                    src={customisableFull}
+                  />
+                  <div className="flex flex-col">
+                    <h2 className="text-black font-bold text-[40px]">
+                      Customisable
+                    </h2>
+                    <p className="text-black text-[16px] mt-5">
+                      Customisable is a powerful template system that allows you
+                      to fully design and personalize your digital card. You can
+                      freely add, remove, and rearrange elements using an
+                      intuitive drag-and-drop interface, giving you complete
+                      control over the layout and structure.
+                      <br />
+                      <br />
+                      Each element comes with its own dedicated settings panel,
+                      where you can adjust typography (font size, font family,
+                      and colors), customize button styles, control spacing,
+                      dimensions, and scale images precisely to your needs.
+                      <br />
+                      <br />
+                      The platform also supports advanced features such as an
+                      integrated AI assistant that can answer questions about
+                      your business, products, pricing, or availability based on
+                      the content you provide. You can upload catalogs,
+                      schedules, or any business-related information, and the
+                      assistant will use them to help your visitors.
+                      <br />
+                      <br />
+                      Additional features include a meeting booking button,
+                      fully customizable backgrounds (including image uploads
+                      and blur effects), QR code generation for fast sharing and
+                      scanning, and independent layout customization for mobile
+                      and desktop to ensure a perfect experience on every
+                      device.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="pl-[10%]">
+              <h2
+                className="text-[44px] font-black text-black uppercase tracking-tighter"
+                style={{ height: `${headerGap}px` }}
+              >
+                {section.title}
+              </h2>
+              <div className="mt-10 text-xl text-black/70">dsadsdassd</div>
             </div>
           )}
         </section>

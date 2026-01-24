@@ -29,11 +29,9 @@ const KeepMeSection = () => {
   const mySvgRef = useRef(null);
   const selectedProjectRef = useRef(null);
   const menuRef = useRef(null);
-  const menuInnerRef = useRef(null);
   const keepmeWrapperRef = useRef(null);
 
   const [playKeepMeHomepage, setPlayKeepMeHomepage] = useState(false);
-  const [showSvg, setShowSvg] = useState(false);
 
   useGSAP(
     () => {
@@ -53,20 +51,24 @@ const KeepMeSection = () => {
         scrollTrigger: {
           id: "keepme-finish-rectangle",
           trigger: document.body,
-          start: "top -110%",
+          start: "top -90%",
           end: "+=1500",
           scrub: true,
           onUpdate: (self) => {
             setPlayKeepMeHomepage(self.progress >= 0.8);
           },
-          onLeave: () => setShowSvg(true),
-          onEnterBack: () => setShowSvg(false),
+          onLeave: () => {
+            gsap.to(svgOutterWrapper, { autoAlpha: 0, duration: 0.3 });
+          },
+          onEnterBack: () => {
+            gsap.to(svgOutterWrapper, { autoAlpha: 1, duration: 0.3 });
+          },
         },
       });
 
       tl.addLabel("circleToLogo", 0);
       tl.addLabel("logoToRect", 0.7);
-      tl.addLabel("showVideo", 0.95);
+      tl.addLabel("showVideo", 0.96);
 
       // Circle -> Logo (first 30% of timeline)
       const svgWidth = window.innerWidth * 0.8;
@@ -85,6 +87,8 @@ const KeepMeSection = () => {
             circle,
             {
               morphSVG: logoPath,
+              fill: "#efa8c4",
+              stroke: "#efa8c4",
             },
             "circleToLogo",
           );
@@ -197,65 +201,6 @@ const KeepMeSection = () => {
         },
         "showVideo",
       );
-
-      // tl.to(
-      //   el,
-      //   {
-      //     width: "80vw",
-      //     height: "70vh",
-      //     backgroundColor: "#E8E9E8",
-      //   },
-      //   0.9
-      // );
-    },
-    { dependencies: [playKeepMeHomepage, showSvg], revertOnUpdate: true },
-  );
-
-  useGSAP(
-    () => {
-      const menuInner = menuInnerRef?.current;
-      const keepmeFinish = ScrollTrigger.getById("keepme-finish-rectangle");
-
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          // id: "keepme-sections-scroll",
-          trigger: document.body,
-          start: () => keepmeFinish.end,
-          end: "+=4000",
-          scrub: true,
-        },
-      });
-
-      // tl.to(
-      //   videoWrapperRef?.current,
-      //   {
-      //     top: "-50%",
-      //     ease: "power2.inOut",
-      //   },
-      //   0.4
-      // );
-
-      if (menuInner) {
-        gsap.fromTo(
-          keepmeWrapperRef.current,
-          {
-            clipPath: "circle(150% at 50% 50%)",
-            webkitClipPath: "circle(150% at 50% 50%)",
-          },
-          {
-            clipPath: "circle(0% at 50% 50%)",
-            webkitClipPath: "circle(0% at 50% 50%)",
-            ease: "none",
-            scrollTrigger: {
-              id: "keepme-sections-scroll",
-              trigger: document.body,
-              start: () => `${keepmeFinish.end}+=3200`,
-              end: "+=1500",
-              scrub: true,
-            },
-          },
-        );
-      }
     },
     { dependencies: [playKeepMeHomepage], revertOnUpdate: true },
   );
@@ -292,7 +237,7 @@ const KeepMeSection = () => {
             scale: 120,
             transformOrigin: "center center",
             ease: "power3.inOut",
-            duration: 1,
+            duration: 0.8,
           });
       }
     },
@@ -305,74 +250,103 @@ const KeepMeSection = () => {
         ref={keepmeWrapperRef}
         className="fixed z-10 w-full h-full top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center"
       >
-        {!showSvg && (
-          <div
-            ref={svgOutterWrapperRef}
-            className="flex items-center gap-4 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-          >
-            <div ref={svgOriginRef} className="relative w-[70vw] min-h-[200px]">
-              <svg
-                ref={mySvgRef}
-                className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-full z-[100]"
-              >
-                <g ref={circleWrapperRef}>
-                  {[...Array(6)].map((_, i) => {
-                    const r = 1.5; // radius of circle
-                    const svgWidth = window.innerWidth * 0.7; // 70vw
-                    const cx = ((i + 0.5) * svgWidth) / 6;
-                    const cy = 160; // vertical position
-
-                    return (
-                      <path
-                        key={i}
-                        ref={(el) => (circleRefs.current[i] = el)}
-                        style={{ fill: "white" }}
-                        d={`
-                    M ${cx - r}, ${cy}
-                    a ${r},${r} 0 1,0 ${r * 2},0
-                    a ${r},${r} 0 1,0 ${-r * 2},0
-                `}
-                      />
-                    );
-                  })}
-                </g>
-
+        <div
+          ref={svgOutterWrapperRef}
+          className="flex items-center gap-4 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+        >
+          <div ref={svgOriginRef} className="relative w-[70vw] min-h-[200px]">
+            <svg
+              ref={mySvgRef}
+              className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-full z-[100]"
+            >
+              <g ref={circleWrapperRef}>
                 {[...Array(6)].map((_, i) => {
-                  const svgWidth = window.innerWidth * 0.8;
-                  const rectWidth = svgWidth / 6;
+                  const size = 15;
+                  const svgWidth = window.innerWidth * 0.7;
+                  const cx = ((i + 0.5) * svgWidth) / 6;
+                  const cy = 80;
+
+                  const shapes = [
+                    `
+                        M ${cx}, ${cy - size}
+                        A ${size},${size} 0 1,1 ${cx}, ${cy + size}
+                        A ${size * 0.6},${size} 0 1,0 ${cx}, ${cy - size}
+                      `,
+                    `
+                        M ${cx}, ${cy - size}
+                        A ${size},${size} 0 0,1 ${cx}, ${cy + size}
+                        L ${cx}, ${cy}
+                        Z
+                      `,
+                    `
+                        M ${cx}, ${cy - size}
+                        A ${size},${size} 0 0,1 ${cx}, ${cy + size}
+                        A ${size * 0.6},${size} 0 0,1 ${cx}, ${cy - size}
+                      `,
+                    ` 
+                        M ${cx}, ${cy - size}
+                        A ${size},${size} 0 0,0 ${cx}, ${cy + size}
+                        A ${size * 0.6},${size} 0 0,0 ${cx}, ${cy - size}
+                      `,
+                    `
+                        M ${cx}, ${cy - size}
+                        A ${size},${size} 0 0,0 ${cx}, ${cy + size}
+                        L ${cx}, ${cy}
+                        Z
+                      `,
+                    `
+                        M ${cx}, ${cy - size}
+                        A ${size},${size} 0 0,0 ${cx}, ${cy + size}
+                        A ${size * 0.6},${size} 0 0,1 ${cx}, ${cy - size}
+                      `,
+                  ];
 
                   return (
                     <path
                       key={i}
-                      style={{ visibility: "hidden" }}
-                      ref={(el) => (rectRefs.current[i] = el)}
-                      d={`
+                      ref={(el) => (circleRefs.current[i] = el)}
+                      d={shapes[i]}
+                      fill="#d6266b"
+                      stroke="#d6266b"
+                      strokeWidth="0.5"
+                    />
+                  );
+                })}
+              </g>
+
+              {[...Array(6)].map((_, i) => {
+                const svgWidth = window.innerWidth * 0.8;
+                const rectWidth = svgWidth / 6;
+
+                return (
+                  <path
+                    key={i}
+                    style={{ visibility: "hidden" }}
+                    ref={(el) => (rectRefs.current[i] = el)}
+                    d={`
                     M${i * rectWidth} 0
                     L${(i + 1) * rectWidth} 0
                     L${(i + 1) * rectWidth} 800
                     L${i * rectWidth} 800
                     Z
                   `}
-                    />
-                  );
-                })}
-
-                {logoPaths.map((d, i) => (
-                  <path
-                    key={i}
-                    ref={(el) => (logoPathRefs.current[i] = el)}
-                    fill="#17ff27"
-                    style={{ visibility: "hidden" }}
-                    d={d}
                   />
-                ))}
-              </svg>
-            </div>
-          </div>
-        )}
-      </div>
+                );
+              })}
 
-      <div className="h-[1000px]" />
+              {logoPaths.map((d, i) => (
+                <path
+                  key={i}
+                  ref={(el) => (logoPathRefs.current[i] = el)}
+                  fill="#17ff27"
+                  style={{ visibility: "hidden" }}
+                  d={d}
+                />
+              ))}
+            </svg>
+          </div>
+        </div>
+      </div>
 
       <div className="relative">
         <KeepMeComponents
