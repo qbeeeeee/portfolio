@@ -15,6 +15,8 @@ const App = () => {
     const lenis = new Lenis();
     lenisRef.current = lenis;
 
+    lenis.stop();
+
     lenis.on("scroll", ScrollTrigger.update);
 
     const tick = (time) => {
@@ -22,6 +24,8 @@ const App = () => {
     };
     gsap.ticker.add(tick);
     gsap.ticker.lagSmoothing(0);
+
+    window.scrollTo(0, 0);
 
     return () => {
       gsap.ticker.remove(tick);
@@ -44,13 +48,31 @@ const App = () => {
   const vh = window.innerHeight;
   const totalHeight = 1.1 * vh + 5500;
 
+  useEffect(() => {
+    // Disable browser scroll restoration
+    if ("scrollRestoration" in window.history) {
+      window.history.scrollRestoration = "manual";
+    }
+
+    // Force to top immediately
+    window.scrollTo(0, 0);
+  }, []);
+
+  useEffect(() => {
+    if (animationFinished) {
+      resumeScroll();
+    }
+  }, [animationFinished]);
+
   return (
     <div
       style={{
         background:
           "radial-gradient(circle at center, #1a001a 0%, #000000 100%)",
       }}
-      className="overflow-x-hidden relative"
+      className={`overflow-x-hidden relative ${
+        !animationFinished ? "overflow-hidden h-screen" : ""
+      }`}
     >
       {/* {animationFinished && (
         <>
@@ -66,7 +88,11 @@ const App = () => {
         <KeepMeSection />
       </div>
 
-      <OtherProjects stopScroll={stopScroll} resumeScroll={resumeScroll} />
+      <OtherProjects
+        animationFinished={animationFinished}
+        stopScroll={stopScroll}
+        resumeScroll={resumeScroll}
+      />
 
       <div className="h-[100vh]"></div>
     </div>

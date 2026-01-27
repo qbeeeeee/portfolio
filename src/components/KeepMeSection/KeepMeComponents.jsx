@@ -28,6 +28,10 @@ import myDigitalCardFixed from "../../assets/keepme/sections/myDigitalCardFixed.
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRotate } from "@fortawesome/free-solid-svg-icons";
 import colorWheel from "../../assets/color-wheel.webp";
+import "./../../assets/css/custom.css";
+import customisablePlans from "./../../assets/keepme/subscription/customisablePlans.PNG";
+import billingDetails from "./../../assets/keepme/subscription/billingDetails.PNG";
+import upgradeSubscription from "./../../assets/keepme/subscription/upgradeSubscription.PNG";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -45,10 +49,10 @@ const glaceAvatar =
 // #E0D7FF, #A58BA3
 
 const sections = [
-  { id: 1, title: "Homepage", color: "bg-[#d6266b]", hold: 2600 },
+  { id: 1, title: "Homepage", color: "bg-[#d6266b]", hold: 2700 },
   { id: 2, title: "Profile Page", color: "bg-[#8e26d6]", hold: 6500 },
   { id: 3, title: "Templates", color: "bg-[#c01ac0]", hold: 800 },
-  { id: 4, title: "Dashboard", color: "bg-[#6b26d6]", hold: 800 },
+  { id: 4, title: "Subscription", color: "bg-[#6b26d6]", hold: 800 },
 ];
 
 const profilePageComponents = [
@@ -363,6 +367,19 @@ const KeepMeComponents = ({
             // Hold hero
             tl.to({}, { duration: 300 });
           }
+        } else if (section.id === 4) {
+          const items = gsap.utils.toArray(".sub-item");
+
+          if (items.length) {
+            tl.to(items, {
+              y: 0,
+              opacity: 1,
+              stagger: 80,
+              ease: "power3.out",
+              duration: 300,
+            });
+            tl.to({}, { duration: section.hold });
+          }
         } else {
           tl.to({}, { duration: section.hold });
         }
@@ -379,16 +396,17 @@ const KeepMeComponents = ({
       {sections.map((section, index) => (
         <section
           key={section.id}
-          className={`card absolute inset-0 w-full h-screen rounded-[40px] p-10 border border-black/20 shadow-[0_0px_50px_rgba(0,0,0,0.5)] ${section.color}`}
+          className={`card absolute inset-0 w-full rounded-[40px] p-10 border border-black/20 shadow-[0_0px_50px_rgba(0,0,0,0.5)] ${section.color}`}
           style={{
             zIndex: index + 1,
+            height: `calc(100vh - ${headerGap * index}px)`,
           }}
         >
           {section.id === 1 ? (
             <>
               <div className="pl-[10%]">
                 <h2
-                  className="text-[44px] font-black text-black uppercase tracking-tighter title-homepage"
+                  className="text-[44px] font-ica-rubrik text-black uppercase title-homepage"
                   style={{ height: `${headerGap}px` }}
                 >
                   {section.title}
@@ -419,14 +437,14 @@ const KeepMeComponents = ({
           ) : section.id === 2 ? (
             <div className="pl-[10%]">
               <h2
-                className="text-[44px] font-black text-black uppercase tracking-tighter"
+                className="text-[44px] font-ica-rubrik text-black uppercase"
                 style={{ height: `${headerGap}px` }}
               >
                 {section.title}
               </h2>
 
               {/* ... inside section.id === 2 mapping ... */}
-              <div className="absolute inset-0 flex items-center justify-center">
+              <div className="absolute top-[15%] inset-0 flex items-center justify-center">
                 {profilePageComponents.map((comp) => (
                   <div
                     key={comp.id}
@@ -434,10 +452,10 @@ const KeepMeComponents = ({
                   >
                     <div className="profile-title-description opacity-0 h-[50vh] absolute left-[5%] top-[50%] -translate-y-1/2">
                       {/* Title: Positioned absolute so they all stack in one spot */}
-                      <h3 className="text-4xl font-bold text-black whitespace-nowrap">
+                      <h3 className="text-4xl font-bold font-inter text-black whitespace-nowrap">
                         {comp.title}
                       </h3>
-                      <div className="max-w-[25vw] mt-10 text-lg font-bold text-black">
+                      <div className="max-w-[25vw] mt-10 font-inter text-lg font-semibold text-black">
                         {comp.description}
                       </div>{" "}
                     </div>
@@ -466,7 +484,7 @@ const KeepMeComponents = ({
           ) : section.id === 3 ? (
             <div className="w-full">
               <h2
-                className="text-[44px] font-black text-black uppercase tracking-tighter pl-[10%]"
+                className="text-[44px] font-ica-rubrik text-black uppercase pl-[10%]"
                 style={{ height: `${headerGap}px` }}
               >
                 {section.title}
@@ -605,10 +623,10 @@ const KeepMeComponents = ({
                     src={customisableFull}
                   />
                   <div className="flex flex-col">
-                    <h2 className="text-black font-bold text-[40px]">
+                    <h2 className="text-black font-inter font-bold text-[40px]">
                       Customisable
                     </h2>
-                    <p className="text-black text-[16px] mt-5">
+                    <p className="font-inter text-lg font-semibold text-black mt-5">
                       Customisable is a powerful template system that allows you
                       to fully design and personalize your digital card. You can
                       freely add, remove, and rearrange elements using an
@@ -642,14 +660,72 @@ const KeepMeComponents = ({
               </div>
             </div>
           ) : (
-            <div className="pl-[10%]">
+            <div>
               <h2
-                className="text-[44px] font-black text-black uppercase tracking-tighter"
+                className="text-[44px] font-ica-rubrik text-black uppercase pl-[10%]"
                 style={{ height: `${headerGap}px` }}
               >
                 {section.title}
               </h2>
-              <div className="mt-10 text-xl text-black/70">dsadsdassd</div>
+
+              <div className="flex items-start justify-between gap-5 mx-[5%] mt-6 p-10">
+                {/* Card 1 */}
+                <div className="sub-item opacity-0 translate-y-[80px] flex items-center gap-4">
+                  <img
+                    src={customisablePlans}
+                    alt="Choose plan"
+                    className="h-[50vh] max-h-full w-auto rounded-[40px] object-contain"
+                  />
+
+                  <div className="flex flex-col items-center">
+                    <h3 className="text-xl md:text-2xl font-semibold text-center">
+                      Choose Your Plan
+                    </h3>
+                    <p className="text-gray-400 text-center max-w-xs">
+                      Users can select between multiple plans based on the
+                      number of profiles and choose monthly or annual billing.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Card 2 */}
+                <div className="sub-item opacity-0 translate-y-[80px] flex items-center gap-4">
+                  <img
+                    src={billingDetails}
+                    alt="Subscription details"
+                    className="h-[50vh] max-h-full w-auto rounded-[40px] object-contain"
+                  />
+
+                  <div className="flex flex-col items-center">
+                    <h3 className="text-xl md:text-2xl font-semibold text-center">
+                      Manage Subscription
+                    </h3>
+                    <p className="text-gray-400 text-center max-w-xs">
+                      A dedicated dashboard shows the active plan, next billing
+                      date, payment history, and billing details.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Card 3 */}
+                <div className="sub-item opacity-0 translate-y-[80px] flex items-center gap-4">
+                  <img
+                    src={upgradeSubscription}
+                    alt="Upgrade plan"
+                    className="h-[50vh] max-h-full w-auto rounded-[40px] object-contain"
+                  />
+
+                  <div className="flex flex-col items-center">
+                    <h3 className="text-xl md:text-2xl font-semibold text-center">
+                      Upgrade Anytime
+                    </h3>
+                    <p className="text-gray-400 text-center max-w-xs">
+                      Users can upgrade their plan instantly through a focused
+                      upgrade flow without interrupting their subscription.
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
           )}
         </section>

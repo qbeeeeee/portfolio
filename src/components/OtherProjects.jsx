@@ -36,13 +36,15 @@ const projects = [
   { src: airplane, alt: "Airplane 3D" },
 ];
 
-const OtherProjects = ({ stopScroll, resumeScroll }) => {
+const OtherProjects = ({ stopScroll, resumeScroll, animationFinished }) => {
   const projectsWrapperRef = useRef(null);
   const planetRef = useRef(null);
   const projectInfoRef = useRef(null);
 
   useGSAP(
     () => {
+      if (!animationFinished) return;
+
       const menuTrigger = ScrollTrigger.getById("keepme-components");
       const projectsWrapper = projectsWrapperRef?.current;
 
@@ -60,7 +62,7 @@ const OtherProjects = ({ stopScroll, resumeScroll }) => {
         },
       });
     },
-    { dependencies: [], revertOnUpdate: true },
+    { dependencies: [animationFinished], revertOnUpdate: true },
   );
 
   useGSAP(

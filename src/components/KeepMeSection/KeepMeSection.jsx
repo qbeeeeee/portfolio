@@ -1,10 +1,8 @@
-import React, { use, useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { MorphSVGPlugin } from "gsap/MorphSVGPlugin";
-import keepme from "./../../assets/keepme/KeepMe_logo_fullcolor_rgb.svg";
-import keepMeProfilePage from "./../../assets/keepme/ProfilePage.mp4";
 import KeepMeComponents from "./KeepMeComponents";
 
 gsap.registerPlugin(ScrollTrigger, MorphSVGPlugin);
@@ -237,7 +235,7 @@ const KeepMeSection = () => {
             scale: 120,
             transformOrigin: "center center",
             ease: "power3.inOut",
-            duration: 0.8,
+            duration: 1,
           });
       }
     },
