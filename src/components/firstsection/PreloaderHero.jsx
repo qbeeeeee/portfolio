@@ -70,6 +70,7 @@ const skills = [
 
 export default function Hero({ setAnimationFinished }) {
   const root = useRef(null);
+  const isMobile = window.innerWidth < 640;
 
   useGSAP(
     () => {
@@ -188,10 +189,18 @@ export default function Hero({ setAnimationFinished }) {
             });
           }
 
-          function startSkillsFloating() {
+          function startSkillsAnimation() {
             const items = skillsWrapperRef.current?.children;
             if (!items) return;
 
+            if (isMobile) {
+              startSkillsMarquee(items);
+            } else {
+              startSkillsFloating(items);
+            }
+          }
+
+          function startSkillsFloating(items) {
             Array.from(items).forEach((item, index) => {
               gsap.to(item, {
                 yPercent: window.innerWidth > 1536 ? 10 : 8,
@@ -202,6 +211,33 @@ export default function Hero({ setAnimationFinished }) {
                 delay: index * 0.2,
               });
             });
+          }
+
+          function startSkillsMarquee() {
+            const wrapper = skillsWrapperRef.current;
+            if (!wrapper || wrapper.dataset.animated) return;
+            wrapper.dataset.animated = "true";
+
+            // 1. Force the layout to be a single horizontal line
+            // This ensures clones stay on the RIGHT, not underneath
+            wrapper.style.display = "flex";
+            wrapper.style.flexWrap = "nowrap";
+            wrapper.style.width = "max-content";
+
+            // 2. Clone the inner HTML
+            wrapper.innerHTML += wrapper.innerHTML;
+
+            // 3. Animate the ENTIRE wrapper as one unit
+            gsap.fromTo(
+              wrapper,
+              { xPercent: -50 },
+              {
+                xPercent: 0,
+                repeat: -1,
+                duration: 15,
+                ease: "none",
+              },
+            );
           }
 
           const tl = gsap.timeline({ delay: 0.5 });
@@ -333,7 +369,7 @@ export default function Hero({ setAnimationFinished }) {
               "-=1.5",
             )
             .add(playSkillsEntrance, "<")
-            .add(startSkillsFloating, "<")
+            .add(startSkillsAnimation, ">")
             .add(() => setAnimationFinished(true));
         });
       }, root);
@@ -349,6 +385,8 @@ export default function Hero({ setAnimationFinished }) {
 
   useGSAP(
     () => {
+      if (isMobile) return;
+
       const container = containerRef.current;
       const wrapper = skillsWrapperRef.current;
       if (!container || !wrapper) return;
@@ -421,7 +459,12 @@ export default function Hero({ setAnimationFinished }) {
           .to(
             splitB.chars,
             {
-              y: window.innerWidth > 1536 ? -90 : -80,
+              y:
+                window.innerWidth > 1536
+                  ? -90
+                  : isMobile
+                    ? -window.innerHeight * 0.052
+                    : -80,
               duration: 0.33,
               stagger: 0.02,
               ease: "sine.inOut",
@@ -440,7 +483,7 @@ export default function Hero({ setAnimationFinished }) {
         ref={container}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
-        className="inline-flex flex-col relative text-[#230322] cursor-pointer rounded-[15px] px-4 h-[79px] 2xl:h-[85px] overflow-hidden font-bold hover-button"
+        className="inline-flex flex-col relative text-[#230322] cursor-pointer rounded-[15px] px-2 sm:px-4 h-[5vh] sm:h-[79px] 2xl:h-[85px] overflow-hidden font-bold hover-button"
       >
         <span className="absolute inset-0 bg-white z-0 origin-left hover-bg" />
 
@@ -491,7 +534,7 @@ export default function Hero({ setAnimationFinished }) {
       <div className="preloader-progress">
         <div className="preloader-progress-bar"></div>
         <div className="preloader-logo invisible absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full text-center z-2 mix-blend-difference">
-          <h1 className="relative text-[#d7a2ff] text-[3rem] font-medium leading-[1]">
+          <h1 className="relative text-[#d7a2ff] text-[8vw] sm:text-[3rem] font-medium leading-[1]">
             Konstantinos
           </h1>
         </div>
@@ -507,7 +550,7 @@ export default function Hero({ setAnimationFinished }) {
 
       <div className="w-full h-full">
         <section className="hero-section flex items-center justify-center relative w-full h-[100svh] overflow-hidden">
-          <div className="relative rounded-[4rem] w-[90%] h-[90%]">
+          <div className="relative rounded-[4rem] w-full sm:w-[90%] h-full sm:h-[90%]">
             <div className="hero-img absolute w-full h-full scale-[1.75] will-change-transform">
               <div className="absolute inset-0 flex justify-center items-center z-20 [transform-style:preserve-3d] [transform:perspective(1200px)]">
                 <div
@@ -522,59 +565,65 @@ export default function Hero({ setAnimationFinished }) {
                     <img
                       src={topHero}
                       alt=""
-                      className="absolute inset-0 h-full w-full object-cover rounded-[40px] top-hero-image"
+                      className="absolute inset-0 h-full w-full object-cover sm:rounded-[40px] top-hero-image"
                     />
                   </div>
                   <img
                     src={bottomHero}
                     alt=""
-                    className="absolute inset-0 h-full w-full object-cover rounded-[40px] bottom-hero-image"
+                    className="absolute inset-0 h-full w-full object-cover sm:rounded-[40px] bottom-hero-image"
                   />
 
                   <div ref={contentRef} className="h-full relative">
-                    <div className="top-hero-content flex items-end justify-between px-16 2xl:px-20 w-full h-[40%] gap-16 whitespace-nowrap z-[400] relative [perspective:800px]">
+                    <div
+                      className="top-hero-content absolute top-[10%] sm:top-[12%] w-full flex flex-col-reverse sm:flex-row items-center sm:items-end 
+                    justify-between px-5 sm:px-16 2xl:px-20 gap-[15vh] sm:gap-16 whitespace-nowrap z-[400] [perspective:800px]"
+                    >
                       <div className="flex flex-col items-center header-qr-code">
                         <img
                           src={qrCode}
                           alt="QR Code"
-                          className="hover:cursor-pointer hover:bg-[#ffffff32] border border-[#ffffffc6] shadow-xl rounded-[10px] w-40 h-40"
+                          className="hover:cursor-pointer hover:bg-[#ffffff32] border border-[#ffffffc6] shadow-xl rounded-[10px] w-[16vh] sm:w-[clamp(120px,10vw,160px)] h-[16vh] sm:h-[clamp(120px,10vw,160px)]"
                         />
-                        <h2 className="mt-4 text-[16px] text-white font-inter font-bold text-center">
+                        <h2 className="mt-4 text-[1.6vh] sm:text-[16px] text-white font-inter font-bold text-center">
                           My KeepMe Card
                         </h2>
                       </div>
 
-                      <div
-                        className="grid grid-cols-5 gap-4 2xl:gap-5"
-                        ref={skillsWrapperRef}
-                      >
-                        {skills.map((skill, index) => (
-                          <div
-                            key={index}
-                            className="skill-item flex flex-col items-center justify-center hover:cursor-pointer hover:bg-[#ffffff32] gap-2 text-[1rem] 2xl:text-[1.2rem] text-white
-      border border-[#ffffffc6] shadow-xl rounded-[10px] w-[130px] 2xl:w-[150px] h-[87px] 2xl:h-[100px] font-inter"
-                          >
-                            <img
-                              src={skill.icon}
-                              alt=""
-                              className="h-7 2xl:h-8 w-7 2xl:w-8 object-contain"
-                            />
-                            {skill.label}
-                          </div>
-                        ))}
+                      <div className="w-full sm:w-max">
+                        <div
+                          className="flex flex-nowrap sm:grid sm:grid-cols-5 gap-[8px] sm:gap-[1vw]"
+                          ref={skillsWrapperRef}
+                        >
+                          {skills.map((skill, index) => (
+                            <div
+                              key={index}
+                              className="skill-item flex-shrink-0 flex flex-col items-center justify-center hover:cursor-pointer hover:bg-[#ffffff32] 
+                              gap-1 sm:gap-[0.5vw] font-inter font-light text-[12px] sm:text-[1vw] text-white
+      border border-[#ffffffc6] shadow-xl rounded-[10px] w-[11vh] sm:w-[clamp(100px,7.8vw,150px)] h-[7vh] sm:h-[clamp(66px,5.25vw,100px)] font-inter"
+                            >
+                              <img
+                                src={skill.icon}
+                                alt=""
+                                className="w-[24px] sm:w-[clamp(16px,1.6vw,32px)] h-auto object-contain"
+                              />
+                              {skill.label}
+                            </div>
+                          ))}
+                        </div>
                       </div>
                     </div>
 
-                    <div className="bottom-hero-content relative flex justify-between items-end h-[52%] z-10 text-white px-16 2xl:px-20">
+                    <div className="bottom-hero-content absolute bottom-[5%] w-full flex flex-col sm:flex-row gap-[4vh] justify-between sm:items-end z-10 text-white px-5 sm:px-16 2xl:px-20">
                       <div className="header-dev">
-                        <h1 className="font-bold text-[54px] 2xl:text-[60px] font-ica-rubrik">
+                        <h1 className="text-[3.5vh] sm:text-[54px] 2xl:text-[60px] font-ica-rubrik font-bold">
                           Hey, I'm <HoverButton />
                         </h1>
-                        <h1 className="font-bold text-[54px] 2xl:text-[60px] font-ica-rubrik">
+                        <h1 className="text-[3.5vh] sm:text-[54px] 2xl:text-[60px] font-ica-rubrik font-bold">
                           Web Developer
                         </h1>
 
-                        <p className="mt-4 text-[18px] 2xl:text-[20px] text-white max-w-[500px] font-inter font-light">
+                        <p className="mt-[0.9vh] sm:mt-4 text-[1.8vh] sm:text-[18px] 2xl:text-[20px] text-white max-w-[500px] font-inter font-light">
                           I’m a 27-year-old Full-stack web developer from
                           Greece, passionate about building modern, interactive
                           websites.
@@ -582,18 +631,18 @@ export default function Hero({ setAnimationFinished }) {
                       </div>
 
                       <div className="flex flex-col items-end hero-footer-right">
-                        <h1 className="font-bold text-[32px] 2xl:text-[35px] font-inter mb-2">
+                        <h1 className="font-bold text-[1.8vh] sm:text-[32px] 2xl:text-[35px] font-inter mb-1 sm:mb-2">
                           Contact Me:
                         </h1>
 
-                        <h2 className="font-bold text-[23px] 2xl:text-[25px] font-inter">
+                        <h2 className="font-bold text-[1.6vh] sm:text-[23px] 2xl:text-[25px] font-inter">
                           papadokonst1998@gmail.com
                         </h2>
-                        <h2 className="font-bold text-[23px] 2xl:text-[25px] font-inter">
+                        <h2 className="font-bold text-[1.6vh] sm:text-[23px] 2xl:text-[25px] font-inter">
                           +30 697 235 8102
                         </h2>
 
-                        <div className="flex gap-10 text-[18px] 2xl:text-[20px] text-white font-inter">
+                        <div className="flex gap-[4.6vh] text-[1.4vh] sm:text-[18px] 2xl:text-[20px] text-white font-inter">
                           <div className="hover:underline hover:underline-offset-4 hover:cursor-pointer">
                             GitHub
                           </div>

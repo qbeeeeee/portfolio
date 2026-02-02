@@ -31,6 +31,8 @@ const KeepMeSection = () => {
 
   const [playKeepMeHomepage, setPlayKeepMeHomepage] = useState(false);
 
+  const isMobile = window.innerWidth < 640;
+
   useGSAP(
     () => {
       const videoWrapper = videoWrapperRef?.current;
@@ -176,7 +178,7 @@ const KeepMeSection = () => {
           svgOrigin,
           {
             height: "80vh",
-            width: "80vw",
+            width: isMobile ? "90vw" : "80vw",
           },
           "logoToRect",
         );
@@ -313,7 +315,7 @@ const KeepMeSection = () => {
               </g>
 
               {[...Array(6)].map((_, i) => {
-                const svgWidth = window.innerWidth * 0.8;
+                const svgWidth = window.innerWidth * (isMobile ? 0.9 : 0.8);
                 const rectWidth = svgWidth / 6;
 
                 return (

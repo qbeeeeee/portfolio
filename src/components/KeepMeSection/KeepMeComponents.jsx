@@ -172,7 +172,7 @@ const KeepMeComponents = ({
   videoWrapperRef,
 }) => {
   const containerRef = useRef(null);
-  const headerGap = 70;
+  const headerGap = 6;
 
   const templatesRowRef = useRef(null);
   const templatesContainerRef = useRef(null);
@@ -238,7 +238,7 @@ const KeepMeComponents = ({
       sections.forEach((section, index) => {
         if (index !== 0) {
           tl.to(cards[index], {
-            y: index * headerGap,
+            y: `${index * headerGap}vh`,
             ease: "none",
             duration: TRANSITION_SCROLL,
           });
@@ -374,9 +374,9 @@ const KeepMeComponents = ({
             tl.to(items, {
               y: 0,
               opacity: 1,
-              stagger: 80,
+              stagger: 100,
               ease: "power3.out",
-              duration: 300,
+              duration: 400,
             });
             tl.to({}, { duration: section.hold });
           }
@@ -396,19 +396,16 @@ const KeepMeComponents = ({
       {sections.map((section, index) => (
         <section
           key={section.id}
-          className={`card absolute inset-0 w-full rounded-[40px] p-10 border border-black/20 shadow-[0_0px_50px_rgba(0,0,0,0.5)] ${section.color}`}
+          className={`card absolute inset-0 w-full rounded-[40px] sm:p-[4vh] pt-[3vh] border border-black/20 shadow-[0_0px_50px_rgba(0,0,0,0.5)] ${section.color}`}
           style={{
             zIndex: index + 1,
-            height: `calc(100vh - ${headerGap * index}px)`,
+            height: `calc(100vh - ${index * headerGap}vh)`,
           }}
         >
           {section.id === 1 ? (
             <>
               <div className="pl-[10%]">
-                <h2
-                  className="text-[44px] font-ica-rubrik text-black uppercase title-homepage"
-                  style={{ height: `${headerGap}px` }}
-                >
+                <h2 className="text-[44px] font-ica-rubrik text-black uppercase title-homepage">
                   {section.title}
                 </h2>
 
@@ -417,12 +414,12 @@ const KeepMeComponents = ({
                     <div
                       ref={videoWrapperRef}
                       className={`bg-[#efa8c4] absolute top-[55%] left-[50%] transform -translate-x-1/2 -translate-y-1/2
-               overflow-hidden rounded-[40px] w-[80vw] h-[80vh] opacity-0 z-[200]`}
+               overflow-hidden rounded-[40px] w-[90vw] sm:w-[80vw] h-[80vh] opacity-0 z-[200]`}
                     >
                       <h1
                         ref={selectedProjectRef}
                         data-content="SELECTED PROJECT"
-                        className="text-[5em] leading-[1em] whitespace-nowrap font-ica-rubrik text-black scale-0
+                        className="text-[8vw] sm:text-[10vh] leading-[1em] whitespace-nowrap font-ica-rubrik text-black scale-0
          absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 font-semibold flex items-center justify-center"
                       >
                         SELECTED PROJECT
@@ -436,10 +433,7 @@ const KeepMeComponents = ({
             </>
           ) : section.id === 2 ? (
             <div className="pl-[10%]">
-              <h2
-                className="text-[44px] font-ica-rubrik text-black uppercase"
-                style={{ height: `${headerGap}px` }}
-              >
+              <h2 className="text-[44px] font-ica-rubrik text-black uppercase">
                 {section.title}
               </h2>
 
@@ -448,20 +442,28 @@ const KeepMeComponents = ({
                 {profilePageComponents.map((comp) => (
                   <div
                     key={comp.id}
-                    className="profile-item absolute flex items-center justify-between px-20 gap-10 w-full h-full"
+                    className="profile-item absolute flex flex-col sm:flex-row items-center justify-between px-20 gap-10 w-full h-full"
                   >
                     <div className="profile-title-description opacity-0 h-[50vh] absolute left-[5%] top-[50%] -translate-y-1/2">
                       {/* Title: Positioned absolute so they all stack in one spot */}
                       <h3 className="text-4xl font-bold font-inter text-black whitespace-nowrap">
                         {comp.title}
                       </h3>
-                      <div className="max-w-[25vw] mt-10 font-inter text-lg font-semibold text-black">
-                        {comp.description}
-                      </div>{" "}
+
+                      <div className="sm:max-w-[25vw] mt-10 font-inter font-semibold text-lg text-black">
+                        {comp.description.split(". ").map((sentence, idx) => (
+                          <p
+                            key={idx}
+                            className="relative pl-6 before:absolute before:left-0 before:top-2 before:w-2 before:h-2 before:bg-black before:rounded-full before:inline-block"
+                          >
+                            {sentence}.
+                          </p>
+                        ))}
+                      </div>
                     </div>
 
                     {/* Image: This is what we will slide up */}
-                    <div className="profile-image w-[55vw] h-auto flex items-center justify-center ml-auto">
+                    <div className="profile-image w-auto sm:w-[55vw] h-[60vh] sm:h-auto flex items-center justify-center ml-auto">
                       <div className="relative overflow-hidden border border-black/30 h-full w-full rounded-[20px]">
                         <img
                           src={comp.icon}
@@ -483,25 +485,22 @@ const KeepMeComponents = ({
             </div>
           ) : section.id === 3 ? (
             <div className="w-full">
-              <h2
-                className="text-[44px] font-ica-rubrik text-black uppercase pl-[10%]"
-                style={{ height: `${headerGap}px` }}
-              >
+              <h2 className="text-[44px] font-ica-rubrik text-black uppercase pl-[10%]">
                 {section.title}
               </h2>
 
               <div
                 ref={templatesContainerRef}
-                className="w-full h-full overflow-hidden rounded-[20px] mt-14"
+                className="w-full h-full overflow-hidden rounded-[20px] mt-[6vh]"
               >
                 <div
                   ref={templatesRowRef}
-                  className="flex gap-6 pl-[10%] py-9 h-full"
+                  className="flex gap-6 pl-[5%] sm:pl-[10%] py-[4vh] h-full"
                 >
                   {templates.map((template, index) => (
                     <div
                       key={index}
-                      className="flex bg-white/40 rounded-[40px] h-[297px] sm:h-[450px] w-[297px] sm:w-[450px] 
+                      className="flex bg-white/40 rounded-[40px] h-[90vw] sm:h-[47vh] w-[90vw] sm:w-[47vh] 
                                   shrink-0 justify-center items-center relative border border-black/20"
                     >
                       <div className="flex flex-col justify-evenly items-center w-full h-full z-10">
@@ -661,42 +660,50 @@ const KeepMeComponents = ({
             </div>
           ) : (
             <div>
-              <h2
-                className="text-[44px] font-ica-rubrik text-black uppercase pl-[10%]"
-                style={{ height: `${headerGap}px` }}
-              >
+              <h2 className="text-[44px] font-ica-rubrik text-black uppercase pl-[10%]">
                 {section.title}
               </h2>
 
-              <div className="flex items-start justify-between gap-5 mx-[5%] mt-6 p-10">
-                {/* Card 1 */}
-                <div className="sub-item opacity-0 translate-y-[80px] flex items-center gap-4">
-                  <img
-                    src={customisablePlans}
-                    alt="Choose plan"
-                    className="h-[50vh] max-h-full w-auto rounded-[40px] object-contain"
-                  />
+              <div className="flex items-center h-[60vh] justify-around gap-5 mt-6 p-10">
+                <div className="flex items-start justify-between gap-6 max-w-[60vw]">
+                  {/* Card 1 */}
+                  <div className="sub-item opacity-0 translate-y-[80px] flex items-center gap-4 sm:gap-10">
+                    <img
+                      src={customisablePlans}
+                      alt="Choose plan"
+                      className="max-h-[70vh] w-auto rounded-[40px] object-contain"
+                    />
+                  </div>
 
-                  <div className="flex flex-col items-center">
-                    <h3 className="text-xl md:text-2xl font-semibold text-center">
-                      Choose Your Plan
-                    </h3>
-                    <p className="text-gray-400 text-center max-w-xs">
-                      Users can select between multiple plans based on the
-                      number of profiles and choose monthly or annual billing.
-                    </p>
+                  {/* Card 2 */}
+                  <div className="sub-item opacity-0 translate-y-[80px] flex items-center gap-4 sm:gap-10">
+                    <img
+                      src={billingDetails}
+                      alt="Subscription details"
+                      className="max-h-[70vh] w-auto rounded-[40px] object-contain"
+                    />
+                  </div>
+
+                  {/* Card 3 */}
+                  <div className="sub-item opacity-0 translate-y-[80px] flex items-center gap-4 sm:gap-10">
+                    <img
+                      src={upgradeSubscription}
+                      alt="Upgrade plan"
+                      className="max-h-[70vh] w-auto rounded-[40px] object-contain"
+                    />
                   </div>
                 </div>
 
-                {/* Card 2 */}
-                <div className="sub-item opacity-0 translate-y-[80px] flex items-center gap-4">
-                  <img
-                    src={billingDetails}
-                    alt="Subscription details"
-                    className="h-[50vh] max-h-full w-auto rounded-[40px] object-contain"
-                  />
+                <div className="sub-item opacity-0 translate-y-[80px] max-w-[30vw] flex flex-col items-center">
+                  <h3 className="text-xl md:text-2xl font-semibold text-center">
+                    Choose Your Plan
+                  </h3>
+                  <p className="text-black text-center max-w-xs">
+                    Users can select between multiple plans based on the number
+                    of profiles and choose monthly or annual billing.
+                  </p>
 
-                  <div className="flex flex-col items-center">
+                  {/* <div className="flex flex-col items-center">
                     <h3 className="text-xl md:text-2xl font-semibold text-center">
                       Manage Subscription
                     </h3>
@@ -704,18 +711,9 @@ const KeepMeComponents = ({
                       A dedicated dashboard shows the active plan, next billing
                       date, payment history, and billing details.
                     </p>
-                  </div>
-                </div>
+                  </div> */}
 
-                {/* Card 3 */}
-                <div className="sub-item opacity-0 translate-y-[80px] flex items-center gap-4">
-                  <img
-                    src={upgradeSubscription}
-                    alt="Upgrade plan"
-                    className="h-[50vh] max-h-full w-auto rounded-[40px] object-contain"
-                  />
-
-                  <div className="flex flex-col items-center">
+                  {/* <div className="flex flex-col items-center">
                     <h3 className="text-xl md:text-2xl font-semibold text-center">
                       Upgrade Anytime
                     </h3>
@@ -723,7 +721,7 @@ const KeepMeComponents = ({
                       Users can upgrade their plan instantly through a focused
                       upgrade flow without interrupting their subscription.
                     </p>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>
