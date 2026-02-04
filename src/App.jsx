@@ -7,18 +7,48 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import OtherProjects from "./components/OtherProjects";
 import StarField from "./components/StarField";
 
+gsap.registerPlugin(ScrollTrigger);
+
+const MAX_SCROLL_VELOCITY = 30;
+
 const App = () => {
   const [animationFinished, setAnimationFinished] = useState(false);
   const lenisRef = useRef(null);
 
   useEffect(() => {
-    const lenis = new Lenis();
+    const lenis = new Lenis({
+      lerp: 0.08,            // smoothing = lower max speed
+      wheelMultiplier: 0.75, // mouse wheel
+      touchMultiplier: 0.75, // trackpad / touch
+      smoothWheel: true,
+      smoothTouch: true,
+    });
+
     lenisRef.current = lenis;
 
     lenis.stop();
 
-    lenis.on("scroll", ScrollTrigger.update);
+    // Clamp scroll velocity + sync ScrollTrigger
+    let isClamping = false;
 
+    lenis.on("scroll", ({ velocity }) => {
+      if (!isClamping && Math.abs(velocity) > MAX_SCROLL_VELOCITY) {
+        isClamping = true;
+
+        lenis.scrollTo(lenis.scroll, {
+          immediate: true,
+          lock: true,
+        });
+
+        // release lock on next frame
+        requestAnimationFrame(() => {
+          isClamping = false;
+        });
+      }
+
+      ScrollTrigger.update();
+    });
+    
     const tick = (time) => {
       lenis.raf(time * 1000);
     };

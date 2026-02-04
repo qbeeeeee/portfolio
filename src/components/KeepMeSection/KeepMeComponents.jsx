@@ -695,33 +695,32 @@ const KeepMeComponents = ({
                 </div>
 
                 <div className="sub-item opacity-0 translate-y-[80px] max-w-[30vw] flex flex-col items-center">
-                  <h3 className="text-xl md:text-2xl font-semibold text-center">
-                    Choose Your Plan
-                  </h3>
-                  <p className="text-black text-center max-w-xs">
-                    Users can select between multiple plans based on the number
-                    of profiles and choose monthly or annual billing.
-                  </p>
-
-                  {/* <div className="flex flex-col items-center">
+                  {/* first text  */}
+                  <div className="step-text">
                     <h3 className="text-xl md:text-2xl font-semibold text-center">
-                      Manage Subscription
+                      Choose Your Plan
                     </h3>
+                    <p className="text-black text-center max-w-xs">
+                      Users can select between multiple plans based on the number
+                      of profiles and choose monthly or annual billing.
+                    </p>
+                  </div>
+
+                  <div className="step-text absolute opacity-0">
+                    <h3 className="text-xl md:text-2xl font-semibold text-center">Manage Subscription</h3>
                     <p className="text-gray-400 text-center max-w-xs">
                       A dedicated dashboard shows the active plan, next billing
                       date, payment history, and billing details.
                     </p>
-                  </div> */}
+                  </div>
 
-                  {/* <div className="flex flex-col items-center">
-                    <h3 className="text-xl md:text-2xl font-semibold text-center">
-                      Upgrade Anytime
-                    </h3>
+                  <div className="step-text absolute opacity-0">
+                    <h3 className="text-xl md:text-2xl font-semibold text-center">Upgrade Anytime</h3>
                     <p className="text-gray-400 text-center max-w-xs">
                       Users can upgrade their plan instantly through a focused
                       upgrade flow without interrupting their subscription.
                     </p>
-                  </div> */}
+                  </div>
                 </div>
               </div>
             </div>
