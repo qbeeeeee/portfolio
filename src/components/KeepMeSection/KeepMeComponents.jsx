@@ -33,6 +33,24 @@ import customisablePlans from "./../../assets/keepme/subscription/customisablePl
 import billingDetails from "./../../assets/keepme/subscription/billingDetails.PNG";
 import upgradeSubscription from "./../../assets/keepme/subscription/upgradeSubscription.PNG";
 
+import accountDetailsFixedMobile from "../../assets/keepme/sections/accountDetailsFixedMobile.webp";
+import accountDetailsFullMobile from "../../assets/keepme/sections/accountDetailsFullMobile.png";
+import companyDetailsFullMobile from "../../assets/keepme/sections/companyDetailsFullMobile.png";
+import companyDetailsFixedMobile from "../../assets/keepme/sections/companyDetailsFixedMobile.webp";
+import myDigitalCardFullMobile from "../../assets/keepme/sections/myDigitalCardFullMobile.png";
+import myDigitalCardFixedMobile from "../../assets/keepme/sections/myDigitalCardFixedMobile.webp";
+import myQrCodesFullMobile from "../../assets/keepme/sections/myQrCodesFullMobile.png";
+import myQrCodesFixedMobile from "../../assets/keepme/sections/myQrCodesFixedMobile.webp";
+import appleWalletFullMobile from "../../assets/keepme/sections/appleWalletFullMobile.png";
+import analyticsFixedMobile from "../../assets/keepme/sections/analyticsFixedMobile.webp";
+import analyticsFullMobile from "../../assets/keepme/sections/analyticsFullMobile.png";
+import profiletypeFullMobile from "../../assets/keepme/sections/profiletypeFullMobile.png";
+import teamMembersFullMobile from "../../assets/keepme/sections/teamMembersFullMobile.png";
+import teamMembersFixedMobile from "../../assets/keepme/sections/teamMembersFixedMobile.webp";
+
+import securityFixedMobile from "../../assets/keepme/sections/securityFixedMobile.webp";
+import securityFullMobile from "../../assets/keepme/sections/securityFullMobile.png";
+
 gsap.registerPlugin(ScrollTrigger);
 
 // bg-fuchsia-900
@@ -61,69 +79,75 @@ const profilePageComponents = [
     title: "Account Details",
     description:
       "This feature allows users to manage their personal information, including name, email, phone number, and social links. Users can create custom action buttons with labels linking to URLs or files. Additionally, users can add notes or supplementary information, which the AI chatbot can utilize to provide context-aware responses.",
-    icon: accountDetailsFixed,
-    icon2: accountDetailsFull,
+    icon:
+      window.innerWidth < 640 ? accountDetailsFixedMobile : accountDetailsFixed,
+    icon2:
+      window.innerWidth < 640 ? accountDetailsFullMobile : accountDetailsFull,
   },
   {
     id: 2,
     title: "Company Details",
     description:
       "Designed for business users, this feature allows a company to manage its profile and invite team members. All company information is shared consistently across all associated user accounts, providing a unified business presence.",
-    icon: companyDetailsFull,
+    icon:
+      window.innerWidth < 640 ? companyDetailsFixedMobile : companyDetailsFull,
+    icon2: window.innerWidth < 640 ? companyDetailsFullMobile : null,
   },
   {
     id: 3,
     title: "My Digital Card",
     description:
       "This feature enables users to create a personalized digital card with a custom display name used in its URL. Users can choose from multiple templates, adjust background and font colors, upload custom background images, and select from various layouts to tailor their card’s appearance.",
-    icon: myDigitalCardFixed,
-    icon2: myDigitalCardFull,
+    icon:
+      window.innerWidth < 640 ? myDigitalCardFixedMobile : myDigitalCardFixed,
+    icon2:
+      window.innerWidth < 640 ? myDigitalCardFullMobile : myDigitalCardFull,
   },
   {
     id: 4,
     title: "My Qr Codes",
     description:
       "This feature allows users to create fully customized QR codes for instant sharing of their digital card. Users can personalize dot patterns, corner shapes, background colors, and even add a custom logo, ensuring each QR code aligns with their personal or brand identity.",
-    icon: myQrCodesFixed,
-    icon2: myQrCodesFull,
+    icon: window.innerWidth < 640 ? myQrCodesFixedMobile : myQrCodesFixed,
+    icon2: window.innerWidth < 640 ? myQrCodesFullMobile : myQrCodesFull,
   },
   {
     id: 5,
     title: "Apple Wallet Cards",
     description:
       "This feature allows users to save their digital card to Apple Wallet or Google Wallet. The wallet stores all relevant information from the individual or company card and includes the QR code for easy sharing.",
-    icon: appleWalletFull,
+    icon: window.innerWidth < 640 ? appleWalletFullMobile : appleWalletFull,
   },
   {
     id: 6,
     title: "Analytics",
     description:
       "This feature provides users with detailed insights into their digital card’s performance. Users can track total and unique views, view engagement trends over time via interactive graphs, monitor average time spent, bounce rate, geographic data (cities and countries), device and browser statistics, and analyze custom action events such as button clicks and click-through rates on specific templates.",
-    icon: analyticsFixed,
-    icon2: analyticsFull,
+    icon: window.innerWidth < 640 ? analyticsFixedMobile : analyticsFixed,
+    icon2: window.innerWidth < 640 ? analyticsFullMobile : analyticsFull,
   },
   {
     id: 7,
     title: "Profile Type",
     description:
       "This feature allows users to select and switch between an individual or a business profile. Choosing a business profile enables collaboration by inviting team members and sharing company information, while the individual profile focuses on personal branding and customization. This flexibility ensures that users can tailor their digital presence to their specific needs, whether personal or professional.",
-    icon: profiletypeFull,
+    icon: window.innerWidth < 640 ? profiletypeFullMobile : profiletypeFull,
   },
   {
     id: 8,
     title: "Team Members",
     description:
       "This feature enables company owners and administrators to manage their team efficiently. Users can generate and share invite codes via copy or email, create alternative profiles without registering new accounts, and edit or update existing profiles. For companies with a subscription plan, templates can be assigned to team members, ensuring a consistent digital presence across the organization.",
-    icon: teamMembersFixed,
-    icon2: teamMembersFull,
+    icon: window.innerWidth < 640 ? teamMembersFixedMobile : teamMembersFixed,
+    icon2: window.innerWidth < 640 ? teamMembersFullMobile : teamMembersFull,
   },
   {
     id: 9,
     title: "Security",
     description:
       "This feature allows users to securely manage their account and subscription settings. Users can update login credentials, including username and password, and maintain control over their subscription plan—viewing status, billing history, next payment date, and options to cancel or reactivate. Subscription management is integrated with Stripe, providing a seamless and secure billing experience.",
-    icon: securityFixed,
-    icon2: securityFull,
+    icon: window.innerWidth < 640 ? securityFixedMobile : securityFixed,
+    icon2: window.innerWidth < 640 ? securityFullMobile : securityFull,
   },
 ];
 
@@ -283,23 +307,40 @@ const KeepMeComponents = ({
             }
 
             // 3. Cross-fade the TITLE (Delayed until image is halfway up)
-            tl.to(
-              [title],
+            tl.fromTo(
+              title,
+              {
+                opacity: 0,
+                y: 40,
+                filter: "blur(8px)",
+              },
               {
                 opacity: 1,
-                x: 0,
-                duration: itemDuration * 0.4,
+                y: 0,
+                filter: "blur(0px)",
+                duration: itemDuration * 0.45,
+                ease: "power3.out",
               },
-              `<${itemDuration * 0.5}`, // <--- THIS IS THE KEY: Starts 50% into the image duration
+              `<${itemDuration * 0.7}`,
             );
 
-            // 4. Fade out the PREVIOUS title and image
+            // 4.
             if (i > 0) {
               const prevTitle = profileItems[i - 1].querySelector(
                 ".profile-title-description",
               );
 
-              tl.to([prevTitle], { opacity: 0, x: 20, duration: 0.2 }, "<");
+              tl.to(
+                prevTitle,
+                {
+                  opacity: 0,
+                  y: -40,
+                  filter: "blur(6px)",
+                  duration: itemDuration * 0.45,
+                  ease: "power2.in",
+                },
+                "<-=250",
+              );
             }
 
             // 5. Scroll tall image to the top
@@ -369,17 +410,90 @@ const KeepMeComponents = ({
           }
         } else if (section.id === 4) {
           const items = gsap.utils.toArray(".sub-item");
+          const images = gsap.utils.toArray(".step-img");
+          const texts = gsap.utils.toArray(".step-text");
 
-          if (items.length) {
-            tl.to(items, {
-              y: 0,
-              opacity: 1,
-              stagger: 100,
-              ease: "power3.out",
-              duration: 400,
+          if (!items.length || !images.length || !texts.length) return;
+
+          /* Entrance animation */
+          tl.to(items, {
+            y: 0,
+            opacity: 1,
+            stagger: 100,
+            ease: "power3.out",
+            duration: 400,
+          });
+
+          const wrapper = document.querySelector(".sub-wrapper");
+          const container = wrapper.parentElement;
+          const containerWidth = container.offsetWidth;
+          const wrapperWidth = wrapper.scrollWidth;
+
+          /* Step-based sequence */
+          images.forEach((img, index) => {
+            // Reset all borders
+            tl.to(images, {
+              borderColor: "#ffffff66",
+              duration: 300,
+              opacity: 0.7,
+              scale: 0.8,
             });
-            tl.to({}, { duration: section.hold });
-          }
+
+            const imgRect = img.getBoundingClientRect();
+            const wrapperRect = wrapper.getBoundingClientRect();
+
+            let targetX =
+              containerWidth / 2 -
+              (imgRect.left + imgRect.width / 2 - wrapperRect.left);
+
+            // clamp so container never over-scrolls
+            targetX = Math.min(0, targetX); // cannot scroll past left edge
+            targetX = Math.max(containerWidth - wrapperWidth, targetX);
+
+            tl.to(wrapper, {
+              x: targetX + (index === 0 ? +20 : index === 2 ? -60 : -40),
+              duration: 300,
+              ease: "power3.out",
+            });
+
+            // Activate current image
+            tl.to(
+              img,
+              {
+                borderColor: "black",
+                boxShadow: "0 0 20px rgba(0,0,0,0.8)",
+                duration: 300,
+                opacity: 1,
+                scale: 1,
+              },
+              "<",
+            );
+
+            if (index !== 0) {
+              // Reset all text
+              tl.to(
+                texts,
+                {
+                  opacity: 0,
+                  duration: 200,
+                },
+                "<",
+              );
+
+              // Show current text
+              tl.to(
+                texts[index],
+                {
+                  opacity: 1,
+                  duration: 300,
+                },
+                "<",
+              );
+            }
+
+            // Hold between steps
+            tl.to({}, { duration: 400 });
+          });
         } else {
           tl.to({}, { duration: section.hold });
         }
@@ -664,59 +778,65 @@ const KeepMeComponents = ({
                 {section.title}
               </h2>
 
-              <div className="flex items-center h-[60vh] justify-around gap-5 mt-6 p-10">
-                <div className="flex items-start justify-between gap-6 max-w-[60vw]">
-                  {/* Card 1 */}
-                  <div className="sub-item opacity-0 translate-y-[80px] flex items-center gap-4 sm:gap-10">
-                    <img
-                      src={customisablePlans}
-                      alt="Choose plan"
-                      className="max-h-[70vh] w-auto rounded-[40px] object-contain"
-                    />
-                  </div>
+              <div className="flex items-center h-[60vh] justify-around gap-5 mt-10">
+                <div className="sub-container max-w-[70vw] overflow-hidden p-10">
+                  <div className="sub-wrapper flex">
+                    {/* Card 1 */}
+                    <div className="sub-item opacity-0 translate-y-[80px] max-h-[70vh] h-[60vh] min-w-max">
+                      <img
+                        src={customisablePlans}
+                        alt="Choose plan"
+                        className="h-full w-auto opacity-70 scale-[0.8] step-img border-2 border-white/40 rounded-[20px] xl:rounded-[40px] object-cover"
+                      />
+                    </div>
 
-                  {/* Card 2 */}
-                  <div className="sub-item opacity-0 translate-y-[80px] flex items-center gap-4 sm:gap-10">
-                    <img
-                      src={billingDetails}
-                      alt="Subscription details"
-                      className="max-h-[70vh] w-auto rounded-[40px] object-contain"
-                    />
-                  </div>
+                    {/* Card 2 */}
+                    <div className="sub-item opacity-0 translate-y-[80px] max-h-[70vh] h-[60vh] min-w-max">
+                      <img
+                        src={billingDetails}
+                        alt="Subscription details"
+                        className="h-full w-auto opacity-70 scale-[0.8] step-img border-2 border-white/40 rounded-[20px] xl:rounded-[40px] object-cover"
+                      />
+                    </div>
 
-                  {/* Card 3 */}
-                  <div className="sub-item opacity-0 translate-y-[80px] flex items-center gap-4 sm:gap-10">
-                    <img
-                      src={upgradeSubscription}
-                      alt="Upgrade plan"
-                      className="max-h-[70vh] w-auto rounded-[40px] object-contain"
-                    />
+                    {/* Card 3 */}
+                    <div className="sub-item opacity-0 translate-y-[80px] max-h-[70vh] h-[60vh] min-w-max">
+                      <img
+                        src={upgradeSubscription}
+                        alt="Upgrade plan"
+                        className="h-full w-auto opacity-70 scale-[0.8] step-img border-2 border-white/40 rounded-[20px] xl:rounded-[40px] object-cover"
+                      />
+                    </div>
                   </div>
                 </div>
 
-                <div className="sub-item opacity-0 translate-y-[80px] max-w-[30vw] flex flex-col items-center">
+                <div className="sub-item opacity-0 translate-y-[80px] max-w-[25vw] flex flex-col items-center">
                   {/* first text  */}
                   <div className="step-text">
-                    <h3 className="text-xl md:text-2xl font-semibold text-center">
+                    <h3 className="font-inter font-semibold text-2xl text-black text-center">
                       Choose Your Plan
                     </h3>
-                    <p className="text-black text-center max-w-xs">
-                      Users can select between multiple plans based on the number
-                      of profiles and choose monthly or annual billing.
+                    <p className="font-inter font-semibold text-lg text-black text-center">
+                      Users can select between multiple plans based on the
+                      number of profiles and choose monthly or annual billing.
                     </p>
                   </div>
 
                   <div className="step-text absolute opacity-0">
-                    <h3 className="text-xl md:text-2xl font-semibold text-center">Manage Subscription</h3>
-                    <p className="text-gray-400 text-center max-w-xs">
+                    <h3 className="font-inter font-semibold text-2xl text-black text-center">
+                      Manage Subscription
+                    </h3>
+                    <p className="font-inter font-semibold text-lg text-black text-center">
                       A dedicated dashboard shows the active plan, next billing
                       date, payment history, and billing details.
                     </p>
                   </div>
 
                   <div className="step-text absolute opacity-0">
-                    <h3 className="text-xl md:text-2xl font-semibold text-center">Upgrade Anytime</h3>
-                    <p className="text-gray-400 text-center max-w-xs">
+                    <h3 className="font-inter font-semibold text-2xl text-black text-center">
+                      Upgrade Anytime
+                    </h3>
+                    <p className="font-inter font-semibold text-lg text-black text-center">
                       Users can upgrade their plan instantly through a focused
                       upgrade flow without interrupting their subscription.
                     </p>

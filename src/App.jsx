@@ -17,7 +17,7 @@ const App = () => {
 
   useEffect(() => {
     const lenis = new Lenis({
-      lerp: 0.08,            // smoothing = lower max speed
+      lerp: 0.08, // smoothing = lower max speed
       wheelMultiplier: 0.75, // mouse wheel
       touchMultiplier: 0.75, // trackpad / touch
       smoothWheel: true,
@@ -48,7 +48,7 @@ const App = () => {
 
       ScrollTrigger.update();
     });
-    
+
     const tick = (time) => {
       lenis.raf(time * 1000);
     };
