@@ -61,6 +61,6 @@
     transform: rotateY(
         calc((var(--position) - 1) * (360 / var(--quantity)) * 1deg)
       )
-      translateZ(180px);
+      translateZ(30vh);
   }
 }

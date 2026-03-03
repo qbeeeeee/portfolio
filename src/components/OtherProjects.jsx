@@ -269,14 +269,14 @@ const OtherProjects = ({ stopScroll, resumeScroll, animationFinished }) => {
   return (
     <div
       ref={projectsWrapperRef}
-      className="w-full h-[100vh] text-center relative opacity-0 [transform-style:preserve-3d] [transform:perspective(100000px)] mt-[100vh] z-10"
+      className="w-full h-[100vh] text-center relative opacity-0 [transform-style:preserve-3d] [transform:perspective(100000px)] mt-[20vh] z-10"
     >
       <div
         ref={spinRef}
         className={`spin-animation absolute top-[10%] z-[2] [transform-style:preserve-3d] [transform:perspective(1000px)]
           w-[300px] h-[150px] left-[calc(50%-150px)]
           max-lg:w-[160px] max-lg:h-[200px] max-lg:left-[calc(50%-80px)]
-          max-md:w-[100px] max-md:h-[150px] max-md:left-[calc(50%-50px)]
+          max-md:w-[20vh] max-md:h-[12vh] max-md:left-[calc(50%-70px)]
         ${activeProject ? "pause-animation" : ""}
       `}
         style={{ "--quantity": 8 }}
@@ -308,12 +308,12 @@ const OtherProjects = ({ stopScroll, resumeScroll, animationFinished }) => {
       </div>
 
       <div
-        className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[min(1500px,100vw)] h-max pb-[100px] 
+        className="absolute bottom-[40%] sm:bottom-0 left-1/2 -translate-x-1/2 w-[min(1500px,100vw)] h-max pb-[100px] 
       flex flex-wrap justify-between items-center z-[1] px-10"
       >
         <h1
           data-content="PROJECTS"
-          className="font-ica-rubrik galaxy-header relative text-[16em] leading-[1em]"
+          className="font-ica-rubrik galaxy-header relative text-[9vh] sm:text-[16em] leading-[1em]"
         >
           PROJECTS
         </h1>
@@ -329,7 +329,7 @@ const OtherProjects = ({ stopScroll, resumeScroll, animationFinished }) => {
 
         <div
           ref={planetRef}
-          className="absolute -bottom-[40%] left-0 w-full h-[100vh] z-[1]
+          className="absolute -bottom-[40%] left-0 w-full h-[70vh] sm:h-[100vh] z-[1]
             bg-[url('/src/assets/otherProjects/earthPurpleAndBlue.png')]
             bg-[length:auto_110%] bg-no-repeat bg-center"
         />

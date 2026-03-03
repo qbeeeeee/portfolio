@@ -67,7 +67,7 @@ const glaceAvatar =
 // #E0D7FF, #A58BA3
 
 const sections = [
-  { id: 1, title: "Homepage", color: "bg-[#d6266b]", hold: 2700 },
+  { id: 1, title: "Homepage", color: "bg-[#d6266b]", hold: 3200 },
   { id: 2, title: "Profile Page", color: "bg-[#8e26d6]", hold: 6500 },
   { id: 3, title: "Templates", color: "bg-[#c01ac0]", hold: 800 },
   { id: 4, title: "Subscription", color: "bg-[#6b26d6]", hold: 800 },
@@ -556,9 +556,9 @@ const KeepMeComponents = ({
                 {profilePageComponents.map((comp) => (
                   <div
                     key={comp.id}
-                    className="profile-item absolute flex flex-col sm:flex-row items-center justify-between px-20 gap-10 w-full h-full"
+                    className="profile-item absolute flex flex-col-reverse sm:flex-row items-center justify-center sm:justify-between sm:px-20 gap-10 w-full h-full"
                   >
-                    <div className="profile-title-description opacity-0 h-[50vh] absolute left-[5%] top-[50%] -translate-y-1/2">
+                    <div className="profile-title-description hidden sm:block opacity-0 h-[50vh] absolute">
                       {/* Title: Positioned absolute so they all stack in one spot */}
                       <h3 className="text-4xl font-bold font-inter text-black whitespace-nowrap">
                         {comp.title}
@@ -577,7 +577,7 @@ const KeepMeComponents = ({
                     </div>
 
                     {/* Image: This is what we will slide up */}
-                    <div className="profile-image w-auto sm:w-[55vw] h-[60vh] sm:h-auto flex items-center justify-center ml-auto">
+                    <div className="profile-image w-auto sm:w-[55vw] h-[70vh] sm:h-auto flex items-center justify-center sm:ml-auto">
                       <div className="relative overflow-hidden border border-black/30 h-full w-full rounded-[20px]">
                         <img
                           src={comp.icon}
@@ -739,35 +739,34 @@ const KeepMeComponents = ({
                     <h2 className="text-black font-inter font-bold text-[40px]">
                       Customisable
                     </h2>
-                    <p className="font-inter text-lg font-semibold text-black mt-5">
-                      Customisable is a powerful template system that allows you
-                      to fully design and personalize your digital card. You can
-                      freely add, remove, and rearrange elements using an
-                      intuitive drag-and-drop interface, giving you complete
-                      control over the layout and structure.
-                      <br />
-                      <br />
-                      Each element comes with its own dedicated settings panel,
-                      where you can adjust typography (font size, font family,
-                      and colors), customize button styles, control spacing,
-                      dimensions, and scale images precisely to your needs.
-                      <br />
-                      <br />
-                      The platform also supports advanced features such as an
-                      integrated AI assistant that can answer questions about
-                      your business, products, pricing, or availability based on
-                      the content you provide. You can upload catalogs,
-                      schedules, or any business-related information, and the
-                      assistant will use them to help your visitors.
-                      <br />
-                      <br />
-                      Additional features include a meeting booking button,
-                      fully customizable backgrounds (including image uploads
-                      and blur effects), QR code generation for fast sharing and
-                      scanning, and independent layout customization for mobile
-                      and desktop to ensure a perfect experience on every
-                      device.
-                    </p>
+                    <div className="font-inter text-lg font-semibold text-black mt-5 flex flex-col gap-3">
+                      <p>
+                        Customisable is a template that allows you to fully
+                        design and personalize your digital card. You can freely
+                        add, remove, and rearrange elements using an intuitive
+                        drag-and-drop interface.
+                      </p>
+                      <p>
+                        Each element comes with its own dedicated settings
+                        panel, where you can adjust typography (font size, font
+                        family, and colors), customize button styles, control
+                        spacing, dimensions, and scale images precisely to your
+                        needs.
+                      </p>
+                      <p>
+                        The platform supports advanced features such as an
+                        integrated AI assistant that can answer questions about
+                        your business, products, pricing, or availability based
+                        on the content you provide. You can upload catalogs,
+                        schedules, or any business-related information, and the
+                        assistant will use them to help your visitors.
+                      </p>
+                      <p>
+                        Additional features include a meeting booking button, QR
+                        code generation for fast sharing and scanning and
+                        independent layout customization for mobile and desktop.
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>

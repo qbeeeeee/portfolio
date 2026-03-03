@@ -1,9 +1,7 @@
 // Hero.jsx
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import gsap from "gsap";
 import SplitText from "gsap/SplitText";
-import testImage from "./../../assets/test1233.jpg";
-import testImage2 from "./../../assets/spaceBackground/11112.jpg";
 import topHero from "./../../assets/spaceBackground/top.webp";
 import bottomHero from "./../../assets/spaceBackground/bottom.webp";
 import { useGSAP } from "@gsap/react";
