@@ -1,30 +1,14 @@
 @import url("https://fonts.cdnfonts.com/css/ica-rubrik-black");
 @import url("https://fonts.cdnfonts.com/css/poppins");
 
-.spin-animation {
-  animation: autoRun 20s linear infinite;
-}
-
-.pause-animation {
-  animation-play-state: paused !important;
-}
-
-@keyframes autoRun {
-  from {
-    transform: perspective(1000px)
-      rotateX(calc(var(--tilt) + var(--tilt2, 0deg)))
-      rotateY(calc(var(--offset) + var(--scrollSpin)));
-  }
-  to {
-    transform: perspective(1000px)
-      rotateX(calc(var(--tilt) + var(--tilt2, 0deg)))
-      rotateY(calc(var(--offset2) + var(--scrollSpin)));
-  }
+.spin-container {
+  transform: translateZ(0px) rotateX(calc(var(--tilt) + var(--tilt2, 0deg)))
+    rotateY(calc(var(--offset) + var(--scrollSpin) + var(--offset2, 0deg)));
+  transform-style: preserve-3d;
 }
 
 .item {
   position: absolute;
-  inset: 0;
   transform: rotateY(
       calc((var(--position) - 1) * (360 / var(--quantity)) * 1deg)
     )
@@ -46,6 +30,46 @@
 }
 .font-poppins {
   font-family: "Poppins";
+}
+
+.projectViewButton {
+  padding: 1em 2em;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  color: black;
+  transition: all 500ms;
+  font-size: 15px;
+  position: relative;
+  overflow: hidden;
+  outline: 2px solid black;
+}
+
+.projectViewButton:hover {
+  color: #ffffff;
+  transform: scale(1.05);
+  outline: 2px solid black;
+  box-shadow: 4px 5px 17px -4px black;
+}
+
+.projectViewButton::before {
+  content: "";
+  position: absolute;
+  left: -50px;
+  top: 0;
+  width: 0;
+  height: 100%;
+  background-color: black;
+  transform: skewX(45deg);
+  z-index: -1;
+  transition: width 1000ms;
+}
+
+.projectViewButton:hover::before {
+  width: 250%;
 }
 
 @media screen and (max-width: 1023px) {
