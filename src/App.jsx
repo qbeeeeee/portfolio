@@ -1,18 +1,19 @@
 import React, { useEffect, useRef, useState } from "react";
-import PreloaderHero from "./components/firstsection/PreloaderHero";
+import PreloaderHero from "./components/Firstsection/PreloaderHero";
 import KeepMeSection from "./components/KeepMeSection/KeepMeSection";
 import Lenis from "lenis";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import OtherProjects from "./components/OtherProjects";
 import StarField from "./components/StarField";
+import ContactMe from "./components/ContactMe/ContactMe";
 
 gsap.registerPlugin(ScrollTrigger);
 
 const MAX_SCROLL_VELOCITY = 30;
 
 const App = () => {
-  const [animationFinished, setAnimationFinished] = useState(true);
+  const [animationFinished, setAnimationFinished] = useState(false);
   const lenisRef = useRef(null);
 
   useEffect(() => {
@@ -110,10 +111,9 @@ const App = () => {
         </>
       )} */}
 
-      {/* 
       <div className="w-full relative min-h-screen z-20">
         <PreloaderHero setAnimationFinished={setAnimationFinished} />
-      </div>*/}
+      </div>
 
       <div className="h-[calc(110vh_+_13000px)]">
         <KeepMeSection />
@@ -125,7 +125,7 @@ const App = () => {
         resumeScroll={resumeScroll}
       />
 
-      <div className="h-[100vh]"></div>
+      <ContactMe/>
     </div>
   );
 };

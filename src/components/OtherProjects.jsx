@@ -403,7 +403,7 @@ const OtherProjects = ({ stopScroll, resumeScroll, animationFinished }) => {
     >
       <div
         ref={spinRef}
-        className={`spin-container absolute top-[15%] z-[2]
+        className={`spin-container absolute top-[10%] z-[2]
           w-[300px] h-auto left-[calc(50%-150px)]
           max-lg:w-[160px] max-lg:h-[200px] max-lg:left-[calc(50%-80px)]
           max-md:w-[20vh] max-md:h-[12vh] max-md:left-[calc(50%-70px)]
