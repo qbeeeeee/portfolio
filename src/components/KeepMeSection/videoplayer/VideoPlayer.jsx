@@ -66,9 +66,8 @@ const VideoPlayer = ({ videoSource, onVideoEnd }) => {
               );
               return keepmeSelectedProject?.end;
             },
-            end: "+=400",
+            end: "+=350",
             scrub: true,
-            markers: true,
           },
         },
       );
