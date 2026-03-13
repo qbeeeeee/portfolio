@@ -50,9 +50,6 @@ const VideoPlayer = ({ videoSource, onVideoEnd }) => {
   useGSAP(
     () => {
       if (!videoWrapperRef.current) return;
-      const keepmeSelectedProject = ScrollTrigger.getById(
-        "keepme-selected-project",
-      );
 
       gsap.fromTo(
         videoWrapperRef.current,
@@ -63,9 +60,15 @@ const VideoPlayer = ({ videoSource, onVideoEnd }) => {
           clearProps: "opacity",
           scrollTrigger: {
             trigger: document.body,
-            start: () => keepmeSelectedProject?.end,
+            start: () => {
+              const keepmeSelectedProject = ScrollTrigger.getById(
+                "keepme-selected-project",
+              );
+              return keepmeSelectedProject?.end;
+            },
             end: "+=400",
             scrub: true,
+            markers: true,
           },
         },
       );

@@ -190,11 +190,7 @@ const templates = [
   },
 ];
 
-const KeepMeComponents = ({
-  playKeepMeHomepage,
-  selectedProjectRef,
-  videoWrapperRef,
-}) => {
+const KeepMeComponents = ({ selectedProjectRef, videoWrapperRef }) => {
   const containerRef = useRef(null);
   const headerGap = 6;
 
@@ -524,24 +520,22 @@ const KeepMeComponents = ({
                 </h2>
 
                 <div className="mt-10 text-xl text-black/70">
-                  {playKeepMeHomepage && (
-                    <div
-                      ref={videoWrapperRef}
-                      className={`bg-[#efa8c4] absolute top-[55%] left-[50%] transform -translate-x-1/2 -translate-y-1/2
+                  <div
+                    ref={videoWrapperRef}
+                    className={`bg-[#efa8c4] absolute top-[55%] left-[50%] transform -translate-x-1/2 -translate-y-1/2
                overflow-hidden rounded-[40px] w-[90vw] sm:w-[80vw] h-[80vh] opacity-0 z-[200]`}
-                    >
-                      <h1
-                        ref={selectedProjectRef}
-                        data-content="SELECTED PROJECT"
-                        className="text-[8vw] sm:text-[10vh] leading-[1em] whitespace-nowrap font-ica-rubrik text-black scale-0
+                  >
+                    <h1
+                      ref={selectedProjectRef}
+                      data-content="SELECTED PROJECT"
+                      className="text-[8vw] sm:text-[10vh] leading-[1em] whitespace-nowrap font-ica-rubrik text-black scale-0
          absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 font-semibold flex items-center justify-center"
-                      >
-                        SELECTED PROJECT
-                      </h1>
+                    >
+                      SELECTED PROJECT
+                    </h1>
 
-                      <VideoPlayer videoSource={keepmeHomepage} />
-                    </div>
-                  )}
+                    <VideoPlayer videoSource={keepmeHomepage} />
+                  </div>
                 </div>
               </div>
             </>

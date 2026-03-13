@@ -29,8 +29,6 @@ const KeepMeSection = () => {
   const menuRef = useRef(null);
   const keepmeWrapperRef = useRef(null);
 
-  const [playKeepMeHomepage, setPlayKeepMeHomepage] = useState(false);
-
   const isMobile = window.innerWidth < 640;
 
   useGSAP(
@@ -54,9 +52,6 @@ const KeepMeSection = () => {
           start: "top -90%",
           end: "+=1500",
           scrub: true,
-          onUpdate: (self) => {
-            setPlayKeepMeHomepage(self.progress >= 0.8);
-          },
           onLeave: () => {
             gsap.to(svgOutterWrapper, { autoAlpha: 0, duration: 0.3 });
           },
@@ -202,7 +197,7 @@ const KeepMeSection = () => {
         "showVideo",
       );
     },
-    { dependencies: [playKeepMeHomepage], revertOnUpdate: true },
+    { dependencies: [], revertOnUpdate: true },
   );
 
   useGSAP(
@@ -245,7 +240,7 @@ const KeepMeSection = () => {
         });
     },
     {
-      dependencies: [playKeepMeHomepage],
+      dependencies: [],
       revertOnUpdate: true,
     },
   );
@@ -356,7 +351,6 @@ const KeepMeSection = () => {
 
       <div className="relative">
         <KeepMeComponents
-          playKeepMeHomepage={playKeepMeHomepage}
           selectedProjectRef={selectedProjectRef}
           videoWrapperRef={videoWrapperRef}
         />
