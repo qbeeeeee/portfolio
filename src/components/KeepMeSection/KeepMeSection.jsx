@@ -208,40 +208,46 @@ const KeepMeSection = () => {
   useGSAP(
     () => {
       const selectedProject = selectedProjectRef?.current;
-      const keepmeFinish = ScrollTrigger.getById("keepme-finish-rectangle");
+      //     const keepmeFinish = ScrollTrigger.getById("keepme-finish-rectangle");
+      if (!selectedProject) return;
 
-      if (selectedProject) {
-        const tl = gsap.timeline({
-          scrollTrigger: {
-            id: "keepme-selected-project",
-            trigger: document.body,
-            start: () => (keepmeFinish?.end ?? 0) - 100,
-            end: "+=1300", // total scroll distance
-            scrub: true,
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          id: "keepme-selected-project",
+          trigger: document.body,
+          //  start: () => (keepmeFinish?.end ?? 0) - 100,
+          start: () => {
+            const finish = ScrollTrigger.getById("keepme-finish-rectangle");
+            return (finish?.end || 0) - 100;
           },
-        });
+          end: "+=1300", // total scroll distance
+          scrub: true,
+        },
+      });
 
-        tl.to(selectedProject, {
+      tl.to(selectedProject, {
+        scale: 1,
+        transformOrigin: "center center",
+        ease: "power3.inOut",
+        duration: 1, // normalized duration within timeline
+      })
+        // Pause at scale=1 for ~100px scroll
+        .to(selectedProject, {
           scale: 1,
+          duration: 0.15, // small duration = pause
+        })
+        // Continue zoom to 100
+        .to(selectedProject, {
+          scale: 120,
           transformOrigin: "center center",
           ease: "power3.inOut",
-          duration: 1, // normalized duration within timeline
-        })
-          // Pause at scale=1 for ~100px scroll
-          .to(selectedProject, {
-            scale: 1,
-            duration: 0.15, // small duration = pause
-          })
-          // Continue zoom to 100
-          .to(selectedProject, {
-            scale: 120,
-            transformOrigin: "center center",
-            ease: "power3.inOut",
-            duration: 1,
-          });
-      }
+          duration: 1,
+        });
     },
-    { dependencies: [playKeepMeHomepage], revertOnUpdate: true },
+    {
+      dependencies: [playKeepMeHomepage],
+      revertOnUpdate: true,
+    },
   );
 
   return (
