@@ -13,7 +13,7 @@ gsap.registerPlugin(ScrollTrigger);
 const MAX_SCROLL_VELOCITY = 30;
 
 const App = () => {
-  const [animationFinished, setAnimationFinished] = useState(false);
+  const [animationFinished, setAnimationFinished] = useState(true);
   const lenisRef = useRef(null);
 
   useEffect(() => {
@@ -111,9 +111,10 @@ const App = () => {
         </>
       )} */}
 
+      {/* 
       <div className="w-full relative min-h-screen z-20">
         <PreloaderHero setAnimationFinished={setAnimationFinished} />
-      </div>
+      </div> */}
 
       <div className="h-[calc(110vh_+_13000px)]">
         <KeepMeSection />
@@ -125,7 +126,7 @@ const App = () => {
         resumeScroll={resumeScroll}
       />
 
-      <ContactMe/>
+      <ContactMe />
     </div>
   );
 };
