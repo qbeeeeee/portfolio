@@ -1,7 +1,7 @@
 import React, { useCallback, useRef, useState } from "react";
 import "./../assets/css/projectsSectionCss.css";
 import "./../assets/css/custom.css";
-import livingLifeApartment from "./../assets/otherProjects/livingLifeApartment.PNG";
+import livingLifeApartment from "./../assets/otherProjects/LivingLifeApartment.PNG";
 import spotify from "./../assets/otherProjects/spotifyHome.png";
 import happyFarm from "./../assets/otherProjects/happyFarm.png";
 import googlePixel from "./../assets/otherProjects/googlePixel3D.PNG";
