@@ -68,7 +68,7 @@ const glaceAvatar =
 
 const sections = [
   { id: 1, title: "Homepage", color: "bg-[#d6266b]", hold: 3200 },
-  { id: 2, title: "Profile Page", color: "bg-[#8e26d6]", hold: 8000 }, //6500
+  { id: 2, title: "Profile Page", color: "bg-[#8e26d6]", hold: 6500 },
   { id: 3, title: "Templates", color: "bg-[#c01ac0]", hold: 800 },
   { id: 4, title: "Subscription", color: "bg-[#6b26d6]", hold: 800 },
 ];
@@ -339,41 +339,27 @@ const KeepMeComponents = ({ selectedProjectRef, videoWrapperRef }) => {
               );
             }
 
-            // // 5. Scroll tall image to the top
-            // if (tallImg && imageContainer) {
-            //   // Get the front image height (icon)
-            //   const frontHeight = shortImg.offsetHeight;
-            //   // Get the back image height (icon2)
-            //   const backHeight = tallImg.offsetHeight;
-            //   // Calculate how much we need to move up so the bottom aligns
-            //   const scrollDistance = backHeight - frontHeight;
-
-            //   if (scrollDistance > 0) {
-            //     // Animate y instead of top for smooth GPU animation
-            //     tl.to(tallImg, {
-            //       y: -scrollDistance, // move up exactly
-            //       duration: 500, // same as before
-            //       ease: "none",
-            //     });
-
-            //     tl.to({}, { duration: 0.5 });
-            //   }
-            // }
-
-            if (tallImg && shortImg) {
+            // 5. Scroll tall image to the top
+            if (tallImg && imageContainer) {
+              console.log("111");
+              // Get the front image height (icon)
               const frontHeight = shortImg.offsetHeight;
+              // Get the back image height (icon2)
               const backHeight = tallImg.offsetHeight;
-
+              // Calculate how much we need to move up so the bottom aligns
               const scrollDistance = backHeight - frontHeight;
 
-              tl.to(tallImg, {
-                y: scrollDistance > 0 ? -scrollDistance : 0,
-                duration: 500,
-                ease: "none",
-              });
-            } else {
-              // keep timeline spacing identical even if there is no tall image
-              tl.to({}, { duration: 500 });
+              if (scrollDistance > 0) {
+                console.log("222");
+                // Animate y instead of top for smooth GPU animation
+                tl.to(tallImg, {
+                  y: -scrollDistance, // move up exactly
+                  duration: 500, // same as before
+                  ease: "none",
+                });
+
+                tl.to({}, { duration: 0.5 });
+              }
             }
           });
         } else if (section.id === 3) {
