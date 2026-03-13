@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -199,8 +199,48 @@ const KeepMeComponents = ({ selectedProjectRef, videoWrapperRef }) => {
 
   const customisableRef = useRef(null);
 
+  const [ready, setReady] = useState(false);
+
+  // Helper to check if all images in the container are loaded
+  useEffect(() => {
+    const images = document.querySelectorAll(".tall-img-scroll");
+
+    // Guard: If there are no images, we are ready immediately!
+    if (images.length === 0) {
+      setReady(true);
+      return;
+    }
+
+    let loaded = 0;
+    const checkImages = () => {
+      loaded++;
+      if (loaded >= images.length) {
+        setReady(true);
+      }
+    };
+
+    images.forEach((img) => {
+      if (img.complete) {
+        checkImages();
+      } else {
+        img.addEventListener("load", checkImages);
+        img.addEventListener("error", checkImages);
+      }
+    });
+
+    // CLEANUP: Remove listeners if the component unmounts
+    return () => {
+      images.forEach((img) => {
+        img.removeEventListener("load", checkImages);
+        img.removeEventListener("error", checkImages);
+      });
+    };
+  }, []);
+
   useGSAP(
     () => {
+      if (!ready) return; // Wait until all images have intrinsic height
+
       const cards = gsap.utils.toArray(".card");
       const profileItems = gsap.utils.toArray(".profile-item");
 
@@ -347,12 +387,6 @@ const KeepMeComponents = ({ selectedProjectRef, videoWrapperRef }) => {
               const backHeight = tallImg.offsetHeight;
               // Calculate how much we need to move up so the bottom aligns
               const scrollDistance = backHeight - frontHeight;
-
-              console.log({
-                frontHeight,
-                backHeight,
-                scrollDistance,
-              });
 
               if (scrollDistance > 0) {
                 // Animate y instead of top for smooth GPU animation
@@ -501,7 +535,7 @@ const KeepMeComponents = ({ selectedProjectRef, videoWrapperRef }) => {
         }
       });
     },
-    { dependencies: [], revertOnUpdate: true },
+    { dependencies: [ready], revertOnUpdate: true },
   );
 
   return (
