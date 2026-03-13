@@ -12,7 +12,7 @@ import Glace from "../../assets/keepme/templates/Glace.webp";
 import accountDetailsFixed from "../../assets/keepme/sections/accountDetailsFixed.webp";
 import accountDetailsFull from "../../assets/keepme/sections/accountDetailsFull.png";
 import companyDetailsFull from "../../assets/keepme/sections/companyDetailsFull.png";
-import appleWalletFull from "../../assets/keepme/sections/appleWalletFull.png";
+import appleWalletFull from "../../assets/keepme/sections/applewalletFull.png";
 import analyticsFixed from "../../assets/keepme/sections/analyticsFixed.webp";
 import analyticsFull from "../../assets/keepme/sections/analyticsFull.png";
 import profiletypeFull from "../../assets/keepme/sections/profiletypeFull.png";
@@ -41,7 +41,7 @@ import myDigitalCardFullMobile from "../../assets/keepme/sections/myDigitalCardF
 import myDigitalCardFixedMobile from "../../assets/keepme/sections/myDigitalCardFixedMobile.webp";
 import myQrCodesFullMobile from "../../assets/keepme/sections/myQrCodesFullMobile.png";
 import myQrCodesFixedMobile from "../../assets/keepme/sections/myQrCodesFixedMobile.webp";
-import appleWalletFullMobile from "../../assets/keepme/sections/appleWalletFullMobile.png";
+import appleWalletFullMobile from "../../assets/keepme/sections/applewalletFullMobile.png";
 import analyticsFixedMobile from "../../assets/keepme/sections/analyticsFixedMobile.webp";
 import analyticsFullMobile from "../../assets/keepme/sections/analyticsFullMobile.png";
 import profiletypeFullMobile from "../../assets/keepme/sections/profiletypeFullMobile.png";
