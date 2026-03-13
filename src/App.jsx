@@ -111,10 +111,9 @@ const App = () => {
         </>
       )} */}
 
-      {/* 
       <div className="w-full relative min-h-screen z-20">
         <PreloaderHero setAnimationFinished={setAnimationFinished} />
-      </div> */}
+      </div>
 
       <div className="h-[calc(110vh_+_13000px)]">
         <KeepMeSection />
