@@ -341,7 +341,6 @@ const KeepMeComponents = ({ selectedProjectRef, videoWrapperRef }) => {
 
             // 5. Scroll tall image to the top
             if (tallImg && imageContainer) {
-              console.log("111");
               // Get the front image height (icon)
               const frontHeight = shortImg.offsetHeight;
               // Get the back image height (icon2)
@@ -349,8 +348,13 @@ const KeepMeComponents = ({ selectedProjectRef, videoWrapperRef }) => {
               // Calculate how much we need to move up so the bottom aligns
               const scrollDistance = backHeight - frontHeight;
 
+              console.log({
+                frontHeight,
+                backHeight,
+                scrollDistance,
+              });
+
               if (scrollDistance > 0) {
-                console.log("222");
                 // Animate y instead of top for smooth GPU animation
                 tl.to(tallImg, {
                   y: -scrollDistance, // move up exactly
