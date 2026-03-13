@@ -26,3 +26,5 @@ dist-ssr
 src/test
 
 .env
+.vercel
+.env*.local

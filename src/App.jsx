@@ -13,7 +13,7 @@ gsap.registerPlugin(ScrollTrigger);
 const MAX_SCROLL_VELOCITY = 30;
 
 const App = () => {
-  const [animationFinished, setAnimationFinished] = useState(true);
+  const [animationFinished, setAnimationFinished] = useState(false);
   const lenisRef = useRef(null);
 
   useEffect(() => {
