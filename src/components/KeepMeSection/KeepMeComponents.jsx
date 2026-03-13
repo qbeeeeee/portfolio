@@ -15,7 +15,7 @@ import companyDetailsFull from "../../assets/keepme/sections/companyDetailsFull.
 import appleWalletFull from "../../assets/keepme/sections/applewalletFull.png";
 import analyticsFixed from "../../assets/keepme/sections/analyticsFixed.webp";
 import analyticsFull from "../../assets/keepme/sections/analyticsFull.png";
-import profiletypeFull from "../../assets/keepme/sections/profiletypeFull.png";
+import profiletypeFull from "../../assets/keepme/sections/profileTypeFull.png";
 import teamMembersFull from "../../assets/keepme/sections/teamMembersFull.png";
 import teamMembersFixed from "../../assets/keepme/sections/teamMembersFixed.webp";
 import securityFixed from "../../assets/keepme/sections/securityFixed.webp";
