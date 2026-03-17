@@ -11,6 +11,7 @@ import GithubCircle from "../../assets/contactme/githubCircle.svg?react";
 import exclamationMarkIcon from "../../assets/contactme/exlamationMark.svg";
 
 import { gsap } from "gsap";
+import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -24,11 +25,14 @@ const socials = [
 ];
 
 const ContactMe = () => {
+  const isMobile = window.innerWidth < 640;
+
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
     email: "",
     message: "",
+    company: "",
   });
 
   const [status, setStatus] = useState("idle");
@@ -53,7 +57,13 @@ const ContactMe = () => {
 
       if (response.ok) {
         setStatus("success");
-        setFormData({ firstName: "", lastName: "", email: "", message: "" }); // Clear form
+        setFormData({
+          firstName: "",
+          lastName: "",
+          email: "",
+          message: "",
+          company: "",
+        });
       } else {
         setStatus("error");
       }
@@ -68,73 +78,131 @@ const ContactMe = () => {
 
   const bgRef = useRef(null);
 
-  useEffect(() => {
-    const dot = dotRef?.current;
-    const text = textRef?.current;
+  const contactRevealRef = useRef(null);
+  const contactRevealRef2 = useRef(null);
+  const contactBgRef = useRef(null);
 
-    // Initial clip-path
-    gsap.set(text, { clipPath: "inset(0 100% 0 0)" });
+  useGSAP(
+    () => {
+      const dot = dotRef?.current;
+      const text = textRef?.current;
 
-    // Calculate text width and left position
-    const textRect = text.getBoundingClientRect();
-    const sectionRect = sectionRef.current.getBoundingClientRect();
+      const contactReveal = contactRevealRef2?.current;
 
-    // Distance dot needs to travel
-    const travelDistance = textRect.right - sectionRect.left + 10;
+      // Initial clip-path
+      gsap.set(text, { clipPath: "inset(0 100% 0 0)" });
+      gsap.set(contactReveal, { clipPath: "inset(0 100% 0 0)" });
 
-    // gsap.set(dot, { clipPath: "inset(79% 0 0 0)" });
+      // Calculate text width and left position
+      const textRect = text.getBoundingClientRect();
+      const sectionRect = sectionRef.current.getBoundingClientRect();
 
-    gsap.to(dot, {
-      scaleY: 1,
-      borderRadius: "15px",
-      scrollTrigger: {
-        trigger: sectionRef.current,
-        start: "top center+=250",
-        end: "+=150",
-        scrub: true,
-      },
-    });
+      // Distance dot needs to travel
+      const travelDistance = textRect.right - sectionRect.left + 10;
 
-    // Animate dot along scroll
-    gsap.to(dot, {
-      x: travelDistance,
-      scrollTrigger: {
-        trigger: sectionRef.current,
-        start: "top center+=100",
-        end: "+=300",
-        scrub: true,
-        onUpdate: (self) => {
-          const progress = self.progress;
-          text.style.clipPath = `inset(0 ${100 - progress * 100}% 0 0)`;
+      // gsap.set(dot, { clipPath: "inset(79% 0 0 0)" });
+
+      gsap.to(dot, {
+        scaleY: 1,
+        borderRadius: "15px",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top center+=250",
+          end: "+=150",
+          scrub: true,
         },
-      },
-      ease: "none",
-    });
+      });
 
-    // gsap.to(dot, {
-    //   scrollTrigger: {
-    //     trigger: sectionRef.current,
-    //     start: "top center-=200",
-    //     end: "+=150",
-    //     scrub: true,
-    //     onUpdate: (self) => {
-    //       const progress = self.progress;
-    //       dot.style.clipPath = `inset(${79 - progress * 100}% 0 0 0)`;
-    //     },
-    //   },
-    // });
+      // Animate dot along scroll
+      gsap.to(dot, {
+        x: travelDistance,
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top center+=100",
+          end: "+=300",
+          scrub: true,
+          onUpdate: (self) => {
+            const progress = self.progress;
+            text.style.clipPath = `inset(0 ${100 - progress * 100}% 0 0)`;
+          },
+        },
+        ease: "none",
+      });
 
-    gsap.to(bgRef.current, {
-      clipPath: "inset(100% 0 0 0)",
-      scrollTrigger: {
-        trigger: sectionRef.current,
-        start: "top center-=200",
-        end: "+=150",
-        scrub: true,
-      },
-      ease: "none",
-    });
-  }, []);
+      // gsap.to(dot, {
+      //   scrollTrigger: {
+      //     trigger: sectionRef.current,
+      //     start: "top center-=200",
+      //     end: "+=150",
+      //     scrub: true,
+      //     onUpdate: (self) => {
+      //       const progress = self.progress;
+      //       dot.style.clipPath = `inset(${79 - progress * 100}% 0 0 0)`;
+      //     },
+      //   },
+      // });
+
+      gsap.to(bgRef.current, {
+        clipPath: "inset(100% 0 0 0)",
+        id: "exclamationMark",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top center-=200",
+          end: isMobile ? "+=100" : "+=200",
+          scrub: true,
+        },
+        ease: "none",
+      });
+
+      const container = contactRevealRef.current;
+      const bg = contactBgRef.current;
+
+      const containerRect = container.getBoundingClientRect();
+      const bgRect = bg.getBoundingClientRect();
+
+      const travelDistance2 = containerRect.height - bgRect.height;
+
+      gsap.to(bg, {
+        y: travelDistance2,
+        ease: "none",
+        scrollTrigger: {
+          id: "revealFormData",
+          trigger: contactReveal,
+          start: () => {
+            const finish = ScrollTrigger.getById("exclamationMark");
+            return finish?.end - (isMobile ? 250 : 300) || 0;
+          },
+          // start: "top center+=100",
+          end: "+=300",
+          scrub: true,
+          onUpdate: (self) => {
+            const progress = self.progress;
+            contactReveal.style.clipPath = `inset(0 0 ${100 - progress * 100}% 0)`;
+          },
+        },
+      });
+
+      gsap.fromTo(
+        bg,
+        { scaleY: 1, borderRadius: "20px" },
+        {
+          scaleY: isMobile ? 0.3 : 0.1,
+          borderRadius: "30px",
+          ease: "none",
+          scrollTrigger: {
+            trigger: contactReveal,
+            start: () => {
+              const start = ScrollTrigger.getById("revealFormData");
+              return start?.end - 200 || 0;
+            },
+            end: "+=200",
+            scrub: true,
+          },
+        },
+      );
+    },
+    { dependencies: [], revertOnUpdate: true },
+  );
 
   return (
     <div className="min-h-screen w-full mt-[40vh] flex flex-col items-center">
@@ -150,7 +218,7 @@ const ContactMe = () => {
         {/* Fat Dot */}
         <div
           ref={dotRef}
-          className="absolute left-0 bottom-[25%] h-[20vh] scale-y-0 w-auto z-20 rounded-[40px] overflow-hidden"
+          className="absolute left-0 bottom-[25%] h-14 sm:h-[20vh] scale-y-0 w-auto z-20 rounded-[40px] overflow-hidden"
         >
           {/* Background layer */}
           <div
@@ -169,208 +237,234 @@ const ContactMe = () => {
         {/* Contact Text */}
         <div
           ref={textRef}
-          className="text-white text-[clamp(3rem,25vh,13rem)] whitespace-nowrap font-ica-rubrik"
+          className="text-white text-[50px] sm:text-[clamp(3rem,25vh,13rem)] whitespace-nowrap font-ica-rubrik"
         >
           Contact Me
         </div>
       </div>
 
-      <div className="w-full flex justify-evenly items-end mt-16 px-20">
-        <div className="w-[20%] max-w-xl text-white flex flex-col gap-6 z-10">
-          <div className="flex flex-col gap-6 font-inter">
-            <a
-              href="mailto:papadokonst1998@gmail.com"
-              className="group transition-all duration-300 hover:translate-x-1 max-w-max"
-            >
-              <div className="text-white/60 text-sm">Email</div>
+      <div
+        ref={contactRevealRef}
+        className="relative w-full flex justify-evenly items-end mt-0 px-6 sm:px-20 overflow-visible"
+      >
+        {/* animated background */}
+        <div
+          ref={contactBgRef}
+          className="absolute pointer-events-none left-1/2 transform -translate-x-1/2 inset-0 bg-[#d6266b] z-20 rounded-[40px] w-[90%] sm:w-[80%] h-4 sm:h-14 scale-y-0"
+          style={{ clipPath: "inset(0 0 0 0)" }}
+        />
 
-              <div className="relative text-white text-[18px]">
-                Papadokonst1998@gmail.com
-                <span className="absolute left-0 -bottom-1 h-[1px] w-0 bg-white transition-all duration-500 group-hover:w-full"></span>
-              </div>
-            </a>
-
-            <a
-              href="tel:+306972358102"
-              className="group transition-all duration-300 hover:translate-x-1 max-w-max"
-            >
-              <div className="text-white/60 text-sm">Phone</div>
-
-              <div className="relative text-white text-[18px]">
-                +30 6972358102
-                <span className="absolute left-0 -bottom-1 h-[1px] w-0 bg-white transition-all duration-500 group-hover:w-full"></span>
-              </div>
-            </a>
-          </div>
-
-          <div className="flex items-center gap-8 mt-1">
-            {socials.map(({ icon: Icon, name }) => (
-              <div
-                key={name}
-                className="relative flex items-center justify-center group"
+        <div
+          ref={contactRevealRef2}
+          className="w-full flex flex-col sm:flex-row justify-evenly items-end gap-6 sm:gap-0 z-10 pt-6 pb-4 sm:pb-14"
+        >
+          <div className="w-full sm:w-[20%] max-w-xl text-white flex flex-col gap-6 z-10">
+            <div className="flex flex-col gap-6 font-inter">
+              <a
+                href="mailto:papadokonst1998@gmail.com"
+                className="group transition-all duration-300 hover:translate-x-1 max-w-max"
               >
-                <Icon className="w-8 h-8 text-white cursor-pointer transition-all duration-300 group-hover:scale-125 group-hover:-translate-y-1" />
+                <div className="text-white/60 text-sm">Email</div>
 
+                <div className="relative text-white text-[18px]">
+                  Papadokonst1998@gmail.com
+                  <span className="absolute left-0 -bottom-1 h-[1px] w-0 bg-white transition-all duration-500 group-hover:w-full"></span>
+                </div>
+              </a>
+
+              <a
+                href="tel:+306972358102"
+                className="group transition-all duration-300 hover:translate-x-1 max-w-max"
+              >
+                <div className="text-white/60 text-sm">Phone</div>
+
+                <div className="relative text-white text-[18px]">
+                  +30 6972358102
+                  <span className="absolute left-0 -bottom-1 h-[1px] w-0 bg-white transition-all duration-500 group-hover:w-full"></span>
+                </div>
+              </a>
+            </div>
+
+            <div className="flex items-center gap-6 sm:gap-8 mt-1">
+              {socials.map(({ icon: Icon, name }) => (
                 <div
-                  className="
+                  key={name}
+                  className="relative flex items-center justify-center group"
+                >
+                  <Icon className="w-8 h-8 text-white cursor-pointer transition-all duration-300 group-hover:scale-125 group-hover:-translate-y-1" />
+
+                  <div
+                    className="
                     absolute top-12 flex flex-col items-center
                     opacity-0 translate-y-2 scale-75
                     group-hover:opacity-100 group-hover:translate-y-0 group-hover:scale-100
                     transition-all duration-300 pointer-events-none
                   "
-                >
-                  <div className="px-3 py-1 text-xs text-white font-inter bg-white/10 backdrop-blur-md rounded-md border border-white/20">
-                    {name}
+                  >
+                    <div className="px-3 py-1 text-xs text-white font-inter bg-white/10 backdrop-blur-md rounded-md border border-white/20">
+                      {name}
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <form
-          onSubmit={handleSubmit}
-          className="w-[50%] max-w-xl flex flex-col gap-6 text-white z-10"
-        >
-          <div className="flex gap-4">
-            {/* First Name */}
-            <div className="relative w-1/2">
-              <input
-                type="text"
-                name="firstName"
-                placeholder=" "
-                value={formData.firstName}
-                onChange={handleChange}
-                className="peer w-full p-3 font-inter font-light bg-transparent border-b border-l border-white/90 rounded-md outline-none"
-                required
-              />
-
-              <label
-                className="
-                  absolute left-4 top-3 text-white/70 font-light
-                  transition-all duration-200
-                  peer-placeholder-shown:top-3
-                  peer-placeholder-shown:text-base
-                  peer-focus:-top-2
-                  peer-focus:text-xs
-                  peer-[&:not(:placeholder-shown)]:-top-2
-                  peer-[&:not(:placeholder-shown)]:text-xs
-                  pointer-events-none
-                "
-              >
-                First Name
-              </label>
-            </div>
-
-            {/* Last Name */}
-            <div className="relative w-1/2">
-              <input
-                type="text"
-                name="lastName"
-                placeholder=" "
-                value={formData.lastName}
-                onChange={handleChange}
-                className="peer w-full p-3 font-inter font-light bg-transparent border-b border-l border-white/90 rounded-md outline-none"
-                required
-              />
-              <label
-                className="
-                  absolute left-4 top-3 text-white/70 font-light
-                  transition-all duration-200
-                  peer-placeholder-shown:top-3
-                  peer-placeholder-shown:text-base
-                  peer-focus:-top-2
-                  peer-focus:text-xs
-                  peer-[&:not(:placeholder-shown)]:-top-2
-                  peer-[&:not(:placeholder-shown)]:text-xs
-                  pointer-events-none
-                "
-              >
-                Last Name
-              </label>
+              ))}
             </div>
           </div>
 
-          <div className="relative">
-            <input
-              type="email"
-              name="email"
-              placeholder=" "
-              value={formData.email}
-              onChange={handleChange}
-              className="peer w-full p-3 font-inter font-light bg-transparent border-b border-l border-white/90 rounded-md outline-none"
-              required
-            />
-            <label
-              className="
-                  absolute left-4 top-3 text-white/70 font-light
-                  transition-all duration-200
-                  peer-placeholder-shown:top-3
-                  peer-placeholder-shown:text-base
-                  peer-focus:-top-2
-                  peer-focus:text-xs
-                  peer-[&:not(:placeholder-shown)]:-top-2
-                  peer-[&:not(:placeholder-shown)]:text-xs
-                  pointer-events-none
-                "
-            >
-              Email Address
-            </label>
-          </div>
-
-          <div className="relative">
-            <textarea
-              name="message"
-              rows="5"
-              placeholder=" "
-              value={formData.message}
-              onChange={handleChange}
-              className="peer w-full p-3 font-inter font-light bg-transparent border-b border-l border-white/90 rounded-md outline-none resize-none"
-              required
-            />
-            <label
-              className="
-                  absolute left-4 top-3 text-white/70 font-light
-                  transition-all duration-200
-                  peer-placeholder-shown:top-3
-                  peer-placeholder-shown:text-base
-                  peer-focus:-top-2
-                  peer-focus:text-xs
-                  peer-[&:not(:placeholder-shown)]:-top-2
-                  peer-[&:not(:placeholder-shown)]:text-xs
-                  pointer-events-none
-                "
-            >
-              Your Message
-            </label>
-          </div>
-
-          <button
-            style={{
-              "--colorButton": "rgb(255 255 255 / 0.9)",
-              "--colorButton2": "black",
-              "--borderLeftBottom": "1px",
-              "--borderOutline": "0px",
-              opacity: status === "sending" ? 0.7 : 1,
-              cursor: status === "sending" ? "not-allowed" : "pointer",
-            }}
-            type="submit"
-            className="projectViewButton"
-            disabled={status === "sending"}
+          <form
+            onSubmit={handleSubmit}
+            className="w-full sm:w-[50%] max-w-xl flex flex-col gap-6 text-white z-10"
           >
-            Send Message
-          </button>
+            <div className="flex gap-4">
+              {/* First Name */}
+              <div className="relative w-1/2">
+                <input
+                  type="text"
+                  name="firstName"
+                  placeholder=" "
+                  value={formData.firstName}
+                  onChange={handleChange}
+                  className="peer w-full p-3 font-inter font-light bg-transparent border-b border-l border-white/90 rounded-md outline-none"
+                  required
+                />
 
-          {/* Optional: Simple feedback messages */}
-          {status === "success" && (
-            <p className="text-green-400 mt-2">Message sent successfully!</p>
-          )}
-          {status === "error" && (
-            <p className="text-red-400 mt-2">
-              Something went wrong. Try again.
-            </p>
-          )}
-        </form>
+                <label
+                  className="
+                  absolute left-4 top-3 text-white/70 font-light
+                  transition-all duration-200
+                  peer-placeholder-shown:top-3
+                  peer-placeholder-shown:text-base
+                  peer-focus:-top-2
+                  peer-focus:text-xs
+                  peer-[&:not(:placeholder-shown)]:-top-2
+                  peer-[&:not(:placeholder-shown)]:text-xs
+                  pointer-events-none
+                "
+                >
+                  First Name
+                </label>
+              </div>
+
+              {/* Last Name */}
+              <div className="relative w-1/2">
+                <input
+                  type="text"
+                  name="lastName"
+                  placeholder=" "
+                  value={formData.lastName}
+                  onChange={handleChange}
+                  className="peer w-full p-3 font-inter font-light bg-transparent border-b border-l border-white/90 rounded-md outline-none"
+                  required
+                />
+                <label
+                  className="
+                  absolute left-4 top-3 text-white/70 font-light
+                  transition-all duration-200
+                  peer-placeholder-shown:top-3
+                  peer-placeholder-shown:text-base
+                  peer-focus:-top-2
+                  peer-focus:text-xs
+                  peer-[&:not(:placeholder-shown)]:-top-2
+                  peer-[&:not(:placeholder-shown)]:text-xs
+                  pointer-events-none
+                "
+                >
+                  Last Name
+                </label>
+              </div>
+            </div>
+
+            <div className="relative">
+              <input
+                type="email"
+                name="email"
+                placeholder=" "
+                value={formData.email}
+                onChange={handleChange}
+                className="peer w-full p-3 font-inter font-light bg-transparent border-b border-l border-white/90 rounded-md outline-none"
+                required
+              />
+              <label
+                className="
+                  absolute left-4 top-3 text-white/70 font-light
+                  transition-all duration-200
+                  peer-placeholder-shown:top-3
+                  peer-placeholder-shown:text-base
+                  peer-focus:-top-2
+                  peer-focus:text-xs
+                  peer-[&:not(:placeholder-shown)]:-top-2
+                  peer-[&:not(:placeholder-shown)]:text-xs
+                  pointer-events-none
+                "
+              >
+                Email Address
+              </label>
+            </div>
+
+            <div className="relative">
+              <textarea
+                name="message"
+                rows="5"
+                placeholder=" "
+                value={formData.message}
+                onChange={handleChange}
+                className="peer w-full p-3 font-inter font-light bg-transparent border-b border-l border-white/90 rounded-md outline-none resize-none"
+                required
+              />
+              <label
+                className="
+                  absolute left-4 top-3 text-white/70 font-light
+                  transition-all duration-200
+                  peer-placeholder-shown:top-3
+                  peer-placeholder-shown:text-base
+                  peer-focus:-top-2
+                  peer-focus:text-xs
+                  peer-[&:not(:placeholder-shown)]:-top-2
+                  peer-[&:not(:placeholder-shown)]:text-xs
+                  pointer-events-none
+                "
+              >
+                Your Message
+              </label>
+            </div>
+
+            {/* Honeypot field */}
+            <input
+              type="text"
+              name="company"
+              value={formData.company || ""}
+              onChange={handleChange}
+              className="hidden"
+              autoComplete="off"
+              tabIndex="-1"
+            />
+
+            <button
+              style={{
+                "--colorButton": "rgb(255 255 255 / 0.9)",
+                "--colorButton2": "black",
+                "--borderLeftBottom": "1px",
+                "--borderOutline": "0px",
+                opacity: status === "sending" ? 0.7 : 1,
+                cursor: status === "sending" ? "not-allowed" : "pointer",
+              }}
+              type="submit"
+              className="projectViewButton"
+              disabled={status === "sending"}
+            >
+              Send Message
+            </button>
+
+            {/* Optional: Simple feedback messages */}
+            {status === "success" && (
+              <p className="text-green-400 mt-2">Message sent successfully!</p>
+            )}
+            {status === "error" && (
+              <p className="text-red-400 mt-2">
+                Something went wrong. Try again.
+              </p>
+            )}
+          </form>
+        </div>
       </div>
     </div>
   );
