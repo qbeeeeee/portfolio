@@ -5,12 +5,9 @@ import Lenis from "lenis";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import OtherProjects from "./components/OtherProjects";
-import StarField from "./components/StarField";
 import ContactMe from "./components/ContactMe/ContactMe";
 
 gsap.registerPlugin(ScrollTrigger);
-
-const MAX_SCROLL_VELOCITY = 30;
 
 const App = () => {
   const [animationFinished, setAnimationFinished] = useState(false);
@@ -26,40 +23,23 @@ const App = () => {
     });
 
     lenisRef.current = lenis;
-
     lenis.stop();
 
-    // Clamp scroll velocity + sync ScrollTrigger
-    let isClamping = false;
+    lenis.on("scroll", ScrollTrigger.update);
 
-    lenis.on("scroll", ({ velocity }) => {
-      if (!isClamping && Math.abs(velocity) > MAX_SCROLL_VELOCITY) {
-        isClamping = true;
-
-        lenis.scrollTo(lenis.scroll, {
-          immediate: true,
-          lock: true,
-        });
-
-        // release lock on next frame
-        requestAnimationFrame(() => {
-          isClamping = false;
-        });
-      }
-
-      ScrollTrigger.update();
-    });
-
-    const tick = (time) => {
+    const raf = (time) => {
       lenis.raf(time * 1000);
     };
-    gsap.ticker.add(tick);
+
+    gsap.ticker.add(raf);
     gsap.ticker.lagSmoothing(0);
 
-    window.scrollTo(0, 0);
+    requestAnimationFrame(() => {
+      ScrollTrigger.refresh();
+    });
 
     return () => {
-      gsap.ticker.remove(tick);
+      gsap.ticker.remove(raf);
       lenis.destroy();
     };
   }, []);
@@ -67,17 +47,12 @@ const App = () => {
   const stopScroll = () => {
     if (!lenisRef.current) return;
     lenisRef.current.stop(); // stops all user scroll
-    console.log("Scrolling stopped");
   };
 
   const resumeScroll = () => {
     if (!lenisRef.current) return;
     lenisRef.current.start(); // resumes scrolling
-    console.log("Scrolling resumed");
   };
-
-  const vh = window.innerHeight;
-  const totalHeight = 1.1 * vh + 5500;
 
   useEffect(() => {
     // Disable browser scroll restoration
@@ -105,19 +80,11 @@ const App = () => {
         !animationFinished ? "overflow-hidden h-screen" : ""
       }`}
     >
-      {/* {animationFinished && (
-        <>
-          <StarField />
-        </>
-      )} */}
-
-      <div className="w-full relative min-h-screen z-20">
+      <div className="w-full relative min-h-[calc(100vh_+_700px)] z-20">
         <PreloaderHero setAnimationFinished={setAnimationFinished} />
       </div>
 
-      <div className="h-[calc(110vh_+_13000px)]">
-        <KeepMeSection />
-      </div>
+      <KeepMeSection />
 
       <OtherProjects
         animationFinished={animationFinished}

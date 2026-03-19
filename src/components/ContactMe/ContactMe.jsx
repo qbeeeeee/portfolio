@@ -205,7 +205,7 @@ const ContactMe = () => {
   );
 
   return (
-    <div className="min-h-screen w-full mt-[40vh] flex flex-col items-center">
+    <div className="min-h-screen w-full sm:mt-[40vh] flex flex-col items-center">
       <div ref={sectionRef} className="relative">
         {/* Fat Dot */}
         {/* <img
@@ -256,57 +256,64 @@ const ContactMe = () => {
 
         <div
           ref={contactRevealRef2}
-          className="w-full flex flex-col sm:flex-row justify-evenly items-end gap-6 sm:gap-0 z-10 pt-6 pb-4 sm:pb-14"
+          className="w-full flex flex-col sm:flex-row justify-evenly items-stretch gap-6 sm:gap-0 z-10 pt-6 pb-4 sm:pb-14"
         >
-          <div className="w-full sm:w-[20%] max-w-xl text-white flex flex-col gap-6 z-10">
-            <div className="flex flex-col gap-6 font-inter">
-              <a
-                href="mailto:papadokonst1998@gmail.com"
-                className="group transition-all duration-300 hover:translate-x-1 max-w-max"
-              >
-                <div className="text-white/60 text-sm">Email</div>
-
-                <div className="relative text-white text-[18px]">
-                  Papadokonst1998@gmail.com
-                  <span className="absolute left-0 -bottom-1 h-[1px] w-0 bg-white transition-all duration-500 group-hover:w-full"></span>
-                </div>
-              </a>
-
-              <a
-                href="tel:+306972358102"
-                className="group transition-all duration-300 hover:translate-x-1 max-w-max"
-              >
-                <div className="text-white/60 text-sm">Phone</div>
-
-                <div className="relative text-white text-[18px]">
-                  +30 6972358102
-                  <span className="absolute left-0 -bottom-1 h-[1px] w-0 bg-white transition-all duration-500 group-hover:w-full"></span>
-                </div>
-              </a>
+          <div className="w-full sm:w-[50%] max-w-lg text-white z-10 flex flex-col gap-10 justify-between">
+            <div className="font-inter text-[20px]">
+              If you have any inquires or just want to say hi, please use the
+              contact form or any of the socials!
             </div>
 
-            <div className="flex items-center gap-6 sm:gap-8 mt-1">
-              {socials.map(({ icon: Icon, name }) => (
-                <div
-                  key={name}
-                  className="relative flex items-center justify-center group"
+            <div className="flex flex-col gap-6">
+              <div className="flex flex-col gap-6 font-inter">
+                <a
+                  href="mailto:papadokonst1998@gmail.com"
+                  className="group transition-all duration-300 hover:translate-x-1 max-w-max"
                 >
-                  <Icon className="w-8 h-8 text-white cursor-pointer transition-all duration-300 group-hover:scale-125 group-hover:-translate-y-1" />
+                  <div className="text-white/60 text-sm">Email</div>
 
+                  <div className="relative text-white text-[18px]">
+                    Papadokonst1998@gmail.com
+                    <span className="absolute left-0 -bottom-1 h-[1px] w-0 bg-white transition-all duration-500 group-hover:w-full"></span>
+                  </div>
+                </a>
+
+                <a
+                  href="tel:+306972358102"
+                  className="group transition-all duration-300 hover:translate-x-1 max-w-max"
+                >
+                  <div className="text-white/60 text-sm">Phone</div>
+
+                  <div className="relative text-white text-[18px]">
+                    +30 6972358102
+                    <span className="absolute left-0 -bottom-1 h-[1px] w-0 bg-white transition-all duration-500 group-hover:w-full"></span>
+                  </div>
+                </a>
+              </div>
+
+              <div className="flex items-center gap-6 sm:gap-8 mt-1">
+                {socials.map(({ icon: Icon, name }) => (
                   <div
-                    className="
+                    key={name}
+                    className="relative flex items-center justify-center group"
+                  >
+                    <Icon className="w-8 h-8 text-white cursor-pointer transition-all duration-300 group-hover:scale-125 group-hover:-translate-y-1" />
+
+                    <div
+                      className="
                     absolute top-12 flex flex-col items-center
                     opacity-0 translate-y-2 scale-75
                     group-hover:opacity-100 group-hover:translate-y-0 group-hover:scale-100
                     transition-all duration-300 pointer-events-none
                   "
-                  >
-                    <div className="px-3 py-1 text-xs text-white font-inter bg-white/10 backdrop-blur-md rounded-md border border-white/20">
-                      {name}
+                    >
+                      <div className="px-3 py-1 text-xs text-white font-inter bg-white/10 backdrop-blur-md rounded-md border border-white/20">
+                        {name}
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
 

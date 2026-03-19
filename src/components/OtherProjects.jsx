@@ -79,6 +79,8 @@ const projects = [
 ];
 
 const OtherProjects = ({ stopScroll, resumeScroll, animationFinished }) => {
+  const isMobile = window.innerWidth < 640;
+
   const projectsWrapperRef = useRef(null);
   const planetRef = useRef(null);
   const projectInfoRef = useRef(null);
@@ -89,8 +91,6 @@ const OtherProjects = ({ stopScroll, resumeScroll, animationFinished }) => {
   useGSAP(
     () => {
       if (!animationFinished) return;
-
-      const menuTrigger = ScrollTrigger.getById("keepme-components");
       const projectsWrapper = projectsWrapperRef?.current;
 
       gsap.to(projectsWrapper, {
@@ -98,11 +98,11 @@ const OtherProjects = ({ stopScroll, resumeScroll, animationFinished }) => {
         duration: 0.1,
         pointerEvents: "auto",
         scrollTrigger: {
-          trigger: ".projects-container",
-
-          // THIS is the key line
-          start: () => menuTrigger?.end + 200,
-
+          trigger: projectsWrapper,
+          start: () => {
+            const menuTrigger = ScrollTrigger.getById("keepme-components");
+            return menuTrigger?.end || 0;
+          },
           toggleActions: "play reverse play reverse",
         },
       });
@@ -125,26 +125,9 @@ const OtherProjects = ({ stopScroll, resumeScroll, animationFinished }) => {
         repeat: -1,
       });
 
-      // Planet entrance animation
-      gsap.fromTo(
-        planet,
-        { y: "-220vh", scale: 0.6 },
-        {
-          y: 0,
-          scale: 1,
-          scrollTrigger: {
-            trigger: projectsWrapper,
-            start: "top bottom",
-            end: "bottom bottom",
-            scrub: true,
-          },
-        },
-      );
-
-      // Scroll rotation offset
-      gsap.to(projectsWrapper, {
-        "--offset": "0deg",
+      const tl = gsap.timeline({
         scrollTrigger: {
+          id: "projectsScroll",
           trigger: projectsWrapper,
           start: "top bottom",
           end: "bottom bottom",
@@ -152,50 +135,34 @@ const OtherProjects = ({ stopScroll, resumeScroll, animationFinished }) => {
         },
       });
 
+      // Planet entrance
+      tl.fromTo(planet, { y: "-220vh", scale: 0.6 }, { y: 0, scale: 1 }, 0);
+
+      // Projects wrapper scroll rotation
+      tl.to(projectsWrapper, { "--offset": "0deg" }, 0);
+
       // Tilt animation
-      gsap.fromTo(
+      tl.fromTo(
         projectsWrapper,
         { "--tilt": "5deg" },
-        {
-          "--tilt": "-24deg",
-          scrollTrigger: {
-            trigger: projectsWrapper,
-            start: "top bottom",
-            end: "bottom bottom",
-            scrub: true,
-          },
-        },
+        { "--tilt": "-24deg" },
+        0,
       );
 
-      // Additional scroll spin
-      gsap.fromTo(
+      // Scroll spin
+      tl.fromTo(
         spin,
         { "--scrollSpin": "0deg" },
-        {
-          "--scrollSpin": "100deg",
-          scrollTrigger: {
-            trigger: projectsWrapper,
-            start: "top bottom",
-            end: "bottom bottom",
-            scrub: true,
-          },
-        },
+        { "--scrollSpin": "100deg" },
+        0,
       );
 
-      // Z axis depth
-      gsap.fromTo(
-        projectRefs?.current,
-        { "--zaxis": "350px" },
-        {
-          "--zaxis": "530px",
-          scrollTrigger: {
-            id: "projectsScroll",
-            trigger: projectsWrapper,
-            start: "top bottom",
-            end: "bottom bottom",
-            scrub: true,
-          },
-        },
+      // Z-axis depth
+      tl.fromTo(
+        projectRefs.current,
+        { "--zaxis": isMobile ? "150px" : "350px" },
+        { "--zaxis": isMobile ? "300px" : "530px" },
+        0,
       );
     },
     { dependencies: [], revertOnUpdate: true },
@@ -245,7 +212,7 @@ const OtherProjects = ({ stopScroll, resumeScroll, animationFinished }) => {
     const targetOffset2 = -(
       currentRotation +
       targetAngle -
-      (currentScrollSpin - 98.95)
+      (currentScrollSpin - (isMobile ? 101.6 : 98.95))
     );
 
     const tl = gsap.timeline({
@@ -259,7 +226,7 @@ const OtherProjects = ({ stopScroll, resumeScroll, animationFinished }) => {
       spinRef.current,
       {
         duration: 1,
-        top: "40%",
+        top: isMobile ? "33%" : "40%",
         "--offset2": `${targetOffset2}deg`,
         "--tilt2": "25deg",
         ease: "power1.inOut",
@@ -271,7 +238,7 @@ const OtherProjects = ({ stopScroll, resumeScroll, animationFinished }) => {
       projectRefs.current[index],
       {
         duration: 1,
-        "--zaxis": "650px",
+        "--zaxis": isMobile ? "400px" : "650px",
         ease: "power1.inOut",
       },
       0.6,
@@ -305,7 +272,7 @@ const OtherProjects = ({ stopScroll, resumeScroll, animationFinished }) => {
       projectRefs.current[currentIndex],
       {
         duration: 1,
-        "--zaxis": "530px",
+        "--zaxis": isMobile ? "300px" : "530px",
         ease: "power1.inOut",
       },
       0.6,
@@ -330,8 +297,8 @@ const OtherProjects = ({ stopScroll, resumeScroll, animationFinished }) => {
     tl.to(
       projectInfoRef?.current,
       {
-        width: "80vw",
-        height: "80vh",
+        width: isMobile ? "100vw" : "80vw",
+        height: isMobile ? "100vh" : "80vh",
       },
       0,
     );
@@ -365,7 +332,7 @@ const OtherProjects = ({ stopScroll, resumeScroll, animationFinished }) => {
 
     tl.to(projectRefs.current[currentIndex], {
       duration: 0.5,
-      "--zaxis": "530px",
+      "--zaxis": isMobile ? "300px" : "530px",
       ease: "power1.inOut",
     });
 
@@ -373,7 +340,7 @@ const OtherProjects = ({ stopScroll, resumeScroll, animationFinished }) => {
       projectRefs.current[nextIndex],
       {
         duration: 0.5,
-        "--zaxis": "650px",
+        "--zaxis": isMobile ? "400px" : "650px",
         ease: "power1.inOut",
       },
       "<",
@@ -388,7 +355,7 @@ const OtherProjects = ({ stopScroll, resumeScroll, animationFinished }) => {
       spinRef.current,
       {
         duration: 1,
-        top: "40%",
+        top: isMobile ? "33%" : "40%",
         "--offset2": `${targetOffset2 + rotation}deg`,
         ease: "power1.inOut",
       },
@@ -399,14 +366,14 @@ const OtherProjects = ({ stopScroll, resumeScroll, animationFinished }) => {
   return (
     <div
       ref={projectsWrapperRef}
-      className="w-full h-[100vh] flex items-center justify-center text-center relative opacity-0 [transform-style:preserve-3d] [transform:perspective(1200px)] mt-[0vh] z-10"
+      className="w-full h-[100vh] flex items-center justify-center text-center relative opacity-0 [transform-style:preserve-3d] [transform:perspective(1200px)] mt-[20vh] z-10"
     >
       <div
         ref={spinRef}
         className={`spin-container absolute top-[10%] z-[2]
           w-[300px] h-auto left-[calc(50%-150px)]
-          max-lg:w-[160px] max-lg:h-[200px] max-lg:left-[calc(50%-80px)]
-          max-md:w-[20vh] max-md:h-[12vh] max-md:left-[calc(50%-70px)]
+          max-lg:w-[180px] max-lg:left-[calc(50%-80px)]
+          max-md:w-[180px] max-md:left-[calc(50%-80px)]
       `}
         style={{ "--quantity": 8 }}
       >
@@ -452,7 +419,7 @@ const OtherProjects = ({ stopScroll, resumeScroll, animationFinished }) => {
 
         <div
           ref={planetRef}
-          className="absolute -bottom-[40%] left-0 w-full h-[70vh] sm:h-[100vh] z-[1]
+          className="absolute -bottom-[40%] left-0 w-full h-[400px] sm:h-[100vh] z-[1]
             bg-[url('/src/assets/otherProjects/earthPurpleAndBlue.png')]
             bg-[length:auto_110%] bg-no-repeat bg-center"
         />
@@ -460,32 +427,38 @@ const OtherProjects = ({ stopScroll, resumeScroll, animationFinished }) => {
 
       <div
         ref={projectInfoRef}
-        style={{ transform: "translateZ(600px)", scale: 0.55 }}
+        style={{
+          transform: `translateZ(${isMobile ? 350 : 600}px)`,
+          scale: isMobile ? 0.7 : 0.55,
+        }}
         className="flex flex-col items-center justify-center h-0 w-0 bg-[#d6266b] rounded-[40px] relative overflow-hidden"
       >
         <h2 className="absolute top-[5%] text-4xl font-bold font-ica-rubrik text-black">
           {activeProject?.alt}
         </h2>
 
-        <p className="absolute bottom-[5%] text-center max-w-[60vw] font-inter font-semibold text-[18px] text-black">
+        <p
+          data-lenis-prevent
+          className="absolute bottom-[5%] text-center max-w-[90vw] sm:max-w-[60vw] max-h-[25vh] overflow-auto font-inter font-semibold text-[18px] text-black"
+        >
           {activeProject?.description}
         </p>
 
-        <div className="absolute bottom-1/2 flex justify-between w-full px-[5%]">
+        <div className="absolute bottom-[35%] sm:bottom-1/2 flex justify-between w-full px-[4%] sm:px-[5%]">
           <div className="flex flex-col gap-5">
             {activeProject?.github && (
               <a
                 href={activeProject?.github}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="projectViewButton"
+                className="projectViewButton font-inter"
               >
                 View Code
               </a>
             )}
             <button
               onClick={() => nextProject(true)}
-              className="projectViewButton"
+              className="projectViewButton font-inter"
             >
               Prev Project
             </button>
@@ -496,12 +469,15 @@ const OtherProjects = ({ stopScroll, resumeScroll, animationFinished }) => {
               href={activeProject?.live || "#"}
               target="_blank"
               rel="noopener noreferrer"
-              className="projectViewButton"
+              className="projectViewButton font-inter"
               style={{ visibility: activeProject?.live ? "visible" : "hidden" }}
             >
               Visit Site
             </a>
-            <button onClick={() => nextProject()} className="projectViewButton">
+            <button
+              onClick={() => nextProject()}
+              className="projectViewButton font-inter"
+            >
               Next Project
             </button>
           </div>

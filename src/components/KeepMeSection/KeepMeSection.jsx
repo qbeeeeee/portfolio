@@ -18,6 +18,7 @@ const logoPaths = [
 
 const KeepMeSection = () => {
   const videoWrapperRef = useRef(null);
+  const videoWrapperInsideRef = useRef(null);
   const svgOutterWrapperRef = useRef(null);
   const svgOriginRef = useRef(null);
   const circleWrapperRef = useRef(null);
@@ -31,8 +32,15 @@ const KeepMeSection = () => {
 
   const isMobile = window.innerWidth < 640;
 
+  const sectionRef = useRef(null);
+
+  const rect = videoWrapperRef?.current?.getBoundingClientRect();
+
   useGSAP(
     () => {
+      if (!rect) return;
+      console.log("2222");
+
       const videoWrapper = videoWrapperRef?.current;
       const circleWrapper = circleWrapperRef?.current;
       const svgOrigin = svgOriginRef?.current;
@@ -48,15 +56,19 @@ const KeepMeSection = () => {
       const tl = gsap.timeline({
         scrollTrigger: {
           id: "keepme-finish-rectangle",
-          trigger: document.body,
-          start: "top -90%",
+          trigger: sectionRef.current,
+          start: "top bottom",
           end: "+=1500",
           scrub: true,
           onLeave: () => {
-            gsap.to(svgOutterWrapper, { autoAlpha: 0, duration: 0.3 });
+            gsap.set(videoWrapper, { opacity: 1 });
+            gsap.set(svgOutterWrapper, { autoAlpha: 0 });
+            gsap.set(keepmeWrapperRef?.current, { zIndex: 0 });
           },
           onEnterBack: () => {
-            gsap.to(svgOutterWrapper, { autoAlpha: 1, duration: 0.3 });
+            gsap.set(svgOutterWrapper, { autoAlpha: 1 });
+            gsap.set(videoWrapper, { opacity: 0 });
+            gsap.set(keepmeWrapperRef?.current, { zIndex: 10 });
           },
         },
       });
@@ -172,8 +184,10 @@ const KeepMeSection = () => {
         tl.to(
           svgOrigin,
           {
-            height: "80vh",
-            width: isMobile ? "90vw" : "80vw",
+            // height: "80vh",
+            // width: isMobile ? "90vw" : "80vw",
+            width: rect.width,
+            height: rect.height,
           },
           "logoToRect",
         );
@@ -188,34 +202,25 @@ const KeepMeSection = () => {
           "logoToRect",
         );
       }
-
-      tl.to(
-        videoWrapper,
-        {
-          opacity: 1,
-        },
-        "showVideo",
-      );
     },
-    { dependencies: [], revertOnUpdate: true },
+    { dependencies: [rect], revertOnUpdate: true },
   );
 
   useGSAP(
     () => {
       const selectedProject = selectedProjectRef?.current;
-      //     const keepmeFinish = ScrollTrigger.getById("keepme-finish-rectangle");
-      if (!selectedProject) return;
+      if (!selectedProject || !rect) return;
+      console.log("111");
 
       const tl = gsap.timeline({
         scrollTrigger: {
           id: "keepme-selected-project",
-          trigger: document.body,
-          //  start: () => (keepmeFinish?.end ?? 0) - 100,
+          trigger: sectionRef.current,
           start: () => {
-            const finish = ScrollTrigger.getById("keepme-finish-rectangle");
-            return (finish?.end || 0) - 100;
+            const start = ScrollTrigger.getById("keepme-finish-rectangle");
+            return start?.end || 0;
           },
-          end: "+=1300", // total scroll distance
+          end: "+=1300",
           scrub: true,
         },
       });
@@ -238,15 +243,36 @@ const KeepMeSection = () => {
           ease: "power3.inOut",
           duration: 1,
         });
+
+      gsap.fromTo(
+        videoWrapperInsideRef.current,
+        { opacity: 0 },
+        {
+          opacity: 1,
+          ease: "power2.inOut",
+          clearProps: "opacity",
+          scrollTrigger: {
+            trigger: videoWrapperInsideRef.current,
+            start: () => {
+              const keepmeSelectedProject = ScrollTrigger.getById(
+                "keepme-selected-project",
+              );
+              return keepmeSelectedProject?.end;
+            },
+            end: "+=250",
+            scrub: true,
+          },
+        },
+      );
     },
     {
-      dependencies: [],
+      dependencies: [rect],
       revertOnUpdate: true,
     },
   );
 
   return (
-    <div className="relative">
+    <div ref={sectionRef} className="relative">
       <div
         ref={keepmeWrapperRef}
         className="fixed z-10 w-full h-full top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center"
@@ -349,10 +375,11 @@ const KeepMeSection = () => {
         </div>
       </div>
 
-      <div className="relative">
+      <div className="relative z-0">
         <KeepMeComponents
           selectedProjectRef={selectedProjectRef}
           videoWrapperRef={videoWrapperRef}
+          videoWrapperInsideRef={videoWrapperInsideRef}
         />
       </div>
     </div>

@@ -4,6 +4,7 @@ import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import VideoPlayer from "./videoplayer/VideoPlayer";
 import keepmeHomepage from "../../assets/keepme/homepage.mp4";
+import keepmeHomepageMobile from "../../assets/keepme/keepmeHomepageMobile.mp4";
 import BaseV2 from "../../assets/keepme/templates/BaseV2.webp";
 import ExecV2 from "../../assets/keepme/templates/ExecV2.webp";
 import Fluro from "../../assets/keepme/templates/Fluro.webp";
@@ -190,7 +191,13 @@ const templates = [
   },
 ];
 
-const KeepMeComponents = ({ selectedProjectRef, videoWrapperRef }) => {
+const KeepMeComponents = ({
+  selectedProjectRef,
+  videoWrapperRef,
+  videoWrapperInsideRef,
+}) => {
+  const isMobile = window.innerWidth < 640;
+
   const containerRef = useRef(null);
   const headerGap = 6;
 
@@ -200,6 +207,12 @@ const KeepMeComponents = ({ selectedProjectRef, videoWrapperRef }) => {
   const customisableRef = useRef(null);
 
   const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    if (ready) {
+      ScrollTrigger.refresh();
+    }
+  }, [ready]);
 
   // Helper to check if all images in the container are loaded
   useEffect(() => {
@@ -259,7 +272,7 @@ const KeepMeComponents = ({ selectedProjectRef, videoWrapperRef }) => {
         if (index === 0) {
           gsap.set(card, { y: 0 });
         } else {
-          gsap.set(card, { y: window.innerHeight });
+          gsap.set(card, { y: window.innerHeight + 150 });
         }
       });
 
@@ -277,6 +290,7 @@ const KeepMeComponents = ({ selectedProjectRef, videoWrapperRef }) => {
           end: `+=${totalScroll}`,
           pin: true,
           scrub: 1,
+          refreshPriority: 1, // <--- Add this! Higher numbers calculate first.
         },
       });
 
@@ -405,7 +419,7 @@ const KeepMeComponents = ({ selectedProjectRef, videoWrapperRef }) => {
             const totalWidth =
               templatesRowRef.current.scrollWidth -
               templatesContainerRef.current.clientWidth +
-              700;
+              (isMobile ? 100 : 700);
 
             // Hold first
             tl.to({}, { duration: 200 });
@@ -471,8 +485,8 @@ const KeepMeComponents = ({ selectedProjectRef, videoWrapperRef }) => {
             tl.to(images, {
               borderColor: "#ffffff66",
               duration: 300,
-              opacity: 0.7,
-              scale: 0.8,
+              opacity: 0.65,
+              scale: 0.95,
             });
 
             const imgRect = img.getBoundingClientRect();
@@ -549,7 +563,7 @@ const KeepMeComponents = ({ selectedProjectRef, videoWrapperRef }) => {
           className={`card absolute inset-0 w-full rounded-[40px] sm:p-[4vh] pt-[3vh] border border-black/20 shadow-[0_0px_50px_rgba(0,0,0,0.5)] ${section.color}`}
           style={{
             zIndex: index + 1,
-            height: `calc(100vh - ${index * headerGap}vh)`,
+            height: `calc(100dvh - ${index * headerGap}vh)`,
           }}
         >
           {section.id === 1 ? (
@@ -563,7 +577,7 @@ const KeepMeComponents = ({ selectedProjectRef, videoWrapperRef }) => {
                   <div
                     ref={videoWrapperRef}
                     className={`bg-[#efa8c4] absolute top-[55%] left-[50%] transform -translate-x-1/2 -translate-y-1/2
-               overflow-hidden rounded-[40px] w-[90vw] sm:w-[80vw] h-[80vh] opacity-0 z-[200]`}
+                  overflow-hidden rounded-[40px] w-auto h-auto opacity-0 z-[200]`}
                   >
                     <h1
                       ref={selectedProjectRef}
@@ -574,7 +588,12 @@ const KeepMeComponents = ({ selectedProjectRef, videoWrapperRef }) => {
                       SELECTED PROJECT
                     </h1>
 
-                    <VideoPlayer videoSource={keepmeHomepage} />
+                    <VideoPlayer
+                      videoWrapperInsideRef={videoWrapperInsideRef}
+                      videoSource={
+                        isMobile ? keepmeHomepageMobile : keepmeHomepage
+                      }
+                    />
                   </div>
                 </div>
               </div>
@@ -611,7 +630,7 @@ const KeepMeComponents = ({ selectedProjectRef, videoWrapperRef }) => {
                     </div>
 
                     {/* Image: This is what we will slide up */}
-                    <div className="profile-image w-auto sm:w-[55vw] h-[70vh] sm:h-auto flex items-center justify-center sm:ml-auto">
+                    <div className="profile-image w-auto sm:w-[55vw] h-[65dvh] sm:h-auto flex items-center justify-center sm:ml-auto">
                       <div className="relative overflow-hidden border border-black/30 h-full w-full rounded-[20px]">
                         <img
                           src={comp.icon}
@@ -762,18 +781,19 @@ const KeepMeComponents = ({ selectedProjectRef, videoWrapperRef }) => {
               {/* NEW HERO SCENE */}
               <div
                 ref={customisableRef}
-                className="absolute inset-0 flex items-center justify-center pointer-events-none"
+                className="absolute inset-0 flex items-center justify-center"
               >
-                <div className="flex justify-between items-center w-full h-full px-[3%] gap-10">
+                <div className="flex flex-col sm:flex-row sm:justify-between items-center w-full h-full px-[3%] gap-10 mt-[30vh] sm:mt-0">
                   <img
-                    className="w-[50vw] max-h-max rounded-[40px]"
+                    className="w-[90vw] sm:w-[50vw] max-h-max rounded-[40px]"
                     src={customisableFull}
                   />
+
                   <div className="flex flex-col">
                     <h2 className="text-black font-inter font-bold text-[40px]">
                       Customisable
                     </h2>
-                    <div className="font-inter text-lg font-semibold text-black mt-5 flex flex-col gap-3">
+                    <div className="font-inter text-lg font-semibold text-black mt-5 flex flex-col gap-3 overflow-auto max-h-[30vh] sm:max-h-[50vh]">
                       <p>
                         Customisable is a template that allows you to fully
                         design and personalize your digital card. You can freely
@@ -811,39 +831,39 @@ const KeepMeComponents = ({ selectedProjectRef, videoWrapperRef }) => {
                 {section.title}
               </h2>
 
-              <div className="flex items-center h-[60vh] justify-around gap-5 mt-10">
-                <div className="sub-container max-w-[70vw] overflow-hidden p-10">
+              <div className="flex flex-col sm:flex-row items-center h-[65dvh] justify-around gap-3 sm:gap-5 sm:mt-10">
+                <div className="sub-container max-w-[100vw] sm:max-w-[70vw] overflow-hidden p-4 sm:p-10">
                   <div className="sub-wrapper flex">
                     {/* Card 1 */}
-                    <div className="sub-item opacity-0 translate-y-[80px] max-h-[70vh] h-[60vh] min-w-max">
+                    <div className="sub-item opacity-0 translate-y-[80px] sm:max-h-[70vh] h-[35dvh] sm:h-[60vh] min-w-max">
                       <img
                         src={customisablePlans}
                         alt="Choose plan"
-                        className="h-full w-auto opacity-70 scale-[0.8] step-img border-2 border-white/40 rounded-[20px] xl:rounded-[40px] object-cover"
+                        className="h-full w-auto opacity-70 scale-[0.95] step-img border-2 border-white/40 rounded-[20px] xl:rounded-[40px] object-cover"
                       />
                     </div>
 
                     {/* Card 2 */}
-                    <div className="sub-item opacity-0 translate-y-[80px] max-h-[70vh] h-[60vh] min-w-max">
+                    <div className="sub-item opacity-0 translate-y-[80px] sm:max-h-[70vh] h-[35dvh] sm:h-[60vh] min-w-max">
                       <img
                         src={billingDetails}
                         alt="Subscription details"
-                        className="h-full w-auto opacity-70 scale-[0.8] step-img border-2 border-white/40 rounded-[20px] xl:rounded-[40px] object-cover"
+                        className="h-full w-auto opacity-70 scale-[0.95] step-img border-2 border-white/40 rounded-[20px] xl:rounded-[40px] object-cover"
                       />
                     </div>
 
                     {/* Card 3 */}
-                    <div className="sub-item opacity-0 translate-y-[80px] max-h-[70vh] h-[60vh] min-w-max">
+                    <div className="sub-item opacity-0 translate-y-[80px] sm:max-h-[70vh] h-[35dvh] sm:h-[60vh] min-w-max">
                       <img
                         src={upgradeSubscription}
                         alt="Upgrade plan"
-                        className="h-full w-auto opacity-70 scale-[0.8] step-img border-2 border-white/40 rounded-[20px] xl:rounded-[40px] object-cover"
+                        className="h-full w-auto opacity-70 scale-[0.95] step-img border-2 border-white/40 rounded-[20px] xl:rounded-[40px] object-cover"
                       />
                     </div>
                   </div>
                 </div>
 
-                <div className="sub-item opacity-0 translate-y-[80px] max-w-[25vw] flex flex-col items-center">
+                <div className="sub-item opacity-0 translate-y-[80px] sm:max-w-[25vw] flex flex-col items-center px-5">
                   {/* first text  */}
                   <div className="step-text">
                     <h3 className="font-inter font-semibold text-2xl text-black text-center">

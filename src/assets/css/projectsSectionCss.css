@@ -83,14 +83,19 @@
     transform: rotateY(
         calc((var(--position) - 1) * (360 / var(--quantity)) * 1deg)
       )
-      translateZ(300px);
+      translateZ(var(--zaxis));
   }
 }
 @media screen and (max-width: 767px) {
+  .projectViewButton {
+    padding: 0.8em 1.1em;
+    font-size: 12px;
+  }
+
   .item {
     transform: rotateY(
         calc((var(--position) - 1) * (360 / var(--quantity)) * 1deg)
       )
-      translateZ(30vh);
+      translateZ(var(--zaxis));
   }
 }

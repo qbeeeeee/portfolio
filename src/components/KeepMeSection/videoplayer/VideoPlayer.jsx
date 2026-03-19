@@ -11,9 +11,8 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const VideoPlayer = ({ videoSource, onVideoEnd }) => {
+const VideoPlayer = ({ videoSource, onVideoEnd, videoWrapperInsideRef }) => {
   const videoRef = useRef(null);
-  const videoWrapperRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(true);
   const [isEnded, setIsEnded] = useState(false);
 
@@ -47,43 +46,15 @@ const VideoPlayer = ({ videoSource, onVideoEnd }) => {
     }
   }, [videoSource]);
 
-  useGSAP(
-    () => {
-      if (!videoWrapperRef.current) return;
-
-      gsap.fromTo(
-        videoWrapperRef.current,
-        { opacity: 0 },
-        {
-          opacity: 1,
-          ease: "power2.inOut",
-          clearProps: "opacity",
-          scrollTrigger: {
-            trigger: document.body,
-            start: () => {
-              const keepmeSelectedProject = ScrollTrigger.getById(
-                "keepme-selected-project",
-              );
-              return keepmeSelectedProject?.end;
-            },
-            end: "+=350",
-            scrub: true,
-          },
-        },
-      );
-    },
-    { dependencies: [] },
-  );
-
   return (
     <div
-      className="relative w-full h-full"
-      ref={videoWrapperRef}
+      className="relative w-auto h-auto"
+      ref={videoWrapperInsideRef}
       style={{ opacity: 0 }}
     >
       <video
         ref={videoRef}
-        className="w-full h-full min-h-[300px] sm:min-h-[500px] rounded-[40px] object-cover"
+        className="w-auto h-auto max-h-[80vh] max-w-[90vw] min-h-[300px] sm:min-h-[500px] rounded-[40px] object-contain"
         autoPlay
         muted
         onEnded={handleVideoEnd}
