@@ -54,7 +54,7 @@ const VideoPlayer = ({ videoSource, onVideoEnd, videoWrapperInsideRef }) => {
     >
       <video
         ref={videoRef}
-        className="w-auto h-auto max-h-[80vh] max-w-[90vw] min-h-[300px] sm:min-h-[500px] rounded-[40px] object-contain"
+        className="w-auto h-auto max-h-[75dvh] max-w-[90vw] min-h-[250px] sm:min-h-[500px] rounded-[40px] object-contain"
         autoPlay
         muted
         onEnded={handleVideoEnd}

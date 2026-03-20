@@ -6,6 +6,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import OtherProjects from "./components/OtherProjects";
 import ContactMe from "./components/ContactMe/ContactMe";
+import { AppProvider } from "./AppContext";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -71,29 +72,34 @@ const App = () => {
   }, [animationFinished]);
 
   return (
-    <div
-      style={{
-        background:
-          "radial-gradient(circle at center, #1a001a 0%, #000000 100%)",
-      }}
-      className={`overflow-x-hidden relative ${
-        !animationFinished ? "overflow-hidden h-screen" : ""
-      }`}
-    >
-      <div className="w-full relative min-h-[calc(100vh_+_700px)] z-20">
-        <PreloaderHero setAnimationFinished={setAnimationFinished} />
+    <AppProvider>
+      <div
+        style={{
+          background:
+            "radial-gradient(circle at center, #1a001a 0%, #000000 100%)",
+        }}
+        className={`overflow-x-hidden relative ${
+          !animationFinished ? "overflow-hidden h-screen" : ""
+        }`}
+      >
+        <div className="w-full relative min-h-[calc(100vh_+_700px)] z-20">
+          <PreloaderHero
+            setAnimationFinished={setAnimationFinished}
+            animationFinished={animationFinished}
+          />
+        </div>
+
+        <KeepMeSection />
+
+        <OtherProjects
+          animationFinished={animationFinished}
+          stopScroll={stopScroll}
+          resumeScroll={resumeScroll}
+        />
+
+        <ContactMe />
       </div>
-
-      <KeepMeSection />
-
-      <OtherProjects
-        animationFinished={animationFinished}
-        stopScroll={stopScroll}
-        resumeScroll={resumeScroll}
-      />
-
-      <ContactMe />
-    </div>
+    </AppProvider>
   );
 };
 

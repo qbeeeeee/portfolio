@@ -14,7 +14,8 @@ import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ScrollToPlugin } from "gsap/ScrollToPlugin";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faX, faXmarkCircle } from "@fortawesome/free-solid-svg-icons";
+import { faXmarkCircle } from "@fortawesome/free-solid-svg-icons";
+import { useAppContext } from "../AppContext";
 
 gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
@@ -79,7 +80,7 @@ const projects = [
 ];
 
 const OtherProjects = ({ stopScroll, resumeScroll, animationFinished }) => {
-  const isMobile = window.innerWidth < 640;
+  const { isPhone } = useAppContext();
 
   const projectsWrapperRef = useRef(null);
   const planetRef = useRef(null);
@@ -112,6 +113,8 @@ const OtherProjects = ({ stopScroll, resumeScroll, animationFinished }) => {
 
   useGSAP(
     () => {
+      if (!isPhone) return;
+
       const planet = planetRef?.current;
       const projectsWrapper = projectsWrapperRef?.current;
       const spin = spinRef?.current;
@@ -160,12 +163,12 @@ const OtherProjects = ({ stopScroll, resumeScroll, animationFinished }) => {
       // Z-axis depth
       tl.fromTo(
         projectRefs.current,
-        { "--zaxis": isMobile ? "150px" : "350px" },
-        { "--zaxis": isMobile ? "300px" : "530px" },
+        { "--zaxis": isPhone <= 640 ? "150px" : "350px" },
+        { "--zaxis": isPhone <= 640 ? "300px" : "530px" },
         0,
       );
     },
-    { dependencies: [], revertOnUpdate: true },
+    { dependencies: [isPhone], revertOnUpdate: true },
   );
 
   const spinRef = useRef(null);
@@ -212,7 +215,7 @@ const OtherProjects = ({ stopScroll, resumeScroll, animationFinished }) => {
     const targetOffset2 = -(
       currentRotation +
       targetAngle -
-      (currentScrollSpin - (isMobile ? 101.6 : 98.95))
+      (currentScrollSpin - (isPhone <= 640 ? 101.6 : 100))
     );
 
     const tl = gsap.timeline({
@@ -226,7 +229,7 @@ const OtherProjects = ({ stopScroll, resumeScroll, animationFinished }) => {
       spinRef.current,
       {
         duration: 1,
-        top: isMobile ? "33%" : "40%",
+        top: isPhone <= 640 ? "35%" : "40%",
         "--offset2": `${targetOffset2}deg`,
         "--tilt2": "25deg",
         ease: "power1.inOut",
@@ -238,7 +241,7 @@ const OtherProjects = ({ stopScroll, resumeScroll, animationFinished }) => {
       projectRefs.current[index],
       {
         duration: 1,
-        "--zaxis": isMobile ? "400px" : "650px",
+        "--zaxis": isPhone <= 640 ? "400px" : "650px",
         ease: "power1.inOut",
       },
       0.6,
@@ -272,7 +275,7 @@ const OtherProjects = ({ stopScroll, resumeScroll, animationFinished }) => {
       projectRefs.current[currentIndex],
       {
         duration: 1,
-        "--zaxis": isMobile ? "300px" : "530px",
+        "--zaxis": isPhone <= 640 ? "300px" : "530px",
         ease: "power1.inOut",
       },
       0.6,
@@ -295,10 +298,16 @@ const OtherProjects = ({ stopScroll, resumeScroll, animationFinished }) => {
     const tl = gsap.timeline({});
 
     tl.to(
-      projectInfoRef?.current,
+      projectInfoRef.current,
       {
-        width: isMobile ? "100vw" : "80vw",
-        height: isMobile ? "100vh" : "80vh",
+        width:
+          isPhone <= 640
+            ? "clamp(280px, 100vw, 450px)"
+            : "clamp(1150px, 80vw, 1400px)",
+        height:
+          isPhone <= 640
+            ? "clamp(450px, 100vh, 700px)"
+            : "clamp(600px, 50vw, 700px)",
       },
       0,
     );
@@ -307,8 +316,8 @@ const OtherProjects = ({ stopScroll, resumeScroll, animationFinished }) => {
   const hideProjectInfo = () => {
     return gsap.to(projectInfoRef.current, {
       duration: 0.6,
-      width: "0vw",
-      height: "0vh",
+      width: "clamp(0px, 0vh, 0px)",
+      height: "clamp(0px, 0vh, 0px)",
       ease: "power2.in",
     });
   };
@@ -332,7 +341,7 @@ const OtherProjects = ({ stopScroll, resumeScroll, animationFinished }) => {
 
     tl.to(projectRefs.current[currentIndex], {
       duration: 0.5,
-      "--zaxis": isMobile ? "300px" : "530px",
+      "--zaxis": isPhone <= 640 ? "300px" : "530px",
       ease: "power1.inOut",
     });
 
@@ -340,7 +349,7 @@ const OtherProjects = ({ stopScroll, resumeScroll, animationFinished }) => {
       projectRefs.current[nextIndex],
       {
         duration: 0.5,
-        "--zaxis": isMobile ? "400px" : "650px",
+        "--zaxis": isPhone <= 640 ? "400px" : "650px",
         ease: "power1.inOut",
       },
       "<",
@@ -355,7 +364,7 @@ const OtherProjects = ({ stopScroll, resumeScroll, animationFinished }) => {
       spinRef.current,
       {
         duration: 1,
-        top: isMobile ? "33%" : "40%",
+        top: isPhone <= 640 ? "35%" : "40%",
         "--offset2": `${targetOffset2 + rotation}deg`,
         ease: "power1.inOut",
       },
@@ -428,8 +437,8 @@ const OtherProjects = ({ stopScroll, resumeScroll, animationFinished }) => {
       <div
         ref={projectInfoRef}
         style={{
-          transform: `translateZ(${isMobile ? 350 : 600}px)`,
-          scale: isMobile ? 0.7 : 0.55,
+          transform: `translateZ(${isPhone <= 640 ? 350 : 600}px)`,
+          scale: isPhone <= 640 ? 0.7 : 0.55,
         }}
         className="flex flex-col items-center justify-center h-0 w-0 bg-[#d6266b] rounded-[40px] relative overflow-hidden"
       >
@@ -439,12 +448,12 @@ const OtherProjects = ({ stopScroll, resumeScroll, animationFinished }) => {
 
         <p
           data-lenis-prevent
-          className="absolute bottom-[5%] text-center max-w-[90vw] sm:max-w-[60vw] max-h-[25vh] overflow-auto font-inter font-semibold text-[18px] text-black"
+          className="absolute bottom-[5%] text-center max-w-[90vw] sm:max-w-[60vw] max-h-[20vh] overflow-auto font-inter font-semibold text-[18px] text-black"
         >
           {activeProject?.description}
         </p>
 
-        <div className="absolute bottom-[35%] sm:bottom-1/2 flex justify-between w-full px-[4%] sm:px-[5%]">
+        <div className="absolute bottom-[30vh] sm:bottom-1/2 flex justify-between w-full px-[4%] sm:px-[5%]">
           <div className="flex flex-col gap-5">
             {activeProject?.github && (
               <a

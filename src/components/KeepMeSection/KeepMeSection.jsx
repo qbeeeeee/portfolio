@@ -4,6 +4,7 @@ import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { MorphSVGPlugin } from "gsap/MorphSVGPlugin";
 import KeepMeComponents from "./KeepMeComponents";
+import { useAppContext } from "../../AppContext";
 
 gsap.registerPlugin(ScrollTrigger, MorphSVGPlugin);
 
@@ -30,7 +31,7 @@ const KeepMeSection = () => {
   const menuRef = useRef(null);
   const keepmeWrapperRef = useRef(null);
 
-  const isMobile = window.innerWidth < 640;
+  const { isPhone } = useAppContext();
 
   const sectionRef = useRef(null);
 
@@ -39,7 +40,6 @@ const KeepMeSection = () => {
   useGSAP(
     () => {
       if (!rect) return;
-      console.log("2222");
 
       const videoWrapper = videoWrapperRef?.current;
       const circleWrapper = circleWrapperRef?.current;
@@ -185,7 +185,7 @@ const KeepMeSection = () => {
           svgOrigin,
           {
             // height: "80vh",
-            // width: isMobile ? "90vw" : "80vw",
+            // width: isPhone <= 640 ? "90vw" : "80vw",
             width: rect.width,
             height: rect.height,
           },
@@ -210,7 +210,6 @@ const KeepMeSection = () => {
     () => {
       const selectedProject = selectedProjectRef?.current;
       if (!selectedProject || !rect) return;
-      console.log("111");
 
       const tl = gsap.timeline({
         scrollTrigger: {
@@ -342,7 +341,8 @@ const KeepMeSection = () => {
               </g>
 
               {[...Array(6)].map((_, i) => {
-                const svgWidth = window.innerWidth * (isMobile ? 0.9 : 0.8);
+                const svgWidth =
+                  window.innerWidth * (isPhone <= 640 ? 0.9 : 0.8);
                 const rectWidth = svgWidth / 6;
 
                 return (

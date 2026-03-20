@@ -51,6 +51,7 @@ import teamMembersFixedMobile from "../../assets/keepme/sections/teamMembersFixe
 
 import securityFixedMobile from "../../assets/keepme/sections/securityFixedMobile.webp";
 import securityFullMobile from "../../assets/keepme/sections/securityFullMobile.png";
+import { useAppContext } from "../../AppContext";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -196,7 +197,7 @@ const KeepMeComponents = ({
   videoWrapperRef,
   videoWrapperInsideRef,
 }) => {
-  const isMobile = window.innerWidth < 640;
+  const { isPhone } = useAppContext();
 
   const containerRef = useRef(null);
   const headerGap = 6;
@@ -252,6 +253,7 @@ const KeepMeComponents = ({
 
   useGSAP(
     () => {
+      if (!isPhone) return;
       if (!ready) return; // Wait until all images have intrinsic height
 
       const cards = gsap.utils.toArray(".card");
@@ -419,7 +421,7 @@ const KeepMeComponents = ({
             const totalWidth =
               templatesRowRef.current.scrollWidth -
               templatesContainerRef.current.clientWidth +
-              (isMobile ? 100 : 700);
+              (isPhone <= 640 ? 100 : 700);
 
             // Hold first
             tl.to({}, { duration: 200 });
@@ -549,7 +551,7 @@ const KeepMeComponents = ({
         }
       });
     },
-    { dependencies: [ready], revertOnUpdate: true },
+    { dependencies: [isPhone, ready], revertOnUpdate: true },
   );
 
   return (
@@ -573,28 +575,26 @@ const KeepMeComponents = ({
                   {section.title}
                 </h2>
 
-                <div className="mt-10 text-xl text-black/70">
-                  <div
-                    ref={videoWrapperRef}
-                    className={`bg-[#efa8c4] absolute top-[55%] left-[50%] transform -translate-x-1/2 -translate-y-1/2
+                <div
+                  ref={videoWrapperRef}
+                  className={`bg-[#efa8c4] absolute top-[54%] sm:top-[55%] left-[50%] transform -translate-x-1/2 -translate-y-1/2
                   overflow-hidden rounded-[40px] w-auto h-auto opacity-0 z-[200]`}
-                  >
-                    <h1
-                      ref={selectedProjectRef}
-                      data-content="SELECTED PROJECT"
-                      className="text-[8vw] sm:text-[10vh] leading-[1em] whitespace-nowrap font-ica-rubrik text-black scale-0
+                >
+                  <h1
+                    ref={selectedProjectRef}
+                    data-content="SELECTED PROJECT"
+                    className="text-[8vw] sm:text-[10vh] leading-[1em] whitespace-nowrap font-ica-rubrik text-black scale-0
          absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 font-semibold flex items-center justify-center"
-                    >
-                      SELECTED PROJECT
-                    </h1>
+                  >
+                    SELECTED PROJECT
+                  </h1>
 
-                    <VideoPlayer
-                      videoWrapperInsideRef={videoWrapperInsideRef}
-                      videoSource={
-                        isMobile ? keepmeHomepageMobile : keepmeHomepage
-                      }
-                    />
-                  </div>
+                  <VideoPlayer
+                    videoWrapperInsideRef={videoWrapperInsideRef}
+                    videoSource={
+                      isPhone <= 640 ? keepmeHomepageMobile : keepmeHomepage
+                    }
+                  />
                 </div>
               </div>
             </>
@@ -605,7 +605,7 @@ const KeepMeComponents = ({
               </h2>
 
               {/* ... inside section.id === 2 mapping ... */}
-              <div className="absolute top-[15%] inset-0 flex items-center justify-center">
+              <div className="absolute top-[10%] sm:top-[15%] inset-0 flex items-center justify-center">
                 {profilePageComponents.map((comp) => (
                   <div
                     key={comp.id}
@@ -658,7 +658,7 @@ const KeepMeComponents = ({
 
               <div
                 ref={templatesContainerRef}
-                className="w-full h-full overflow-hidden rounded-[20px] mt-[6vh]"
+                className="w-full h-full overflow-hidden rounded-[20px] mt-[8dvh] sm:mt-[6vh]"
               >
                 <div
                   ref={templatesRowRef}
@@ -789,7 +789,7 @@ const KeepMeComponents = ({
                     src={customisableFull}
                   />
 
-                  <div className="flex flex-col">
+                  <div className="flex flex-col px-4 sm:px-0">
                     <h2 className="text-black font-inter font-bold text-[40px]">
                       Customisable
                     </h2>

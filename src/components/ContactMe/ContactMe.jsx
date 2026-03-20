@@ -13,6 +13,7 @@ import exclamationMarkIcon from "../../assets/contactme/exlamationMark.svg";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useAppContext } from "../../AppContext";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -25,7 +26,7 @@ const socials = [
 ];
 
 const ContactMe = () => {
-  const isMobile = window.innerWidth < 640;
+  const { isPhone } = useAppContext();
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -84,6 +85,8 @@ const ContactMe = () => {
 
   useGSAP(
     () => {
+      if (!isPhone) return;
+
       const dot = dotRef?.current;
       const text = textRef?.current;
 
@@ -98,7 +101,7 @@ const ContactMe = () => {
       const sectionRect = sectionRef.current.getBoundingClientRect();
 
       // Distance dot needs to travel
-      const travelDistance = textRect.right - sectionRect.left + 10;
+      const travelDistance = textRect.right - sectionRect.left;
 
       // gsap.set(dot, { clipPath: "inset(79% 0 0 0)" });
 
@@ -115,32 +118,22 @@ const ContactMe = () => {
 
       // Animate dot along scroll
       gsap.to(dot, {
-        x: travelDistance,
+        x: travelDistance + 10,
         scrollTrigger: {
           trigger: sectionRef.current,
           start: "top center+=100",
           end: "+=300",
           scrub: true,
           onUpdate: (self) => {
-            const progress = self.progress;
+            const dotX = self.progress * (travelDistance + 10);
+
+            const progress = Math.min(dotX / travelDistance, 1);
+
             text.style.clipPath = `inset(0 ${100 - progress * 100}% 0 0)`;
           },
         },
         ease: "none",
       });
-
-      // gsap.to(dot, {
-      //   scrollTrigger: {
-      //     trigger: sectionRef.current,
-      //     start: "top center-=200",
-      //     end: "+=150",
-      //     scrub: true,
-      //     onUpdate: (self) => {
-      //       const progress = self.progress;
-      //       dot.style.clipPath = `inset(${79 - progress * 100}% 0 0 0)`;
-      //     },
-      //   },
-      // });
 
       gsap.to(bgRef.current, {
         clipPath: "inset(100% 0 0 0)",
@@ -148,7 +141,7 @@ const ContactMe = () => {
         scrollTrigger: {
           trigger: sectionRef.current,
           start: "top center-=200",
-          end: isMobile ? "+=100" : "+=200",
+          end: isPhone <= 640 ? "+=100" : "+=200",
           scrub: true,
         },
         ease: "none",
@@ -170,7 +163,7 @@ const ContactMe = () => {
           trigger: contactReveal,
           start: () => {
             const finish = ScrollTrigger.getById("exclamationMark");
-            return finish?.end - (isMobile ? 250 : 300) || 0;
+            return finish?.end - (isPhone <= 640 ? 250 : 300) || 0;
           },
           // start: "top center+=100",
           end: "+=300",
@@ -186,7 +179,7 @@ const ContactMe = () => {
         bg,
         { scaleY: 1, borderRadius: "20px" },
         {
-          scaleY: isMobile ? 0.3 : 0.1,
+          scaleY: isPhone <= 640 ? 0.3 : 0.1,
           borderRadius: "30px",
           ease: "none",
           scrollTrigger: {
@@ -201,20 +194,12 @@ const ContactMe = () => {
         },
       );
     },
-    { dependencies: [], revertOnUpdate: true },
+    { dependencies: [isPhone], revertOnUpdate: true },
   );
 
   return (
     <div className="min-h-screen w-full sm:mt-[40vh] flex flex-col items-center">
       <div ref={sectionRef} className="relative">
-        {/* Fat Dot */}
-        {/* <img
-          src={exclamationMarkIcon}
-          alt="!"
-          ref={dotRef}
-          className="absolute left-0 bottom-[25%] transform h-[20vh] w-auto z-20"
-        /> */}
-
         {/* Fat Dot */}
         <div
           ref={dotRef}
@@ -239,7 +224,7 @@ const ContactMe = () => {
           ref={textRef}
           className="text-white text-[50px] sm:text-[clamp(3rem,25vh,13rem)] whitespace-nowrap font-ica-rubrik"
         >
-          Contact Me
+          Contact Me{" "}
         </div>
       </div>
 
