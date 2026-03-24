@@ -11,8 +11,12 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const VideoPlayer = ({ videoSource, onVideoEnd, videoWrapperInsideRef }) => {
-  const videoRef = useRef(null);
+const VideoPlayer = ({
+  videoSource,
+  onVideoEnd,
+  videoWrapperInsideRef,
+  videoRef,
+}) => {
   const [isPlaying, setIsPlaying] = useState(true);
   const [isEnded, setIsEnded] = useState(false);
 
@@ -55,8 +59,9 @@ const VideoPlayer = ({ videoSource, onVideoEnd, videoWrapperInsideRef }) => {
       <video
         ref={videoRef}
         className="w-auto h-auto max-h-[75dvh] max-w-[90vw] min-h-[250px] sm:min-h-[500px] rounded-[40px] object-contain"
-        autoPlay
         muted
+        playsInline
+        webkit-playsinline="true"
         onEnded={handleVideoEnd}
       >
         <source src={videoSource} type="video/mp4" />
@@ -64,10 +69,10 @@ const VideoPlayer = ({ videoSource, onVideoEnd, videoWrapperInsideRef }) => {
       </video>
       <button
         onClick={handleButtonClick}
-        className="absolute z-40 bottom-8 right-8 bg-white text-gray-500 p-5 flex items-center justify-center rounded-full shadow-md hover:bg-gray-300 transition"
+        className="absolute z-40 bottom-8 right-8 bg-white text-gray-500 p-3 sm:p-5 flex items-center justify-center rounded-full shadow-md hover:bg-gray-300 transition"
       >
         <FontAwesomeIcon
-          className="w-5 h-5"
+          className="w-4 sm:w-5 h-4 sm:h-5"
           icon={isEnded ? faRotateLeft : isPlaying ? faPause : faPlay}
         />
       </button>

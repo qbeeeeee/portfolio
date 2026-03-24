@@ -186,8 +186,9 @@ const KeepMeSection = () => {
           {
             // height: "80vh",
             // width: isPhone <= 640 ? "90vw" : "80vw",
-            width: rect.width,
-            height: rect.height,
+            width: () => videoWrapperRef.current.getBoundingClientRect().width,
+            height: () =>
+              videoWrapperRef.current.getBoundingClientRect().height,
           },
           "logoToRect",
         );
@@ -205,6 +206,8 @@ const KeepMeSection = () => {
     },
     { dependencies: [rect], revertOnUpdate: true },
   );
+
+  const videoRef = useRef(null);
 
   useGSAP(
     () => {
@@ -250,6 +253,9 @@ const KeepMeSection = () => {
           opacity: 1,
           ease: "power2.inOut",
           clearProps: "opacity",
+          onComplete: () => {
+            videoRef.current?.play();
+          },
           scrollTrigger: {
             trigger: videoWrapperInsideRef.current,
             start: () => {
@@ -380,6 +386,7 @@ const KeepMeSection = () => {
           selectedProjectRef={selectedProjectRef}
           videoWrapperRef={videoWrapperRef}
           videoWrapperInsideRef={videoWrapperInsideRef}
+          videoRef={videoRef}
         />
       </div>
     </div>

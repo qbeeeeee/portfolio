@@ -196,6 +196,7 @@ const KeepMeComponents = ({
   selectedProjectRef,
   videoWrapperRef,
   videoWrapperInsideRef,
+  videoRef,
 }) => {
   const { isPhone } = useAppContext();
 
@@ -590,6 +591,7 @@ const KeepMeComponents = ({
                   </h1>
 
                   <VideoPlayer
+                    videoRef={videoRef}
                     videoWrapperInsideRef={videoWrapperInsideRef}
                     videoSource={
                       isPhone <= 640 ? keepmeHomepageMobile : keepmeHomepage
@@ -630,12 +632,12 @@ const KeepMeComponents = ({
                     </div>
 
                     {/* Image: This is what we will slide up */}
-                    <div className="profile-image w-auto sm:w-[55vw] h-[65dvh] sm:h-auto flex items-center justify-center sm:ml-auto">
-                      <div className="relative overflow-hidden border border-black/30 h-full w-full rounded-[20px]">
+                    <div className="profile-image w-fit sm:w-[55vw] h-[65dvh] sm:h-auto flex items-center justify-center sm:ml-auto">
+                      <div className="relative overflow-hidden border border-black/30 h-full w-auto rounded-[20px]">
                         <img
                           src={comp.icon}
                           alt={comp.title}
-                          className="short-img-scroll w-full h-full relative z-10 object-contain border border-white/20"
+                          className="short-img-scroll w-auto h-full relative z-10 object-contain border border-white/20"
                         />
                         {comp.icon2 && (
                           <img
@@ -783,9 +785,9 @@ const KeepMeComponents = ({
                 ref={customisableRef}
                 className="absolute inset-0 flex items-center justify-center"
               >
-                <div className="flex flex-col sm:flex-row sm:justify-between items-center w-full h-full px-[3%] gap-10 mt-[30vh] sm:mt-0">
+                <div className="flex flex-col sm:flex-row sm:justify-between items-center w-full h-full px-[3%] gap-10 mt-[30dvh] sm:mt-0">
                   <img
-                    className="w-[90vw] sm:w-[50vw] max-h-max rounded-[40px]"
+                    className="w-[90vw] sm:w-[50vw] max-h-max h-auto rounded-[40px]"
                     src={customisableFull}
                   />
 
@@ -793,7 +795,7 @@ const KeepMeComponents = ({
                     <h2 className="text-black font-inter font-bold text-[40px]">
                       Customisable
                     </h2>
-                    <div className="font-inter text-lg font-semibold text-black mt-5 flex flex-col gap-3 overflow-auto max-h-[30vh] sm:max-h-[50vh]">
+                    <div className="font-inter text-lg font-semibold text-black mt-5 flex flex-col gap-3 overflow-auto max-h-[30dvh] sm:max-h-[50vh]">
                       <p>
                         Customisable is a template that allows you to fully
                         design and personalize your digital card. You can freely

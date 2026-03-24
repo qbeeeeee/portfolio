@@ -2,8 +2,8 @@
 import { useRef } from "react";
 import gsap from "gsap";
 import SplitText from "gsap/SplitText";
-import topHero from "./../../assets/spaceBackground/top.webp";
-import bottomHero from "./../../assets/spaceBackground/bottom.webp";
+import topHero from "./../../assets/spaceBackground/top.png";
+import bottomHero from "./../../assets/spaceBackground/bottom.png";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import figma from "../../assets/skills/figma.png";
@@ -283,7 +283,7 @@ export default function Hero({ setAnimationFinished, animationFinished }) {
             .to(
               ".preloader-mask",
               {
-                scale: 7,
+                scale: isPhone <= 640 ? 10 : 7,
                 duration: 2.5,
                 ease: "power3.out",
               },

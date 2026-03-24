@@ -163,10 +163,10 @@ const ContactMe = () => {
           trigger: contactReveal,
           start: () => {
             const finish = ScrollTrigger.getById("exclamationMark");
-            return finish?.end - (isPhone <= 640 ? 250 : 300) || 0;
+            return finish?.end - (isPhone <= 640 ? 200 : 300) || 0;
           },
           // start: "top center+=100",
-          end: "+=300",
+          end: isPhone <= 640 ? "+=350" : "+=300",
           scrub: true,
           onUpdate: (self) => {
             const progress = self.progress;
@@ -198,7 +198,7 @@ const ContactMe = () => {
   );
 
   return (
-    <div className="min-h-screen w-full sm:mt-[40vh] flex flex-col items-center">
+    <div className="min-h-screen w-full sm:mt-[40vh] flex flex-col items-center pb-10 sm:pb-0">
       <div ref={sectionRef} className="relative">
         {/* Fat Dot */}
         <div
@@ -215,7 +215,7 @@ const ContactMe = () => {
           <img
             src={exclamationMarkIcon}
             alt="!"
-            className="h-full w-full object-contain"
+            className="h-full w-auto object-contain"
           />
         </div>
 

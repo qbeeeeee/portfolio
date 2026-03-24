@@ -16,11 +16,18 @@ const App = () => {
 
   useEffect(() => {
     const lenis = new Lenis({
-      lerp: 0.08, // smoothing = lower max speed
-      wheelMultiplier: 0.75, // mouse wheel
-      touchMultiplier: 0.75, // trackpad / touch
+      duration: 1.2, // Add a set duration for a more consistent feel
+      lerp: 0.08,
+      wheelMultiplier: 0.75,
+      touchMultiplier: 2, // You might want to bump this slightly if syncTouch is on
+      infinite: false,
       smoothWheel: true,
-      smoothTouch: true,
+
+      // KEY SETTINGS FOR MOBILE STACKING:
+      smoothTouch: true, // Keep this true
+      syncTouch: true, // This mimics native touch scroll behavior and prevents "stacking"
+      syncTouchLerp: 0.08, // Ensures the touch speed matches your lerp speed
+      touchInertiaMultiplier: 15, // Limits how much "flick" carries over
     });
 
     lenisRef.current = lenis;
@@ -29,15 +36,16 @@ const App = () => {
     lenis.on("scroll", ScrollTrigger.update);
 
     const raf = (time) => {
+      // Use the standard time (seconds) - lenis usually handles the conversion
       lenis.raf(time * 1000);
     };
 
     gsap.ticker.add(raf);
     gsap.ticker.lagSmoothing(0);
 
-    requestAnimationFrame(() => {
-      ScrollTrigger.refresh();
-    });
+    // requestAnimationFrame(() => {
+    //   ScrollTrigger.refresh();
+    // });
 
     return () => {
       gsap.ticker.remove(raf);
