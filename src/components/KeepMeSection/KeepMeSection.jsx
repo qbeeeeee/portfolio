@@ -253,9 +253,6 @@ const KeepMeSection = () => {
           opacity: 1,
           ease: "power2.inOut",
           clearProps: "opacity",
-          onComplete: () => {
-            videoRef.current?.play();
-          },
           scrollTrigger: {
             trigger: videoWrapperInsideRef.current,
             start: () => {
@@ -266,6 +263,12 @@ const KeepMeSection = () => {
             },
             end: "+=250",
             scrub: true,
+            onEnter: () => {
+              videoRef.current?.play();
+            },
+            onEnterBack: () => {
+              videoRef.current?.play();
+            },
           },
         },
       );

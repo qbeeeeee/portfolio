@@ -102,7 +102,7 @@ const OtherProjects = ({ stopScroll, resumeScroll, animationFinished }) => {
           trigger: projectsWrapper,
           start: () => {
             const menuTrigger = ScrollTrigger.getById("keepme-components");
-            return menuTrigger?.end || 0;
+            return menuTrigger?.end + 150 || 0;
           },
           toggleActions: "play reverse play reverse",
         },
@@ -163,8 +163,14 @@ const OtherProjects = ({ stopScroll, resumeScroll, animationFinished }) => {
       // Z-axis depth
       tl.fromTo(
         projectRefs.current,
-        { "--zaxis": isPhone <= 640 ? "150px" : "350px" },
-        { "--zaxis": isPhone <= 640 ? "300px" : "530px" },
+        {
+          "--zaxis":
+            isPhone <= 640 ? "150px" : isPhone <= 1024 ? "200px" : "350px",
+        },
+        {
+          "--zaxis":
+            isPhone <= 640 ? "300px" : isPhone <= 1024 ? "400px" : "530px",
+        },
         0,
       );
     },
@@ -241,7 +247,8 @@ const OtherProjects = ({ stopScroll, resumeScroll, animationFinished }) => {
       projectRefs.current[index],
       {
         duration: 1,
-        "--zaxis": isPhone <= 640 ? "400px" : "650px",
+        "--zaxis":
+          isPhone <= 640 ? "400px" : isPhone <= 1024 ? "500px" : "650px",
         ease: "power1.inOut",
       },
       0.6,
@@ -275,7 +282,8 @@ const OtherProjects = ({ stopScroll, resumeScroll, animationFinished }) => {
       projectRefs.current[currentIndex],
       {
         duration: 1,
-        "--zaxis": isPhone <= 640 ? "300px" : "530px",
+        "--zaxis":
+          isPhone <= 640 ? "300px" : isPhone <= 1024 ? "400px" : "530px",
         ease: "power1.inOut",
       },
       0.6,
@@ -303,11 +311,15 @@ const OtherProjects = ({ stopScroll, resumeScroll, animationFinished }) => {
         width:
           isPhone <= 640
             ? "clamp(280px, 100vw, 450px)"
-            : "clamp(1150px, 80vw, 1400px)",
+            : isPhone <= 1024
+              ? "clamp(1000px, 100vw, 1400px)"
+              : "clamp(1150px, 80vw, 1400px)",
         height:
           isPhone <= 640
             ? "clamp(450px, 100vh, 700px)"
-            : "clamp(600px, 50vw, 700px)",
+            : isPhone <= 1024
+              ? "clamp(600px, 70vh, 700px)"
+              : "clamp(600px, 50vw, 700px)",
       },
       0,
     );
@@ -341,7 +353,7 @@ const OtherProjects = ({ stopScroll, resumeScroll, animationFinished }) => {
 
     tl.to(projectRefs.current[currentIndex], {
       duration: 0.5,
-      "--zaxis": isPhone <= 640 ? "300px" : "530px",
+      "--zaxis": isPhone <= 640 ? "300px" : isPhone <= 1024 ? "400px" : "530px",
       ease: "power1.inOut",
     });
 
@@ -349,7 +361,8 @@ const OtherProjects = ({ stopScroll, resumeScroll, animationFinished }) => {
       projectRefs.current[nextIndex],
       {
         duration: 0.5,
-        "--zaxis": isPhone <= 640 ? "400px" : "650px",
+        "--zaxis":
+          isPhone <= 640 ? "400px" : isPhone <= 1024 ? "500px" : "650px",
         ease: "power1.inOut",
       },
       "<",
@@ -375,13 +388,13 @@ const OtherProjects = ({ stopScroll, resumeScroll, animationFinished }) => {
   return (
     <div
       ref={projectsWrapperRef}
-      className="w-full h-[100vh] flex items-center justify-center text-center relative opacity-0 [transform-style:preserve-3d] [transform:perspective(1200px)] mt-[20vh] z-10"
+      className="w-full h-[100vh] flex items-center justify-center text-center relative opacity-0 [transform-style:preserve-3d] [transform:perspective(1200px)] mt-[35dvh] z-10"
     >
       <div
         ref={spinRef}
         className={`spin-container absolute top-[10%] z-[2]
           w-[300px] h-auto left-[calc(50%-150px)]
-          max-lg:w-[180px] max-lg:left-[calc(50%-80px)]
+          max-lg:w-[200px] max-lg:left-[calc(50%-100px)]
           max-md:w-[180px] max-md:left-[calc(50%-80px)]
       `}
         style={{ "--quantity": 8 }}
@@ -412,23 +425,23 @@ const OtherProjects = ({ stopScroll, resumeScroll, animationFinished }) => {
         ))}
       </div>
 
-      <div className="absolute bottom-[40%] sm:bottom-0 left-1/2 -translate-x-1/2 w-[min(1500px,100vw)] h-max pb-[9vh] z-[1]">
+      <div className="absolute bottom-[40%] sm:bottom-[20%] lg:bottom-0 left-1/2 -translate-x-1/2 w-[min(1500px,100vw)] h-max pb-[60px] z-[1]">
         <div className="flex flex-col items-center justify-center w-full">
           <h1
             data-content="PROJECTS"
-            className="font-ica-rubrik galaxy-header relative text-[9vh] sm:text-[27.5vh] leading-[1em]"
+            className="font-ica-rubrik galaxy-header relative text-[9vh] sm:text-[150px] lg:text-[200px] 2xl:text-[250px]"
           >
             PROJECTS
           </h1>
 
-          <div className="font-inter text-white z-[100]">
+          <div className="font-inter sm:text-[18px] xl:text-[24px] text-white z-[100]">
             Select a project to view more details.
           </div>
         </div>
 
         <div
           ref={planetRef}
-          className="absolute -bottom-[40%] left-0 w-full h-[400px] sm:h-[100vh] z-[1]
+          className="absolute -bottom-[40%] left-0 w-full h-[400px] sm:h-[700px] lg:h-[100vh] z-[1]
             bg-[url('/src/assets/otherProjects/earthPurpleAndBlue.png')]
             bg-[length:auto_110%] bg-no-repeat bg-center"
         />
@@ -437,8 +450,8 @@ const OtherProjects = ({ stopScroll, resumeScroll, animationFinished }) => {
       <div
         ref={projectInfoRef}
         style={{
-          transform: `translateZ(${isPhone <= 640 ? 350 : 600}px)`,
-          scale: isPhone <= 640 ? 0.7 : 0.55,
+          transform: `translateZ(${isPhone <= 640 ? 350 : isPhone <= 1024 ? 450 : 600}px)`,
+          scale: isPhone <= 640 ? 0.7 : isPhone <= 1024 ? 0.6 : 0.55,
         }}
         className="flex flex-col items-center justify-center h-0 w-0 bg-[#d6266b] rounded-[40px] relative overflow-hidden"
       >
@@ -448,7 +461,7 @@ const OtherProjects = ({ stopScroll, resumeScroll, animationFinished }) => {
 
         <p
           data-lenis-prevent
-          className="absolute bottom-[5%] text-center max-w-[90vw] sm:max-w-[60vw] max-h-[20vh] overflow-auto font-inter font-semibold text-[18px] text-black"
+          className="absolute bottom-[5%] text-center max-w-[90vw] lg:max-w-[60vw] max-h-[20vh] overflow-auto font-inter font-semibold text-[18px] text-black"
         >
           {activeProject?.description}
         </p>

@@ -1,15 +1,10 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faRotateLeft,
   faPause,
   faPlay,
 } from "@fortawesome/free-solid-svg-icons";
-import { gsap } from "gsap";
-import { useGSAP } from "@gsap/react";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-
-gsap.registerPlugin(ScrollTrigger);
 
 const VideoPlayer = ({
   videoSource,
@@ -17,22 +12,17 @@ const VideoPlayer = ({
   videoWrapperInsideRef,
   videoRef,
 }) => {
-  const [isPlaying, setIsPlaying] = useState(true);
+  const [isPlaying, setIsPlaying] = useState(false);
   const [isEnded, setIsEnded] = useState(false);
 
   const handleButtonClick = () => {
     const video = videoRef.current;
+    if (!video) return;
 
-    if (isEnded) {
-      video.play(); // Replay the video if it has ended
-      setIsEnded(false);
-      setIsPlaying(true);
-    } else if (isPlaying) {
-      video.pause(); // Pause the video
-      setIsPlaying(false);
+    if (video.paused || video.ended) {
+      video.play();
     } else {
-      video.play(); // Play the video
-      setIsPlaying(true);
+      video.pause();
     }
   };
 
@@ -43,12 +33,39 @@ const VideoPlayer = ({
   };
 
   useEffect(() => {
-    if (videoRef.current) {
-      videoRef.current.src = videoSource;
-      videoRef.current.load(); // Ensures the video updates
-      setIsEnded(false); // Reset video end state
+    const video = videoRef.current;
+    if (video) {
+      video.load();
+      setIsEnded(false);
+      setIsPlaying(false);
     }
   }, [videoSource]);
+
+  // Auto-Pause when scrolled out of view
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    // Create an observer that triggers when the video is less than 10% visible
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          // If the video leaves the screen AND it is currently playing, pause it
+          if (!entry.isIntersecting && !video.paused) {
+            video.pause();
+          }
+        });
+      },
+      { threshold: 0.1 }, // 10% visibility threshold
+    );
+
+    observer.observe(video);
+
+    return () => {
+      observer.unobserve(video);
+      observer.disconnect();
+    };
+  }, [videoRef]); // This only runs once on mount
 
   return (
     <div
@@ -58,15 +75,20 @@ const VideoPlayer = ({
     >
       <video
         ref={videoRef}
-        className="w-auto h-auto max-h-[75dvh] max-w-[90vw] min-h-[250px] sm:min-h-[500px] rounded-[40px] object-contain"
+        src={videoSource}
+        preload="metadata" // Stops massive background downloads on load
+        className="w-auto h-auto max-h-[75dvh] max-w-[90vw] min-h-[250px] lg:min-h-[500px] rounded-[40px] object-contain"
         muted
         playsInline
         webkit-playsinline="true"
         onEnded={handleVideoEnd}
-      >
-        <source src={videoSource} type="video/mp4" />
-        Your browser does not support the video tag.
-      </video>
+        onPlay={() => {
+          setIsPlaying(true);
+          setIsEnded(false);
+        }}
+        onPause={() => setIsPlaying(false)}
+      />
+
       <button
         onClick={handleButtonClick}
         className="absolute z-40 bottom-8 right-8 bg-white text-gray-500 p-3 sm:p-5 flex items-center justify-center rounded-full shadow-md hover:bg-gray-300 transition"

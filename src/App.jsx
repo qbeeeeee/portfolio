@@ -1,66 +1,31 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import PreloaderHero from "./components/Firstsection/PreloaderHero";
 import KeepMeSection from "./components/KeepMeSection/KeepMeSection";
-import Lenis from "lenis";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import OtherProjects from "./components/OtherProjects";
 import ContactMe from "./components/ContactMe/ContactMe";
-import { AppProvider } from "./AppContext";
+import { useAppContext } from "./AppContext";
+import Header from "./components/Header/Header";
 
 gsap.registerPlugin(ScrollTrigger);
 
 const App = () => {
   const [animationFinished, setAnimationFinished] = useState(false);
-  const lenisRef = useRef(null);
+  const { lenis } = useAppContext();
 
   useEffect(() => {
-    const lenis = new Lenis({
-      duration: 1.2, // Add a set duration for a more consistent feel
-      lerp: 0.08,
-      wheelMultiplier: 0.75,
-      touchMultiplier: 2, // You might want to bump this slightly if syncTouch is on
-      infinite: false,
-      smoothWheel: true,
-
-      // KEY SETTINGS FOR MOBILE STACKING:
-      smoothTouch: true, // Keep this true
-      syncTouch: true, // This mimics native touch scroll behavior and prevents "stacking"
-      syncTouchLerp: 0.08, // Ensures the touch speed matches your lerp speed
-      touchInertiaMultiplier: 15, // Limits how much "flick" carries over
-    });
-
-    lenisRef.current = lenis;
-    lenis.stop();
-
-    lenis.on("scroll", ScrollTrigger.update);
-
-    const raf = (time) => {
-      // Use the standard time (seconds) - lenis usually handles the conversion
-      lenis.raf(time * 1000);
-    };
-
-    gsap.ticker.add(raf);
-    gsap.ticker.lagSmoothing(0);
-
-    // requestAnimationFrame(() => {
-    //   ScrollTrigger.refresh();
-    // });
-
-    return () => {
-      gsap.ticker.remove(raf);
-      lenis.destroy();
-    };
-  }, []);
+    if (animationFinished && lenis) {
+      lenis.start();
+    }
+  }, [animationFinished, lenis]);
 
   const stopScroll = () => {
-    if (!lenisRef.current) return;
-    lenisRef.current.stop(); // stops all user scroll
+    if (lenis) lenis.stop();
   };
 
   const resumeScroll = () => {
-    if (!lenisRef.current) return;
-    lenisRef.current.start(); // resumes scrolling
+    if (lenis) lenis.start();
   };
 
   useEffect(() => {
@@ -80,34 +45,43 @@ const App = () => {
   }, [animationFinished]);
 
   return (
-    <AppProvider>
+    <div
+      style={{
+        background:
+          "radial-gradient(circle at center, #1a001a 0%, #000000 100%)",
+      }}
+      className={`overflow-x-hidden relative ${
+        !animationFinished ? "overflow-hidden h-screen" : ""
+      }`}
+    >
+      <Header animationFinished={animationFinished} />
+
       <div
-        style={{
-          background:
-            "radial-gradient(circle at center, #1a001a 0%, #000000 100%)",
-        }}
-        className={`overflow-x-hidden relative ${
-          !animationFinished ? "overflow-hidden h-screen" : ""
-        }`}
+        id="home"
+        className="w-full relative min-h-[calc(100vh_+_700px)] z-20"
       >
-        <div className="w-full relative min-h-[calc(100vh_+_700px)] z-20">
-          <PreloaderHero
-            setAnimationFinished={setAnimationFinished}
-            animationFinished={animationFinished}
-          />
-        </div>
+        <PreloaderHero
+          setAnimationFinished={setAnimationFinished}
+          animationFinished={animationFinished}
+        />
+      </div>
 
+      <section id="keepme">
         <KeepMeSection />
+      </section>
 
+      <section id="projects">
         <OtherProjects
           animationFinished={animationFinished}
           stopScroll={stopScroll}
           resumeScroll={resumeScroll}
         />
+      </section>
 
+      <section id="contact">
         <ContactMe />
-      </div>
-    </AppProvider>
+      </section>
+    </div>
   );
 };
 

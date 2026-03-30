@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -69,87 +69,156 @@ const glaceAvatar =
 // #E0D7FF, #A58BA3
 
 const sections = [
-  { id: 1, title: "Homepage", color: "bg-[#d6266b]", hold: 3200 },
+  { id: 1, title: "Homepage", color: "bg-[#d6266b]", hold: 3400 },
   { id: 2, title: "Profile Page", color: "bg-[#8e26d6]", hold: 6500 },
   { id: 3, title: "Templates", color: "bg-[#c01ac0]", hold: 800 },
   { id: 4, title: "Subscription", color: "bg-[#6b26d6]", hold: 800 },
 ];
 
-const profilePageComponents = [
+const profilePageComponents2 = [
   {
     id: 1,
     title: "Account Details",
     description:
       "This feature allows users to manage their personal information, including name, email, phone number, and social links. Users can create custom action buttons with labels linking to URLs or files. Additionally, users can add notes or supplementary information, which the AI chatbot can utilize to provide context-aware responses.",
-    icon:
-      window.innerWidth < 640 ? accountDetailsFixedMobile : accountDetailsFixed,
-    icon2:
-      window.innerWidth < 640 ? accountDetailsFullMobile : accountDetailsFull,
+    icons: {
+      fixed: {
+        mobile: accountDetailsFixedMobile,
+        desktop: accountDetailsFixed,
+      },
+      full: {
+        mobile: accountDetailsFullMobile,
+        desktop: accountDetailsFull,
+      },
+    },
   },
   {
     id: 2,
     title: "Company Details",
     description:
       "Designed for business users, this feature allows a company to manage its profile and invite team members. All company information is shared consistently across all associated user accounts, providing a unified business presence.",
-    icon:
-      window.innerWidth < 640 ? companyDetailsFixedMobile : companyDetailsFull,
-    icon2: window.innerWidth < 640 ? companyDetailsFullMobile : null,
+    icons: {
+      fixed: {
+        mobile: companyDetailsFixedMobile,
+        desktop: companyDetailsFull,
+      },
+      full: {
+        mobile: companyDetailsFullMobile,
+        desktop: null,
+      },
+    },
   },
   {
     id: 3,
     title: "My Digital Card",
     description:
       "This feature enables users to create a personalized digital card with a custom display name used in its URL. Users can choose from multiple templates, adjust background and font colors, upload custom background images, and select from various layouts to tailor their card’s appearance.",
-    icon:
-      window.innerWidth < 640 ? myDigitalCardFixedMobile : myDigitalCardFixed,
-    icon2:
-      window.innerWidth < 640 ? myDigitalCardFullMobile : myDigitalCardFull,
+    icons: {
+      fixed: {
+        mobile: myDigitalCardFixedMobile,
+        desktop: myDigitalCardFixed,
+      },
+      full: {
+        mobile: myDigitalCardFullMobile,
+        desktop: myDigitalCardFull,
+      },
+    },
   },
   {
     id: 4,
     title: "My Qr Codes",
     description:
       "This feature allows users to create fully customized QR codes for instant sharing of their digital card. Users can personalize dot patterns, corner shapes, background colors, and even add a custom logo, ensuring each QR code aligns with their personal or brand identity.",
-    icon: window.innerWidth < 640 ? myQrCodesFixedMobile : myQrCodesFixed,
-    icon2: window.innerWidth < 640 ? myQrCodesFullMobile : myQrCodesFull,
+    icons: {
+      fixed: {
+        mobile: myQrCodesFixedMobile,
+        desktop: myQrCodesFixed,
+      },
+      full: {
+        mobile: myQrCodesFullMobile,
+        desktop: myQrCodesFull,
+      },
+    },
   },
   {
     id: 5,
     title: "Apple Wallet Cards",
     description:
       "This feature allows users to save their digital card to Apple Wallet or Google Wallet. The wallet stores all relevant information from the individual or company card and includes the QR code for easy sharing.",
-    icon: window.innerWidth < 640 ? appleWalletFullMobile : appleWalletFull,
+    icons: {
+      fixed: {
+        mobile: appleWalletFullMobile,
+        desktop: appleWalletFull,
+      },
+      full: {
+        mobile: null,
+        desktop: null,
+      },
+    },
   },
   {
     id: 6,
     title: "Analytics",
     description:
       "This feature provides users with detailed insights into their digital card’s performance. Users can track total and unique views, view engagement trends over time via interactive graphs, monitor average time spent, bounce rate, geographic data (cities and countries), device and browser statistics, and analyze custom action events such as button clicks and click-through rates on specific templates.",
-    icon: window.innerWidth < 640 ? analyticsFixedMobile : analyticsFixed,
-    icon2: window.innerWidth < 640 ? analyticsFullMobile : analyticsFull,
+    icons: {
+      fixed: {
+        mobile: analyticsFixedMobile,
+        desktop: analyticsFixed,
+      },
+      full: {
+        mobile: analyticsFullMobile,
+        desktop: analyticsFull,
+      },
+    },
   },
   {
     id: 7,
     title: "Profile Type",
     description:
       "This feature allows users to select and switch between an individual or a business profile. Choosing a business profile enables collaboration by inviting team members and sharing company information, while the individual profile focuses on personal branding and customization. This flexibility ensures that users can tailor their digital presence to their specific needs, whether personal or professional.",
-    icon: window.innerWidth < 640 ? profiletypeFullMobile : profiletypeFull,
+    icons: {
+      fixed: {
+        mobile: profiletypeFullMobile,
+        desktop: profiletypeFull,
+      },
+      full: {
+        mobile: null,
+        desktop: null,
+      },
+    },
   },
   {
     id: 8,
     title: "Team Members",
     description:
       "This feature enables company owners and administrators to manage their team efficiently. Users can generate and share invite codes via copy or email, create alternative profiles without registering new accounts, and edit or update existing profiles. For companies with a subscription plan, templates can be assigned to team members, ensuring a consistent digital presence across the organization.",
-    icon: window.innerWidth < 640 ? teamMembersFixedMobile : teamMembersFixed,
-    icon2: window.innerWidth < 640 ? teamMembersFullMobile : teamMembersFull,
+    icons: {
+      fixed: {
+        mobile: teamMembersFixedMobile,
+        desktop: teamMembersFixed,
+      },
+      full: {
+        mobile: teamMembersFullMobile,
+        desktop: teamMembersFull,
+      },
+    },
   },
   {
     id: 9,
     title: "Security",
     description:
       "This feature allows users to securely manage their account and subscription settings. Users can update login credentials, including username and password, and maintain control over their subscription plan—viewing status, billing history, next payment date, and options to cancel or reactivate. Subscription management is integrated with Stripe, providing a seamless and secure billing experience.",
-    icon: window.innerWidth < 640 ? securityFixedMobile : securityFixed,
-    icon2: window.innerWidth < 640 ? securityFullMobile : securityFull,
+    icons: {
+      fixed: {
+        mobile: securityFixedMobile,
+        desktop: securityFixed,
+      },
+      full: {
+        mobile: securityFullMobile,
+        desktop: securityFull,
+      },
+    },
   },
 ];
 
@@ -200,6 +269,22 @@ const KeepMeComponents = ({
 }) => {
   const { isPhone } = useAppContext();
 
+  const profilePageComponents = useMemo(() => {
+    return profilePageComponents2.map((item) => {
+      const icon =
+        isPhone <= 640 ? item.icons.fixed.mobile : item.icons.fixed.desktop;
+
+      const icon2 =
+        isPhone <= 640 ? item.icons.full.mobile : item.icons.full.desktop;
+
+      return {
+        ...item,
+        icon,
+        icon2,
+      };
+    });
+  }, [isPhone]);
+
   const containerRef = useRef(null);
   const headerGap = 6;
 
@@ -230,7 +315,9 @@ const KeepMeComponents = ({
     const checkImages = () => {
       loaded++;
       if (loaded >= images.length) {
-        setReady(true);
+        setTimeout(() => {
+          setReady(true);
+        }, 100);
       }
     };
 
@@ -399,9 +486,9 @@ const KeepMeComponents = ({
             // 5. Scroll tall image to the top
             if (tallImg && imageContainer) {
               // Get the front image height (icon)
-              const frontHeight = shortImg.offsetHeight;
+              const frontHeight = shortImg.getBoundingClientRect().height;
               // Get the back image height (icon2)
-              const backHeight = tallImg.offsetHeight;
+              const backHeight = tallImg.getBoundingClientRect().height;
               // Calculate how much we need to move up so the bottom aligns
               const scrollDistance = backHeight - frontHeight;
 
@@ -409,11 +496,11 @@ const KeepMeComponents = ({
                 // Animate y instead of top for smooth GPU animation
                 tl.to(tallImg, {
                   y: -scrollDistance, // move up exactly
-                  duration: 500, // same as before
+                  duration: i === 0 ? 800 : 400, // same as before
                   ease: "none",
                 });
 
-                tl.to({}, { duration: 0.5 });
+                tl.to({}, { duration: 100 });
               }
             }
           });
@@ -607,19 +694,22 @@ const KeepMeComponents = ({
               </h2>
 
               {/* ... inside section.id === 2 mapping ... */}
-              <div className="absolute top-[10%] sm:top-[15%] inset-0 flex items-center justify-center">
+              <div className="absolute top-[10%] inset-0 flex items-center justify-center">
                 {profilePageComponents.map((comp) => (
                   <div
                     key={comp.id}
-                    className="profile-item absolute flex flex-col-reverse sm:flex-row items-center justify-center sm:justify-between sm:px-20 gap-10 w-full h-full"
+                    className="profile-item absolute flex flex-col-reverse lg:flex-row items-center justify-center lg:justify-between sm:px-20 gap-10 w-full h-full"
                   >
-                    <div className="profile-title-description hidden sm:block opacity-0 h-[50vh] absolute">
+                    <div className="profile-title-description hidden lg:block opacity-0 h-[50vh] absolute">
                       {/* Title: Positioned absolute so they all stack in one spot */}
                       <h3 className="text-4xl font-bold font-inter text-black whitespace-nowrap">
                         {comp.title}
                       </h3>
 
-                      <div className="sm:max-w-[25vw] mt-10 font-inter font-semibold text-lg text-black">
+                      <div
+                        data-lenis-prevent
+                        className="lg:max-w-[27vw] mt-10 font-inter font-semibold xl:text-lg text-black max-h-[50dvh] overflow-auto"
+                      >
                         {comp.description.split(". ").map((sentence, idx) => (
                           <p
                             key={idx}
@@ -632,7 +722,7 @@ const KeepMeComponents = ({
                     </div>
 
                     {/* Image: This is what we will slide up */}
-                    <div className="profile-image w-fit sm:w-[55vw] h-[65dvh] sm:h-auto flex items-center justify-center sm:ml-auto">
+                    <div className="profile-image w-fit sm:w-[75vw] lg:w-[55vw] h-[65dvh] sm:h-auto flex items-center justify-center lg:ml-auto">
                       <div className="relative overflow-hidden border border-black/30 h-full w-auto rounded-[20px]">
                         <img
                           src={comp.icon}
@@ -795,7 +885,10 @@ const KeepMeComponents = ({
                     <h2 className="text-black font-inter font-bold text-[40px]">
                       Customisable
                     </h2>
-                    <div className="font-inter text-lg font-semibold text-black mt-5 flex flex-col gap-3 overflow-auto max-h-[30dvh] sm:max-h-[50vh]">
+                    <div
+                      data-lenis-prevent
+                      className="font-inter text-lg font-semibold text-black mt-5 flex flex-col gap-3 overflow-auto max-h-[30dvh] sm:max-h-[50vh]"
+                    >
                       <p>
                         Customisable is a template that allows you to fully
                         design and personalize your digital card. You can freely
@@ -833,11 +926,11 @@ const KeepMeComponents = ({
                 {section.title}
               </h2>
 
-              <div className="flex flex-col sm:flex-row items-center h-[65dvh] justify-around gap-3 sm:gap-5 sm:mt-10">
-                <div className="sub-container max-w-[100vw] sm:max-w-[70vw] overflow-hidden p-4 sm:p-10">
+              <div className="flex flex-col lg:flex-row items-center h-[65dvh] justify-around gap-3 lg:gap-5 lg:mt-10">
+                <div className="sub-container max-w-[100vw] lg:max-w-[70vw] overflow-hidden p-4 lg:p-10">
                   <div className="sub-wrapper flex">
                     {/* Card 1 */}
-                    <div className="sub-item opacity-0 translate-y-[80px] sm:max-h-[70vh] h-[35dvh] sm:h-[60vh] min-w-max">
+                    <div className="sub-item opacity-0 translate-y-[80px] lg:max-h-[70vh] h-[35dvh] lg:h-[60vh] min-w-max">
                       <img
                         src={customisablePlans}
                         alt="Choose plan"
@@ -846,7 +939,7 @@ const KeepMeComponents = ({
                     </div>
 
                     {/* Card 2 */}
-                    <div className="sub-item opacity-0 translate-y-[80px] sm:max-h-[70vh] h-[35dvh] sm:h-[60vh] min-w-max">
+                    <div className="sub-item opacity-0 translate-y-[80px] lg:max-h-[70vh] h-[35dvh] lg:h-[60vh] min-w-max">
                       <img
                         src={billingDetails}
                         alt="Subscription details"
@@ -855,7 +948,7 @@ const KeepMeComponents = ({
                     </div>
 
                     {/* Card 3 */}
-                    <div className="sub-item opacity-0 translate-y-[80px] sm:max-h-[70vh] h-[35dvh] sm:h-[60vh] min-w-max">
+                    <div className="sub-item opacity-0 translate-y-[80px] lg:max-h-[70vh] h-[35dvh] lg:h-[60vh] min-w-max">
                       <img
                         src={upgradeSubscription}
                         alt="Upgrade plan"
@@ -865,7 +958,7 @@ const KeepMeComponents = ({
                   </div>
                 </div>
 
-                <div className="sub-item opacity-0 translate-y-[80px] sm:max-w-[25vw] flex flex-col items-center px-5">
+                <div className="sub-item opacity-0 translate-y-[80px] lg:max-w-[25vw] flex flex-col items-center px-5">
                   {/* first text  */}
                   <div className="step-text">
                     <h3 className="font-inter font-semibold text-2xl text-black text-center">

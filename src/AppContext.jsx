@@ -1,9 +1,55 @@
 import { createContext, useContext, useEffect, useState } from "react";
+import Lenis from "lenis";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
   const [isPhone, setIsPhone] = useState(null);
+  const [lenis, setLenis] = useState(null);
+
+  useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger);
+
+    const lenisInstance = new Lenis({
+      duration: 1.2, // Add a set duration for a more consistent feel
+      lerp: 0.08,
+      wheelMultiplier: 0.75,
+      touchMultiplier: 2, // You might want to bump this slightly if syncTouch is on
+      infinite: false,
+      smoothWheel: true,
+
+      // KEY SETTINGS FOR MOBILE STACKING:
+      smoothTouch: true, // Keep this true
+      syncTouch: true, // This mimics native touch scroll behavior and prevents "stacking"
+      syncTouchLerp: 0.08, // Ensures the touch speed matches your lerp speed
+      touchInertiaMultiplier: 15, // Limits how much "flick" carries over
+    });
+
+    // 1. Update State
+    setLenis(lenisInstance);
+
+    // 2. Initial state: stopped (for your preloader)
+    lenisInstance.stop();
+
+    // 3. Sync with ScrollTrigger
+    lenisInstance.on("scroll", ScrollTrigger.update);
+
+    // 4. GSAP Ticker
+    const raf = (time) => {
+      lenisInstance.raf(time * 1000);
+    };
+
+    gsap.ticker.add(raf);
+    gsap.ticker.lagSmoothing(0);
+
+    return () => {
+      gsap.ticker.remove(raf);
+      lenisInstance.destroy(); // Use the local instance for cleanup
+      setLenis(null);
+    };
+  }, []);
 
   // Check if is Phone or not
   useEffect(() => {
@@ -32,6 +78,8 @@ export const AppProvider = ({ children }) => {
 
   const value = {
     isPhone,
+    lenis,
+    setLenis,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

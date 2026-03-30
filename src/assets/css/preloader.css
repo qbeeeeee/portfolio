@@ -93,3 +93,20 @@ img {
     width: 75%;
   }
 }
+
+@keyframes scroll-dot {
+  0% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(12px);
+    opacity: 0;
+  }
+}
+.animate-scroll-dot {
+  animation: scroll-dot 2s infinite;
+}

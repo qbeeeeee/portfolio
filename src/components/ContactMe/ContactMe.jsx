@@ -18,11 +18,18 @@ import { useAppContext } from "../../AppContext";
 gsap.registerPlugin(ScrollTrigger);
 
 const socials = [
-  { icon: GmailIcon, name: "Gmail" },
-  { icon: LinkedinBlue, name: "LinkedIn" },
-  { icon: WhatsappGreen, name: "WhatsApp" },
-  { icon: ViberPurple, name: "Viber" },
-  { icon: GithubCircle, name: "Github" },
+  {
+    icon: LinkedinBlue,
+    name: "LinkedIn",
+    url: "https://www.linkedin.com/in/konstantinos-papadopoulos-26712321a/",
+  },
+  { icon: WhatsappGreen, name: "WhatsApp", url: "https://wa.me/306972358102" },
+  { icon: ViberPurple, name: "Viber", url: "viber://chat?number=306972358102" },
+  {
+    icon: GithubCircle,
+    name: "Github",
+    url: "https://github.com/qbeeeeee?tab=repositories",
+  },
 ];
 
 const ContactMe = () => {
@@ -163,10 +170,10 @@ const ContactMe = () => {
           trigger: contactReveal,
           start: () => {
             const finish = ScrollTrigger.getById("exclamationMark");
-            return finish?.end - (isPhone <= 640 ? 200 : 300) || 0;
+            return finish?.end - (isPhone <= 640 ? 200 : 200) || 0;
           },
           // start: "top center+=100",
-          end: isPhone <= 640 ? "+=350" : "+=300",
+          end: isPhone <= 640 ? "+=350" : "+=200",
           scrub: true,
           onUpdate: (self) => {
             const progress = self.progress;
@@ -175,35 +182,35 @@ const ContactMe = () => {
         },
       });
 
-      gsap.fromTo(
-        bg,
-        { scaleY: 1, borderRadius: "20px" },
-        {
-          scaleY: isPhone <= 640 ? 0.3 : 0.1,
-          borderRadius: "30px",
-          ease: "none",
-          scrollTrigger: {
-            trigger: contactReveal,
-            start: () => {
-              const start = ScrollTrigger.getById("revealFormData");
-              return start?.end - 200 || 0;
-            },
-            end: "+=200",
-            scrub: true,
-          },
-        },
-      );
+      // gsap.fromTo(
+      //   bg,
+      //   { scaleY: 1, borderRadius: "20px" },
+      //   {
+      //     scaleY: isPhone <= 640 ? 0.3 : 0.1,
+      //     borderRadius: "30px",
+      //     ease: "none",
+      //     scrollTrigger: {
+      //       trigger: contactReveal,
+      //       start: () => {
+      //         const start = ScrollTrigger.getById("revealFormData");
+      //         return start?.end - 200 || 0;
+      //       },
+      //       end: "+=200",
+      //       scrub: true,
+      //     },
+      //   },
+      // );
     },
     { dependencies: [isPhone], revertOnUpdate: true },
   );
 
   return (
-    <div className="min-h-screen w-full sm:mt-[40vh] flex flex-col items-center pb-10 sm:pb-0">
+    <div className="min-h-max lg:min-h-screen w-full sm:mt-[40vh] flex flex-col items-center pb-20 lg:pb-0">
       <div ref={sectionRef} className="relative">
         {/* Fat Dot */}
         <div
           ref={dotRef}
-          className="absolute left-0 bottom-[25%] h-14 sm:h-[20vh] scale-y-0 w-auto z-20 rounded-[40px] overflow-hidden"
+          className="absolute left-0 bottom-[25%] h-14 sm:h-[100px] lg:h-[20vh] scale-y-0 w-auto z-20 rounded-[40px] overflow-hidden"
         >
           {/* Background layer */}
           <div
@@ -222,7 +229,7 @@ const ContactMe = () => {
         {/* Contact Text */}
         <div
           ref={textRef}
-          className="text-white text-[50px] sm:text-[clamp(3rem,25vh,13rem)] whitespace-nowrap font-ica-rubrik"
+          className="text-white text-[50px] sm:text-[90px] lg:text-[clamp(3rem,25vh,13rem)] whitespace-nowrap font-ica-rubrik"
         >
           Contact Me{" "}
         </div>
@@ -230,21 +237,21 @@ const ContactMe = () => {
 
       <div
         ref={contactRevealRef}
-        className="relative w-full flex justify-evenly items-end mt-0 px-6 sm:px-20 overflow-visible"
+        className="relative w-full flex justify-evenly items-end px-6 sm:px-10 lg:px-20 overflow-visible lg:-mt-6"
       >
         {/* animated background */}
         <div
           ref={contactBgRef}
-          className="absolute pointer-events-none left-1/2 transform -translate-x-1/2 inset-0 bg-[#d6266b] z-20 rounded-[40px] w-[90%] sm:w-[80%] h-4 sm:h-14 scale-y-0"
+          className="absolute pointer-events-none left-1/2 transform -translate-x-1/2 inset-0 bg-[#d6266b] z-20 rounded-[40px] w-[90%] sm:w-[80%] h-4 sm:h-7 lg:h-10"
           style={{ clipPath: "inset(0 0 0 0)" }}
         />
 
         <div
           ref={contactRevealRef2}
-          className="w-full flex flex-col sm:flex-row justify-evenly items-stretch gap-6 sm:gap-0 z-10 pt-6 pb-4 sm:pb-14"
+          className="w-full flex flex-col lg:flex-row justify-evenly items-center lg:items-stretch gap-6 sm:gap-10 lg:gap-0 z-10 pt-6 pb-14 sm:pb-28"
         >
-          <div className="w-full sm:w-[50%] max-w-lg text-white z-10 flex flex-col gap-10 justify-between">
-            <div className="font-inter text-[20px]">
+          <div className="w-full lg:w-[50%] max-w-lg text-white z-10 flex flex-col gap-10 justify-between">
+            <div className="font-inter sm:text-[20px]">
               If you have any inquires or just want to say hi, please use the
               contact form or any of the socials!
             </div>
@@ -277,9 +284,12 @@ const ContactMe = () => {
               </div>
 
               <div className="flex items-center gap-6 sm:gap-8 mt-1">
-                {socials.map(({ icon: Icon, name }) => (
-                  <div
+                {socials.map(({ icon: Icon, name, url }) => (
+                  <a
                     key={name}
+                    href={url}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="relative flex items-center justify-center group"
                   >
                     <Icon className="w-8 h-8 text-white cursor-pointer transition-all duration-300 group-hover:scale-125 group-hover:-translate-y-1" />
@@ -296,7 +306,7 @@ const ContactMe = () => {
                         {name}
                       </div>
                     </div>
-                  </div>
+                  </a>
                 ))}
               </div>
             </div>
@@ -304,7 +314,7 @@ const ContactMe = () => {
 
           <form
             onSubmit={handleSubmit}
-            className="w-full sm:w-[50%] max-w-xl flex flex-col gap-6 text-white z-10"
+            className="w-full lg:w-[50%] max-w-xl flex flex-col gap-6 text-white z-10"
           >
             <div className="flex gap-4">
               {/* First Name */}

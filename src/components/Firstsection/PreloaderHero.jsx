@@ -70,7 +70,41 @@ const skills = [
 export default function Hero({ setAnimationFinished, animationFinished }) {
   const { isPhone } = useAppContext();
 
+  const containerRef = useRef(null);
+  const skillsWrapperRef = useRef(null);
+  const contentRef = useRef(null);
+  const scrollDownRef = useRef(null);
   const root = useRef(null);
+
+  useGSAP(
+    () => {
+      gsap.to(".mouse-icon", {
+        scrollTrigger: {
+          trigger: document.body,
+          start: "top top",
+          end: "400px top",
+          scrub: true,
+        },
+        opacity: 0,
+        y: 50,
+        ease: "none",
+      });
+
+      // The cool split effect
+      gsap.to(".scroll-left", {
+        scrollTrigger: { scrub: true, end: "400px top" },
+        x: -40,
+        opacity: 0,
+      });
+
+      gsap.to(".scroll-right", {
+        scrollTrigger: { scrub: true, end: "400px top" },
+        x: 40,
+        opacity: 0,
+      });
+    },
+    { scope: scrollDownRef },
+  );
 
   useGSAP(
     () => {
@@ -361,7 +395,13 @@ export default function Hero({ setAnimationFinished, animationFinished }) {
             )
             .add(playSkillsEntrance, "<")
             .add(startSkillsAnimation, ">")
-            .add(() => setAnimationFinished(true));
+            .add(() => setAnimationFinished(true))
+            .to(scrollDownRef?.current, {
+              y: 0,
+              opacity: 1,
+              duration: 1,
+              ease: "power3.out",
+            });
         });
       }, root);
 
@@ -369,10 +409,6 @@ export default function Hero({ setAnimationFinished, animationFinished }) {
     },
     { dependencies: [isPhone], revertOnUpdate: true },
   );
-
-  const containerRef = useRef(null);
-  const skillsWrapperRef = useRef(null);
-  const contentRef = useRef(null);
 
   useGSAP(
     () => {
@@ -453,7 +489,14 @@ export default function Hero({ setAnimationFinished, animationFinished }) {
           .to(
             splitB.chars,
             {
-              y: window.innerWidth > 1536 ? -90 : isPhone <= 640 ? -45 : -80,
+              y:
+                isPhone > 1536
+                  ? -90
+                  : isPhone <= 640
+                    ? -45
+                    : isPhone <= 1024
+                      ? -60
+                      : -80,
               duration: 0.33,
               stagger: 0.02,
               ease: "sine.inOut",
@@ -472,7 +515,7 @@ export default function Hero({ setAnimationFinished, animationFinished }) {
         ref={container}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
-        className="inline-flex flex-col relative text-[#230322] cursor-pointer rounded-[15px] px-2 sm:px-4 h-[40px] sm:h-[79px] 2xl:h-[85px] overflow-hidden font-bold hover-button"
+        className="inline-flex flex-col relative text-[#230322] cursor-pointer rounded-[15px] px-2 sm:px-4 h-[40px] sm:h-[57px] lg:h-[79px] 2xl:h-[85px] overflow-hidden font-bold hover-button"
       >
         <span className="absolute inset-0 bg-white z-0 origin-left hover-bg" />
 
@@ -570,14 +613,14 @@ export default function Hero({ setAnimationFinished, animationFinished }) {
                     className="h-full relative flex flex-col justify-between"
                   >
                     <div
-                      className="top-hero-content mt-[8vh] w-full flex flex-col-reverse sm:flex-row items-center sm:items-end 
-                    justify-between px-5 sm:px-16 2xl:px-20 gap-[8vh] sm:gap-16 whitespace-nowrap z-[400] [perspective:800px]"
+                      className="top-hero-content mt-20 sm:mt-[5vh] lg:mt-[8vh] w-full flex flex-col-reverse lg:flex-row items-center lg:items-end 
+                    justify-between px-5 sm:px-8 lg:px-16 2xl:px-20 gap-[8vh] sm:gap-[4vh] lg:gap-16 whitespace-nowrap z-[400] [perspective:800px]"
                     >
                       <div className="flex flex-col items-center justify-center header-qr-code">
                         <img
                           src={qrCode}
                           alt="QR Code"
-                          className="hover:cursor-pointer hover:bg-[#ffffff32] border border-[#ffffffc6] shadow-xl rounded-[10px] w-[clamp(100px,16vh,120px)] sm:w-[clamp(120px,10vw,160px)] h-[clamp(100px,16vh,120px)] sm:h-[clamp(120px,10vw,160px)]"
+                          className="hover:cursor-pointer hover:bg-[#ffffff32] border border-[#ffffffc6] shadow-xl rounded-[10px] w-[clamp(100px,16vh,120px)] lg:w-[clamp(120px,10vw,160px)] h-[clamp(100px,16vh,120px)] sm:h-[clamp(120px,10vw,160px)]"
                         />
                         <h2 className="mt-4 text-[14px] sm:text-[16px] text-white font-inter font-bold text-center">
                           My KeepMe Card
@@ -586,14 +629,14 @@ export default function Hero({ setAnimationFinished, animationFinished }) {
 
                       <div className="w-full sm:w-max">
                         <div
-                          className="flex flex-nowrap sm:grid sm:grid-cols-5 gap-[8px] sm:gap-[1vw]"
+                          className="flex flex-nowrap sm:grid sm:grid-cols-5 gap-[8px]"
                           ref={skillsWrapperRef}
                         >
                           {duplicatedSkills.map((skill, index) => (
                             <div
                               key={index}
                               className="skill-item flex-shrink-0 flex flex-col items-center justify-center hover:cursor-pointer hover:bg-[#ffffff32] 
-                              gap-1 sm:gap-[0.5vw] font-inter font-light text-[12px] sm:text-[1vw] text-white
+                              gap-1 sm:gap-[8px] font-inter font-light text-[12px] lg:text-[14px] text-white
       border border-[#ffffffc6] shadow-xl rounded-[10px] w-[clamp(90px,7vw,140px)] sm:w-[clamp(100px,7.8vw,150px)] h-[clamp(60px,5.25vw,90px)] sm:h-[clamp(66px,5.25vw,100px)] font-inter"
                             >
                               <img
@@ -608,28 +651,28 @@ export default function Hero({ setAnimationFinished, animationFinished }) {
                       </div>
                     </div>
 
-                    <div className="bottom-hero-content mb-[5vh] w-full flex flex-col sm:flex-row gap-[4vh] justify-between sm:items-end z-10 text-white px-5 sm:px-16 2xl:px-20">
+                    <div className="bottom-hero-content mb-[5vh] sm:mb-4 lg:mb-[5vh] w-full flex flex-col xl:flex-row gap-[2vh] sm:gap-3 xl:gap-[4vh] justify-between xl:items-end z-10 text-white px-5 sm:px-8 lg:px-16 2xl:px-20">
                       <div className="header-dev">
-                        <h1 className="text-[30px] sm:text-[54px] 2xl:text-[60px] font-ica-rubrik font-bold">
+                        <h1 className="text-[30px] sm:text-[40px] lg:text-[54px] 2xl:text-[60px] font-ica-rubrik font-bold">
                           Hey, I'm <HoverButton />
                         </h1>
-                        <h1 className="text-[30px] sm:text-[54px] 2xl:text-[60px] font-ica-rubrik font-bold">
+                        <h1 className="text-[30px] sm:text-[40px] lg:text-[54px] 2xl:text-[60px] font-ica-rubrik font-bold">
                           Web Developer
                         </h1>
 
-                        <p className="mt-[0.9vh] sm:mt-4 text-[15px] sm:text-[18px] 2xl:text-[20px] text-white max-w-[500px] font-inter font-light">
+                        <p className="mt-[0.9vh] sm:mt-4 text-[15px] sm:text-[16px] lg:text-[18px] 2xl:text-[20px] text-white max-w-[500px] font-inter font-light">
                           I’m a 27-year-old Full-stack web developer from
                           Greece, passionate about building modern, interactive
                           websites.
                         </p>
                       </div>
 
-                      <div className="flex flex-col items-end hero-footer-right">
-                        <h1 className="font-bold text-[18px] sm:text-[32px] 2xl:text-[35px] font-inter mb-1 sm:mb-2">
+                      <div className="flex flex-col items-end hero-footer-right opacity-0 lg:opacity-100">
+                        <h1 className="font-bold text-[18px] sm:text-[24px] lg:text-[32px] 2xl:text-[35px] font-inter mb-1 sm:mb-2">
                           Experience
                         </h1>
 
-                        <div className="flex flex-col gap-1 text-[14px] sm:text-[18px] 2xl:text-[20px] text-white font-inter font-light">
+                        <div className="flex flex-col gap-1 text-[15px] sm:text-[16px] lg:text-[18px] 2xl:text-[20px] text-white font-inter font-light">
                           <div className="flex gap-6">
                             <div className="hover:cursor-pointer">
                               B.Sc. Computer Science
@@ -653,6 +696,22 @@ export default function Hero({ setAnimationFinished, animationFinished }) {
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
+
+          <div
+            ref={scrollDownRef}
+            className="absolute bottom-10 sm:bottom-14 flex flex-col items-center gap-3 opacity-0 translate-y-10"
+          >
+            {/* The Mouse Outline */}
+            <div className="mouse-icon w-[22px] h-[36px] border-2 border-white/50 rounded-full flex justify-center p-1">
+              <div className="w-1 h-2 bg-white rounded-full animate-scroll-dot"></div>
+            </div>
+
+            {/* Split Text */}
+            <div className="scroll-text-container flex gap-2 text-white/50 font-inter font-light text-[10px] tracking-[0.4em] uppercase">
+              <span className="scroll-left">Scroll</span>
+              <span className="scroll-right">Down</span>
             </div>
           </div>
         </section>
