@@ -79,8 +79,8 @@ const projects = [
   },
 ];
 
-const OtherProjects = ({ stopScroll, resumeScroll, animationFinished }) => {
-  const { isPhone } = useAppContext();
+const OtherProjects = ({ animationFinished }) => {
+  const { isPhone, stopScroll, resumeScroll } = useAppContext();
 
   const projectsWrapperRef = useRef(null);
   const planetRef = useRef(null);
@@ -88,6 +88,12 @@ const OtherProjects = ({ stopScroll, resumeScroll, animationFinished }) => {
 
   const [activeProject, setActiveProject] = useState(null);
   const spinTweenRef = useRef(null);
+
+  const spinRef = useRef(null);
+  const projectRefs = useRef([]);
+  const [currentIndex, setCurrentIndex] = useState(null);
+
+  const isAnimating = useRef(false);
 
   useGSAP(
     () => {
@@ -177,10 +183,6 @@ const OtherProjects = ({ stopScroll, resumeScroll, animationFinished }) => {
     { dependencies: [isPhone], revertOnUpdate: true },
   );
 
-  const spinRef = useRef(null);
-  const projectRefs = useRef([]);
-  const [currentIndex, setCurrentIndex] = useState(null);
-
   const { contextSafe } = useGSAP();
 
   const scrollToComponent = useCallback(
@@ -200,6 +202,9 @@ const OtherProjects = ({ stopScroll, resumeScroll, animationFinished }) => {
   );
 
   const handleProjectClick = (project, index) => {
+    if (isAnimating.current) return;
+    isAnimating.current = true;
+
     spinTweenRef.current?.pause();
 
     scrollToComponent();
@@ -228,6 +233,8 @@ const OtherProjects = ({ stopScroll, resumeScroll, animationFinished }) => {
       onComplete: () => {
         setActiveProject(project);
         showProjectInfo();
+
+        isAnimating.current = false;
       },
     });
 
@@ -256,6 +263,9 @@ const OtherProjects = ({ stopScroll, resumeScroll, animationFinished }) => {
   };
 
   const handleCloseProject = () => {
+    if (isAnimating.current) return;
+    isAnimating.current = true;
+
     setCurrentIndex(null);
 
     const style = getComputedStyle(spinRef.current);
@@ -273,6 +283,7 @@ const OtherProjects = ({ stopScroll, resumeScroll, animationFinished }) => {
         resumeScroll();
 
         spinTweenRef.current?.resume();
+        isAnimating.current = false;
       },
     });
 
@@ -310,13 +321,13 @@ const OtherProjects = ({ stopScroll, resumeScroll, animationFinished }) => {
       {
         width:
           isPhone <= 640
-            ? "clamp(280px, 100vw, 450px)"
+            ? "clamp(280px, 100dvw, 450px)"
             : isPhone <= 1024
               ? "clamp(1000px, 100vw, 1400px)"
               : "clamp(1150px, 80vw, 1400px)",
         height:
           isPhone <= 640
-            ? "clamp(450px, 100vh, 700px)"
+            ? "clamp(450px, 100dvh, 700px)"
             : isPhone <= 1024
               ? "clamp(600px, 70vh, 700px)"
               : "clamp(600px, 50vw, 700px)",
@@ -388,7 +399,7 @@ const OtherProjects = ({ stopScroll, resumeScroll, animationFinished }) => {
   return (
     <div
       ref={projectsWrapperRef}
-      className="w-full h-[100vh] flex items-center justify-center text-center relative opacity-0 [transform-style:preserve-3d] [transform:perspective(1200px)] mt-[35dvh] z-10"
+      className="w-full h-[100vh] max-h-[800px] sm:max-h-[100vh] flex items-center justify-center text-center relative opacity-0 [transform-style:preserve-3d] [transform:perspective(1200px)] mt-[35dvh] z-10"
     >
       <div
         ref={spinRef}
@@ -451,7 +462,7 @@ const OtherProjects = ({ stopScroll, resumeScroll, animationFinished }) => {
         ref={projectInfoRef}
         style={{
           transform: `translateZ(${isPhone <= 640 ? 350 : isPhone <= 1024 ? 450 : 600}px)`,
-          scale: isPhone <= 640 ? 0.7 : isPhone <= 1024 ? 0.6 : 0.55,
+          scale: isPhone <= 640 ? 0.62 : isPhone <= 1024 ? 0.6 : 0.55,
         }}
         className="flex flex-col items-center justify-center h-0 w-0 bg-[#d6266b] rounded-[40px] relative overflow-hidden"
       >
@@ -461,7 +472,7 @@ const OtherProjects = ({ stopScroll, resumeScroll, animationFinished }) => {
 
         <p
           data-lenis-prevent
-          className="absolute bottom-[5%] text-center max-w-[90vw] lg:max-w-[60vw] max-h-[20vh] overflow-auto font-inter font-semibold text-[18px] text-black"
+          className="absolute bottom-[5%] text-center max-w-[90vw] lg:max-w-[60vw] max-h-[20vh] overflow-y-auto overscroll-none font-inter font-semibold text-[18px] text-black"
         >
           {activeProject?.description}
         </p>

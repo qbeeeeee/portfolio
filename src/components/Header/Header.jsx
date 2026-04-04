@@ -18,7 +18,7 @@ const Header = ({ animationFinished }) => {
   const navRef = useRef(null);
   const bgRef = useRef(null);
   const linksRef = useRef([]);
-  const { lenis } = useAppContext();
+  const { scrollToTarget, isPhone } = useAppContext();
 
   const [activeId, setActiveId] = useState("home");
   const [hoveredId, setHoveredId] = useState(null);
@@ -45,13 +45,11 @@ const Header = ({ animationFinished }) => {
     e.preventDefault(); // Stop any default smooth behavior
     setHoveredId(null);
 
-    if (lenis) {
-      lenis.scrollTo(`#${id}`, {
-        offset: -80, // Space for your fixed header
-        immediate: true, // THE KEY: bypasses the 1.2s duration for an instant jump
-        force: true, // Kills any current momentum from the user's mouse wheel
-      });
-    }
+    scrollToTarget(`#${id}`, {
+      offset: -80, // Space for your fixed header
+      immediate: true, // THE KEY: bypasses the 1.2s duration for an instant jump
+      force: true, // Kills any current momentum from the user's mouse wheel
+    });
   };
 
   // Helper function to animate the pill to a specific element
@@ -70,7 +68,8 @@ const Header = ({ animationFinished }) => {
 
   useGSAP(
     () => {
-      // 1. Create ScrollTriggers for each section
+      if (!isPhone) return;
+      // Create ScrollTriggers for each section
       navItems.forEach((item, index) => {
         ScrollTrigger.create({
           trigger: `#${item.id}`,
@@ -86,7 +85,7 @@ const Header = ({ animationFinished }) => {
         });
       });
     },
-    { dependencies: [], revertOnUpdate: true },
+    { dependencies: [isPhone], revertOnUpdate: true },
   );
 
   // Hover handlers (manual override)
@@ -117,7 +116,7 @@ const Header = ({ animationFinished }) => {
 
   return (
     <nav
-      className="fixed top-3 md:top-6 left-1/2 -translate-x-1/2 z-[100] w-[95%] md:w-auto"
+      className="fixed top-3 md:top-6 left-1/2 -translate-x-1/2 z-[100] w-[95%] md:w-auto max-w-[380px] sm:max-w-max"
       onMouseLeave={handleMouseLeaveNav}
     >
       <div

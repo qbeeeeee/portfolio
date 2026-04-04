@@ -12,21 +12,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 const App = () => {
   const [animationFinished, setAnimationFinished] = useState(false);
-  const { lenis } = useAppContext();
-
-  useEffect(() => {
-    if (animationFinished && lenis) {
-      lenis.start();
-    }
-  }, [animationFinished, lenis]);
-
-  const stopScroll = () => {
-    if (lenis) lenis.stop();
-  };
-
-  const resumeScroll = () => {
-    if (lenis) lenis.start();
-  };
+  const { resumeScroll } = useAppContext();
 
   useEffect(() => {
     // Disable browser scroll restoration
@@ -71,11 +57,7 @@ const App = () => {
       </section>
 
       <section id="projects">
-        <OtherProjects
-          animationFinished={animationFinished}
-          stopScroll={stopScroll}
-          resumeScroll={resumeScroll}
-        />
+        <OtherProjects animationFinished={animationFinished} />
       </section>
 
       <section id="contact">

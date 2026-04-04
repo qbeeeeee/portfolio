@@ -77,6 +77,15 @@ img {
   will-change: transform;
 }
 
+@media (max-width: 1280px) {
+  .preloader-mask {
+    mask:
+      linear-gradient(var(--base-300), var(--base-300)),
+      url("/src/assets//mask.svg") center/45% no-repeat;
+    mask-composite: subtract;
+  }
+}
+
 @media (max-width: 800px) {
   .preloader-progress-bar {
     width: 100%;

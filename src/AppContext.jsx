@@ -1,4 +1,11 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import Lenis from "lenis";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -7,7 +14,7 @@ const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
   const [isPhone, setIsPhone] = useState(null);
-  const [lenis, setLenis] = useState(null);
+  const lenisRef = useRef(null);
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
@@ -28,7 +35,7 @@ export const AppProvider = ({ children }) => {
     });
 
     // 1. Update State
-    setLenis(lenisInstance);
+    lenisRef.current = lenisInstance;
 
     // 2. Initial state: stopped (for your preloader)
     lenisInstance.stop();
@@ -46,10 +53,27 @@ export const AppProvider = ({ children }) => {
 
     return () => {
       gsap.ticker.remove(raf);
-      lenisInstance.destroy(); // Use the local instance for cleanup
-      setLenis(null);
+      lenisInstance.destroy();
+      lenisRef.current = null;
     };
   }, []);
+
+  const stopScroll = () => {
+    if (lenisRef.current) lenisRef.current.stop();
+  };
+
+  const resumeScroll = () => {
+    if (lenisRef.current) {
+      lenisRef.current.start();
+    }
+  };
+
+  const scrollToTarget = (target, options) => {
+    if (lenisRef.current) {
+      // Passes the target and your custom options straight to Lenis!
+      lenisRef.current.scrollTo(target, options);
+    }
+  };
 
   // Check if is Phone or not
   useEffect(() => {
@@ -78,8 +102,9 @@ export const AppProvider = ({ children }) => {
 
   const value = {
     isPhone,
-    lenis,
-    setLenis,
+    stopScroll,
+    resumeScroll,
+    scrollToTarget,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

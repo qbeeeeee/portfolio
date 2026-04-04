@@ -1,13 +1,12 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import "./../../assets/css/custom.css";
 import "./../../assets/css/projectsSectionCss.css";
-import LinkedinIcon from "../../assets/contactme/linkedinCircle.svg?react";
-import GmailIcon from "../../assets/contactme/gmailCircle.svg?react";
-import WhatsappCircle from "../../assets/contactme/whatsappCircle.svg?react";
 import WhatsappGreen from "../../assets/contactme/whatsappGreen.svg?react";
 import LinkedinBlue from "../../assets/contactme/linkedinBlue.svg?react";
 import ViberPurple from "../../assets/contactme/viberBlack.svg?react";
 import GithubCircle from "../../assets/contactme/githubCircle.svg?react";
+import resumeIcon from "../../assets/contactme/resume.svg";
+import myResume from "../../assets/contactme/resume.pdf";
 import exclamationMarkIcon from "../../assets/contactme/exlamationMark.svg";
 
 import { gsap } from "gsap";
@@ -30,6 +29,11 @@ const socials = [
     name: "Github",
     url: "https://github.com/qbeeeeee?tab=repositories",
   },
+  // {
+  //   icon: ResumeIcon,
+  //   name: "Resume CV",
+  //   url: "",
+  // },
 ];
 
 const ContactMe = () => {
@@ -56,8 +60,11 @@ const ContactMe = () => {
     e.preventDefault();
     setStatus("sending");
 
+    const API_ENDPOINT =
+      "https://765x2q8qe6.execute-api.eu-central-1.amazonaws.com/contactme-form";
+
     try {
-      const response = await fetch("/api/send", {
+      const response = await fetch(API_ENDPOINT, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -76,6 +83,7 @@ const ContactMe = () => {
         setStatus("error");
       }
     } catch (err) {
+      console.error("Fetch error:", err);
       setStatus("error");
     }
   };
@@ -210,7 +218,7 @@ const ContactMe = () => {
         {/* Fat Dot */}
         <div
           ref={dotRef}
-          className="absolute left-0 bottom-[25%] h-14 sm:h-[100px] lg:h-[20vh] scale-y-0 w-auto z-20 rounded-[40px] overflow-hidden"
+          className="absolute left-0 bottom-[25%] h-14 sm:h-[100px] lg:h-[20vh] max-h-[200px] scale-y-0 w-auto z-20 rounded-[40px] overflow-hidden"
         >
           {/* Background layer */}
           <div
@@ -248,7 +256,7 @@ const ContactMe = () => {
 
         <div
           ref={contactRevealRef2}
-          className="w-full flex flex-col lg:flex-row justify-evenly items-center lg:items-stretch gap-6 sm:gap-10 lg:gap-0 z-10 pt-6 pb-14 sm:pb-28"
+          className="w-full flex flex-col lg:flex-row justify-evenly items-center lg:items-stretch gap-6 sm:gap-10 lg:gap-0 z-10 pt-6 pb-14 sm:pb-40"
         >
           <div className="w-full lg:w-[50%] max-w-lg text-white z-10 flex flex-col gap-10 justify-between">
             <div className="font-inter sm:text-[20px]">
@@ -258,6 +266,20 @@ const ContactMe = () => {
 
             <div className="flex flex-col gap-6">
               <div className="flex flex-col gap-6 font-inter">
+                <a
+                  href={myResume}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group transition-all duration-300 hover:translate-x-1 max-w-max"
+                >
+                  <div className="text-white/60 text-sm">CV</div>
+
+                  <div className="relative text-white text-[18px]">
+                    View Resume
+                    <span className="absolute left-0 -bottom-1 h-[1px] w-0 bg-white transition-all duration-500 group-hover:w-full"></span>
+                  </div>
+                </a>
+
                 <a
                   href="mailto:papadokonst1998@gmail.com"
                   className="group transition-all duration-300 hover:translate-x-1 max-w-max"
@@ -309,6 +331,21 @@ const ContactMe = () => {
                   </a>
                 ))}
               </div>
+
+              {/* <a
+                href={myResume}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  "--colorButton": "rgb(255 255 255 / 0.9)",
+                  "--colorButton2": "black",
+                  "--borderLeftBottom": "1px",
+                  "--borderOutline": "0px",
+                }}
+                className="projectViewButton max-w-max !capitalize"
+              >
+                View Resume (CV)
+              </a> */}
             </div>
           </div>
 

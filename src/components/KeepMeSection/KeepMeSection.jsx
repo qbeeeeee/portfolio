@@ -173,7 +173,7 @@ const KeepMeSection = () => {
         tl.to(
           svgOutterWrapper,
           {
-            top: "55%",
+            top: isPhone <= 1280 ? "58%" : "55%",
             left: "50%",
           },
           "logoToRect",

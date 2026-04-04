@@ -417,15 +417,16 @@ const KeepMeComponents = ({
             const tallImg = item.querySelector(".tall-img-scroll");
             const shortImg = item.querySelector(".short-img-scroll");
 
-            // 1. Slide the IMAGE up and fade in
+            // 1. Slide the NEW IMAGE up and fade in
             tl.to(imageContainer, {
               y: 0,
               opacity: 1,
               duration: itemDuration,
               ease: "power2.inOut",
+              force3D: true, // Forces GPU acceleration
             });
 
-            // 2. NEW: Tilt all PREVIOUS images by an additional 5 degrees
+            // 2. Tilt all PREVIOUS images and gradually fade them
             if (i > 0) {
               const previousImages = profileItems
                 .slice(0, i)
@@ -435,36 +436,34 @@ const KeepMeComponents = ({
                 previousImages,
                 {
                   rotation: "+=1.5",
-                  // x: "+=15",
                   y: "-=5",
+                  opacity: "-=0.15", // Gradually reduces opacity each time a new image comes in
                   duration: itemDuration,
                   ease: "power2.inOut",
-                  filter: "blur(1px)",
-                  // opacity: 0.8,
+                  force3D: true, // CRITICAL: Keeps this growing array smooth on iPhone
                 },
                 "<",
-              ); // "<" makes it start at the same time as the new image animation
+              );
             }
 
-            // 3. Cross-fade the TITLE (Delayed until image is halfway up)
+            // 3. Cross-fade the NEW TITLE (Delayed until image is halfway up)
             tl.fromTo(
               title,
               {
                 opacity: 0,
                 y: 40,
-                filter: "blur(8px)",
               },
               {
                 opacity: 1,
                 y: 0,
-                filter: "blur(0px)",
                 duration: itemDuration * 0.45,
                 ease: "power3.out",
+                force3D: true,
               },
               `<${itemDuration * 0.7}`,
             );
 
-            // 4.
+            // 4. Slide up and fade out the PREVIOUS TITLE
             if (i > 0) {
               const prevTitle = profileItems[i - 1].querySelector(
                 ".profile-title-description",
@@ -475,9 +474,9 @@ const KeepMeComponents = ({
                 {
                   opacity: 0,
                   y: -40,
-                  filter: "blur(6px)",
                   duration: itemDuration * 0.45,
                   ease: "power2.in",
+                  force3D: true,
                 },
                 "<-=250",
               );
@@ -485,19 +484,16 @@ const KeepMeComponents = ({
 
             // 5. Scroll tall image to the top
             if (tallImg && imageContainer) {
-              // Get the front image height (icon)
               const frontHeight = shortImg.getBoundingClientRect().height;
-              // Get the back image height (icon2)
               const backHeight = tallImg.getBoundingClientRect().height;
-              // Calculate how much we need to move up so the bottom aligns
               const scrollDistance = backHeight - frontHeight;
 
               if (scrollDistance > 0) {
-                // Animate y instead of top for smooth GPU animation
                 tl.to(tallImg, {
-                  y: -scrollDistance, // move up exactly
-                  duration: i === 0 ? 800 : 400, // same as before
+                  y: -scrollDistance,
+                  duration: i === 0 ? 800 : 400,
                   ease: "none",
+                  force3D: true, // Hardware acceleration for the inner scroll
                 });
 
                 tl.to({}, { duration: 100 });
@@ -659,19 +655,19 @@ const KeepMeComponents = ({
           {section.id === 1 ? (
             <>
               <div className="pl-[10%]">
-                <h2 className="text-[44px] font-ica-rubrik text-black uppercase title-homepage">
+                <h2 className="text-[44px] pt-8 sm:pt-10 xl:pt-0 font-ica-rubrik text-black uppercase title-homepage">
                   {section.title}
                 </h2>
 
                 <div
                   ref={videoWrapperRef}
-                  className={`bg-[#efa8c4] absolute top-[54%] sm:top-[55%] left-[50%] transform -translate-x-1/2 -translate-y-1/2
+                  className={`bg-[#efa8c4] absolute top-[58%] xl:top-[55%] left-[50%] transform -translate-x-1/2 -translate-y-1/2
                   overflow-hidden rounded-[40px] w-auto h-auto opacity-0 z-[200]`}
                 >
                   <h1
                     ref={selectedProjectRef}
                     data-content="SELECTED PROJECT"
-                    className="text-[8vw] sm:text-[10vh] leading-[1em] whitespace-nowrap font-ica-rubrik text-black scale-0
+                    className="text-[6.5vw] sm:text-[10vh] leading-[1em] whitespace-nowrap font-ica-rubrik text-black scale-0
          absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 font-semibold flex items-center justify-center"
                   >
                     SELECTED PROJECT
