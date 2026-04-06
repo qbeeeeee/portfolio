@@ -399,7 +399,7 @@ const OtherProjects = ({ animationFinished }) => {
   return (
     <div
       ref={projectsWrapperRef}
-      className="w-full h-[100vh] max-h-[800px] sm:max-h-[100vh] flex items-center justify-center text-center relative opacity-0 [transform-style:preserve-3d] [transform:perspective(1200px)] mt-[35dvh] z-10"
+      className="w-full h-[100vh] max-h-[800px] sm:max-h-[min(100vh,1000px)] flex items-center justify-center text-center relative opacity-0 [transform-style:preserve-3d] [transform:perspective(1200px)] mt-[35dvh] z-10"
     >
       <div
         ref={spinRef}
@@ -452,7 +452,7 @@ const OtherProjects = ({ animationFinished }) => {
 
         <div
           ref={planetRef}
-          className="absolute -bottom-[40%] left-0 w-full h-[400px] sm:h-[700px] lg:h-[100vh] z-[1]
+          className="absolute -bottom-[40%] left-0 w-full h-[400px] sm:h-[700px] lg:h-[100vh] max-h-[920px] z-[1]
             bg-[url('/src/assets/otherProjects/earthPurpleAndBlue.png')]
             bg-[length:auto_110%] bg-no-repeat bg-center"
         />

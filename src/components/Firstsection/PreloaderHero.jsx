@@ -597,7 +597,7 @@ export default function Hero({ setAnimationFinished, animationFinished }) {
   const duplicatedSkills = isPhone <= 640 ? [...skills, ...skills] : skills;
 
   return (
-    <div ref={root} className="max-w-[1920px] max-h-[750px] mx-auto">
+    <div ref={root} className="max-w-[1920px] mx-auto">
       <div className="preloader-progress">
         <div className="preloader-progress-bar"></div>
         <div className="preloader-logo invisible absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full text-center z-2 mix-blend-difference">

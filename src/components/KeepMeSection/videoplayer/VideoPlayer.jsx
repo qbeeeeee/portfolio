@@ -77,7 +77,7 @@ const VideoPlayer = ({
         ref={videoRef}
         src={videoSource}
         preload="metadata" // Stops massive background downloads on load
-        className="w-auto h-auto max-h-[75dvh] max-w-[90vw] min-h-[250px] lg:min-h-[500px] rounded-[40px] object-contain"
+        className="w-auto h-auto max-h-[min(75dvh,689px)] max-w-[min(90vw,1225px)] min-h-[250px] lg:min-h-[500px] rounded-[40px] object-contain"
         muted
         playsInline
         webkit-playsinline="true"

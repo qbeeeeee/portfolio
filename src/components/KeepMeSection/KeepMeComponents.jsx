@@ -646,7 +646,7 @@ const KeepMeComponents = ({
       {sections.map((section, index) => (
         <section
           key={section.id}
-          className={`card absolute inset-0 w-full rounded-[40px] sm:p-[4vh] pt-[3vh] border border-black/20 shadow-[0_0px_50px_rgba(0,0,0,0.5)] ${section.color}`}
+          className={`card absolute inset-0 max-w-[1920px] max-h-[1000px] min-[2000px]:m-auto w-full rounded-[40px] sm:p-[4vh] pt-[3vh] border border-black/20 shadow-[0_0px_50px_rgba(0,0,0,0.5)] ${section.color}`}
           style={{
             zIndex: index + 1,
             height: `calc(100dvh - ${index * headerGap}vh)`,
@@ -667,7 +667,7 @@ const KeepMeComponents = ({
                   <h1
                     ref={selectedProjectRef}
                     data-content="SELECTED PROJECT"
-                    className="text-[6.5vw] sm:text-[10vh] leading-[1em] whitespace-nowrap font-ica-rubrik text-black scale-0
+                    className="text-[6.5vw] sm:text-[min(10vh,90px)] leading-[1em] whitespace-nowrap font-ica-rubrik text-black scale-0
          absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 font-semibold flex items-center justify-center"
                   >
                     SELECTED PROJECT
@@ -696,7 +696,7 @@ const KeepMeComponents = ({
                     key={comp.id}
                     className="profile-item absolute flex flex-col-reverse lg:flex-row items-center justify-center lg:justify-between sm:px-20 gap-10 w-full h-full"
                   >
-                    <div className="profile-title-description hidden lg:block opacity-0 h-[50vh] absolute">
+                    <div className="profile-title-description hidden lg:block opacity-0 h-[50vh] max-h-[526px] absolute">
                       {/* Title: Positioned absolute so they all stack in one spot */}
                       <h3 className="text-4xl font-bold font-inter text-black whitespace-nowrap">
                         {comp.title}
@@ -704,7 +704,7 @@ const KeepMeComponents = ({
 
                       <div
                         data-lenis-prevent
-                        className="lg:max-w-[27vw] mt-10 font-inter font-semibold xl:text-lg text-black max-h-[50dvh] overflow-auto"
+                        className="lg:max-w-[min(27vw,700px)] mt-10 font-inter font-semibold xl:text-lg text-black max-h-[50dvh] overflow-auto"
                       >
                         {comp.description.split(". ").map((sentence, idx) => (
                           <p
@@ -718,7 +718,10 @@ const KeepMeComponents = ({
                     </div>
 
                     {/* Image: This is what we will slide up */}
-                    <div className="profile-image w-fit sm:w-[75vw] lg:w-[55vw] h-[65dvh] sm:h-auto flex items-center justify-center lg:ml-auto">
+                    <div
+                      className="profile-image w-fit sm:w-[75vw] lg:w-[55vw] h-[65dvh] sm:h-auto max-w-[1056px] max-h-[526px]
+                    flex items-center justify-center lg:ml-auto"
+                    >
                       <div className="relative overflow-hidden border border-black/30 h-full w-auto rounded-[20px]">
                         <img
                           src={comp.icon}
@@ -755,7 +758,7 @@ const KeepMeComponents = ({
                   {templates.map((template, index) => (
                     <div
                       key={index}
-                      className="flex bg-white/40 rounded-[40px] h-[90vw] sm:h-[47vh] w-[90vw] sm:w-[47vh] 
+                      className="flex bg-white/40 rounded-[40px] h-[90vw] sm:h-[47vh] w-[90vw] sm:w-[47vh] max-w-[432px] max-h-[432px]
                                   shrink-0 justify-center items-center relative border border-black/20"
                     >
                       <div className="flex flex-col justify-evenly items-center w-full h-full z-10">
@@ -873,7 +876,7 @@ const KeepMeComponents = ({
               >
                 <div className="flex flex-col sm:flex-row sm:justify-between items-center w-full h-full px-[3%] gap-10 mt-[30dvh] sm:mt-0">
                   <img
-                    className="w-[90vw] sm:w-[50vw] max-h-max h-auto rounded-[40px]"
+                    className="w-[90vw] sm:w-[50vw] max-w-[960px] max-h-max h-auto rounded-[40px]"
                     src={customisableFull}
                   />
 
@@ -922,11 +925,11 @@ const KeepMeComponents = ({
                 {section.title}
               </h2>
 
-              <div className="flex flex-col lg:flex-row items-center h-[65dvh] justify-around gap-3 lg:gap-5 lg:mt-10">
+              <div className="flex flex-col lg:flex-row items-center h-[65dvh] justify-around gap-3 lg:gap-5 lg:mt-10 min-[2000px]:m-auto">
                 <div className="sub-container max-w-[100vw] lg:max-w-[70vw] overflow-hidden p-4 lg:p-10">
                   <div className="sub-wrapper flex">
                     {/* Card 1 */}
-                    <div className="sub-item opacity-0 translate-y-[80px] lg:max-h-[70vh] h-[35dvh] lg:h-[60vh] min-w-max">
+                    <div className="sub-item opacity-0 translate-y-[80px] lg:max-h-[min(70vh,552px)] h-[35dvh] lg:h-[60vh] min-w-max">
                       <img
                         src={customisablePlans}
                         alt="Choose plan"
@@ -935,7 +938,7 @@ const KeepMeComponents = ({
                     </div>
 
                     {/* Card 2 */}
-                    <div className="sub-item opacity-0 translate-y-[80px] lg:max-h-[70vh] h-[35dvh] lg:h-[60vh] min-w-max">
+                    <div className="sub-item opacity-0 translate-y-[80px] lg:max-h-[min(70vh,552px)] h-[35dvh] lg:h-[60vh] min-w-max">
                       <img
                         src={billingDetails}
                         alt="Subscription details"
@@ -944,7 +947,7 @@ const KeepMeComponents = ({
                     </div>
 
                     {/* Card 3 */}
-                    <div className="sub-item opacity-0 translate-y-[80px] lg:max-h-[70vh] h-[35dvh] lg:h-[60vh] min-w-max">
+                    <div className="sub-item opacity-0 translate-y-[80px] lg:max-h-[min(70vh,552px)] h-[35dvh] lg:h-[60vh] min-w-max">
                       <img
                         src={upgradeSubscription}
                         alt="Upgrade plan"
