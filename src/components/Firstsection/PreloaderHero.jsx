@@ -129,6 +129,13 @@ export default function Hero({ setAnimationFinished, animationFinished }) {
             elements.forEach(({ key, selector, type }) => {
               const config = { type, mask: type };
 
+              // Find the element in the DOM
+              const el = document.querySelector(selector);
+              if (el) {
+                // Add a role to make the aria-label valid for Lighthouse
+                el.setAttribute("role", "text");
+              }
+
               if (type === "chars") config.charsClass = "char";
               if (type === "lines") config.linesClass = "line";
               splits[key] = SplitText.create(selector, config);
@@ -552,8 +559,12 @@ export default function Hero({ setAnimationFinished, animationFinished }) {
       >
         <span className="absolute inset-0 bg-white z-0 origin-left hover-bg" />
 
-        <div className="name-top">Papadopoulos</div>
-        <div className="name-bottom">Konstaninos</div>
+        <div className="name-top" role="heading" aria-level="1">
+          Papadopoulos
+        </div>
+        <div className="name-bottom" role="heading" aria-level="1">
+          Konstaninos
+        </div>
       </span>
     );
   };

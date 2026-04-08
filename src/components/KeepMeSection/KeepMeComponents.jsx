@@ -877,6 +877,7 @@ const KeepMeComponents = ({
                 <div className="flex flex-col sm:flex-row sm:justify-between items-center w-full h-full px-[3%] gap-10 mt-[30dvh] sm:mt-0">
                   <img
                     className="w-[90vw] sm:w-[50vw] max-w-[960px] max-h-max h-auto rounded-[40px]"
+                    alt="Customisable"
                     src={customisableFull}
                   />
 

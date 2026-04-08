@@ -358,6 +358,7 @@ const ContactMe = () => {
               <div className="relative w-1/2">
                 <input
                   type="text"
+                  id="firstName"
                   name="firstName"
                   placeholder=" "
                   value={formData.firstName}
@@ -367,6 +368,7 @@ const ContactMe = () => {
                 />
 
                 <label
+                  htmlFor="firstName"
                   className="
                   absolute left-4 top-3 text-white/70 font-light
                   transition-all duration-200
@@ -387,6 +389,7 @@ const ContactMe = () => {
               <div className="relative w-1/2">
                 <input
                   type="text"
+                  id="lastName"
                   name="lastName"
                   placeholder=" "
                   value={formData.lastName}
@@ -395,6 +398,7 @@ const ContactMe = () => {
                   required
                 />
                 <label
+                  htmlFor="lastName"
                   className="
                   absolute left-4 top-3 text-white/70 font-light
                   transition-all duration-200
@@ -415,6 +419,7 @@ const ContactMe = () => {
             <div className="relative">
               <input
                 type="email"
+                id="email"
                 name="email"
                 placeholder=" "
                 value={formData.email}
@@ -423,6 +428,7 @@ const ContactMe = () => {
                 required
               />
               <label
+                htmlFor="email"
                 className="
                   absolute left-4 top-3 text-white/70 font-light
                   transition-all duration-200
@@ -442,6 +448,7 @@ const ContactMe = () => {
             <div className="relative">
               <textarea
                 name="message"
+                id="message"
                 rows="5"
                 placeholder=" "
                 value={formData.message}
@@ -450,6 +457,7 @@ const ContactMe = () => {
                 required
               />
               <label
+                htmlFor="message"
                 className="
                   absolute left-4 top-3 text-white/70 font-light
                   transition-all duration-200

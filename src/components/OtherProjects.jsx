@@ -518,9 +518,14 @@ const OtherProjects = ({ animationFinished }) => {
 
         <button
           className="absolute top-[5%] right-[2%] text-black"
+          aria-label={`Close ${activeProject?.alt}`}
           onClick={() => handleCloseProject()}
         >
-          <FontAwesomeIcon icon={faXmarkCircle} className="w-7 h-auto" />
+          <FontAwesomeIcon
+            icon={faXmarkCircle}
+            className="w-7 h-auto"
+            aria-hidden="true"
+          />
         </button>
       </div>
     </div>

@@ -91,11 +91,15 @@ const VideoPlayer = ({
 
       <button
         onClick={handleButtonClick}
+        aria-label={
+          isEnded ? "Restart video" : isPlaying ? "Pause video" : "Play video"
+        }
         className="absolute z-40 bottom-8 right-8 bg-white text-gray-500 p-3 sm:p-5 flex items-center justify-center rounded-full shadow-md hover:bg-gray-300 transition"
       >
         <FontAwesomeIcon
           className="w-4 sm:w-5 h-4 sm:h-5"
           icon={isEnded ? faRotateLeft : isPlaying ? faPause : faPlay}
+          aria-hidden="true"
         />
       </button>
     </div>
