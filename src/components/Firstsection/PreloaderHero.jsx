@@ -15,6 +15,7 @@ import tailwind from "../../assets/skills/tailwind.png";
 import pythonSvg from "../../assets/skills/python.svg";
 import djangoSvg from "../../assets/skills/django.svg";
 import gsapSvg from "../../assets/skills/gsap.svg";
+import typesrciptSVG from "../../assets/skills/typescript.svg";
 import awsSvg from "../../assets/skills/aws.svg";
 import qrCode from "../../assets/qrCode.png";
 import "../../assets/css/custom.css";
@@ -31,8 +32,8 @@ const skills = [
     icon: react,
   },
   {
-    label: "Javascript",
-    icon: javascript,
+    label: "Typescript",
+    icon: typesrciptSVG,
   },
   {
     label: "TailwindCSS",
