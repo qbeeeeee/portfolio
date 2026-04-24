@@ -9,6 +9,8 @@ import webGymApp from "./../assets/otherProjects/webGymApp.png";
 import blog from "./../assets/otherProjects/blog.PNG";
 import stratego3D from "./../assets/otherProjects/stratego3D.PNG";
 import airplane from "./../assets/otherProjects/airplaneGame.PNG";
+import cretanLabdanum from "./../assets/otherProjects/cretanLabdanum.png";
+import restaurant from "./../assets/otherProjects/restaurant.png";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -64,18 +66,17 @@ const projects = [
     github: "https://github.com/qbeeeeee/Blog",
   },
   {
-    src: stratego3D,
-    alt: "Stratego 3D",
+    src: restaurant,
+    alt: "Restaurant",
     description:
-      "A Unity-made version of the classic Stratego board game presented in a 3D environment. Players first build and arrange their army, then start the match and move their pawns across the board. The game also includes a settings menu where players can adjust graphics, audio, and resolution.",
-    github: "https://github.com/qbeeeeee/Stratego-3D",
+      "A modern, high-performance restaurant website built with React and TypeScript, featuring a sleek UI styled with Tailwind CSS. The centerpiece is an interactive GSAP-powered showcase where users can explore signature dishes through fluid animations and dynamic motion transitions.",
+    github: "https://github.com/qbeeeeee/restaurant",
   },
   {
-    src: airplane,
-    alt: "Airplane 3D",
+    src: cretanLabdanum,
+    alt: "Cretan Labdanum",
     description:
-      "A Unity-made airplane game built with a custom terrain and an airplane model created in Blender. The world includes roads, trees, grass, and houses. It features particle systems for snowfall, clouds, and explosions, sound effects, and physics-based airplane movement allowing directional control and speed adjustments.",
-    github: "https://github.com/qbeeeeee/Airplane-Game",
+      "A professional commercial website built with React and Vite, designed to showcase the heritage and products of a Cretan Labdanum family business. Styled with Tailwind CSS, the site features a clean, minimalist layout that highlights the history of labdanum harvesting and traditional production methods.",
   },
 ];
 
@@ -479,13 +480,17 @@ const OtherProjects = ({ animationFinished }) => {
 
         <div className="absolute bottom-[30vh] sm:bottom-1/2 flex justify-between w-full px-[4%] sm:px-[5%]">
           <div className="flex flex-col gap-5">
-            {activeProject?.github && (
+            {activeProject?.github ? (
               <a
                 href={activeProject?.github}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="projectViewButton font-inter"
               >
+                View Code
+              </a>
+            ) : (
+              <a className="projectViewButton font-inter opacity-0">
                 View Code
               </a>
             )}
